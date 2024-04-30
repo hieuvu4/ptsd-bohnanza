@@ -14,4 +14,7 @@ public class Pile {
         return pile;
     }
 
+    public static void drawCard() {
+
+    }
 }

@@ -2,15 +2,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-
 public class HandTest {
     Hand hand = new Hand();
 
     @Test
     public void testAddCard() {
-        hand.addCard(new Card("Test", new int[4]));
-        hand.addCard(new Card("Test", new int[4]));
-        hand.addCard(new Card("Test", new int[4]));
+        hand.addCard(new Card("Test", new int[4], new int[4]));
+        hand.addCard(new Card("Test", new int[4], new int[4]));
+        hand.addCard(new Card("Test", new int[4], new int[4]));
 
         Assertions.assertEquals(3, hand.getHandPile().size());
     }
@@ -18,9 +17,9 @@ public class HandTest {
 
     @Test
     public void testRemoveCard() {
-        hand.addCard(new Card("Test1", new int[4]));
-        hand.addCard(new Card("Test2", new int[4]));
-        hand.addCard(new Card("Test3", new int[4]));
+        hand.addCard(new Card("Test", new int[4], new int[4]));
+        hand.addCard(new Card("Test", new int[4], new int[4]));
+        hand.addCard(new Card("Test", new int[4], new int[4]));
 
         hand.removeCard(2);
 
