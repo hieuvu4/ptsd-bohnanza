@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.IntStream;
+
 public class FieldTest {
 
 
@@ -11,6 +13,7 @@ public class FieldTest {
     @Test
     public void testAddCardToField() {
         field.addCardToField();
+
         Assertions.assertEquals(1, field.getCardAmount());
     }
 
@@ -22,11 +25,9 @@ public class FieldTest {
     @Test
     public void testHarvest() {
         field.setCardType(card);
-        field.addCardToField();
-        field.addCardToField();
-        field.addCardToField();
-        field.addCardToField();
+        IntStream.range(0, 4).forEach(i -> field.addCardToField());
         int result = field.harvest();
+
         Assertions.assertEquals(3, result);
         Assertions.assertTrue(field.isEmpty());
         Assertions.assertEquals(0, field.getCardAmount());
