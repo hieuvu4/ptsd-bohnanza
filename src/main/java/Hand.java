@@ -11,11 +11,11 @@ public class Hand {
     }
 
     public void addCard(Card card) {
-        handPile.add(card);
+
     }
 
     public void removeCard(int index) {
-        handPile.remove(index);
+
     }
 }
 

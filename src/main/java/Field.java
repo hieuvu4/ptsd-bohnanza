@@ -22,24 +22,14 @@ public class Field {
     }
 
     public void addCardToField() {
-        cardAmount += 1;
+
     }
 
     public boolean isEmpty() {
-        return cardAmount == 0;
+        return false;
     }
 
     public int harvest() {
-        int profit = 0;
-        int index = cardType.getNumberNeedToHarvest().length-1;
-        for (int i = index; i > 0; i--) {
-            if(cardType.getNumberNeedToHarvest()[i] <= cardAmount){
-                profit = cardType.getCoins()[i];
-                break;
-            }
-        }
-        cardAmount = 0;
-        cardType = null;
-        return profit;
+        return -1;
     }
 }
