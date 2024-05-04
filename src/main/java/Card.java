@@ -1,11 +1,14 @@
 
 
-public class Card {
+public enum Card {
+    RED("Red", new int[1], new int[1]);
+
+
     private final String name;
     private final int[] numberNeedToHarvest;
     private final int[] coins;
 
-    public Card(String name, int[] numberNeedToHarvest, int[] coins) {
+    Card(String name, int[] numberNeedToHarvest, int[] coins) {
         this.name = name;
         this.numberNeedToHarvest = numberNeedToHarvest;
         this.coins = coins;
@@ -24,5 +27,9 @@ public class Card {
 
     public int[] getCoins() {
         return coins;
+    }
+
+    public int coinValue(int count){
+        return 0;
     }
 }

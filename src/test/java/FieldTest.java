@@ -6,9 +6,9 @@ import java.util.stream.IntStream;
 public class FieldTest {
 
 
-    private Card card = new Card("Rote Bohne", new int[]{2, 3, 4, 5}, new int[]{1, 2, 3, 5});
+    private Card card = Card.RED;
 
-    private Field field = new Field(1);
+    private Field field = new Field();
 
     @Test
     public void testAddCardToField() {
