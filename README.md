@@ -1,1 +1,1 @@
-GitHub Repo for the Progamming Techniques and Software Design module of the Philipps-University Marburg and the creation of the card-game "Bohnanza".
+GitHub Repository for the Programming Techniques and Software Design module of the Philipps University of Marburg and the creation of the card-game "Bohnanza".
