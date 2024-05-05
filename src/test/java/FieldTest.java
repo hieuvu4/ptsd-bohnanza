@@ -8,7 +8,7 @@ public class FieldTest {
 
     private Card card = Card.ROTE_BOHNE;
 
-    private Field field = new Field(1);
+    private Field field = new Field();
 
     @Test
     public void testAddCardToField() {

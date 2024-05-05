@@ -36,4 +36,8 @@ public enum Card {
     public int[] getCoins() {
         return coins;
     }
+
+    public int coinValue(int count){
+        return 0;
+    }
 }

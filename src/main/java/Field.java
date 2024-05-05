@@ -1,12 +1,11 @@
 
 
 public class Field {
-    private final int fieldNumber;
     private Card cardType;
     private int cardAmount;
 
-    public Field(int fieldNumber) {
-        this.fieldNumber = fieldNumber;
+    public Field() {
+
     }
 
     public Card getCardType() {

@@ -1,21 +1,23 @@
 import java.util.List;
 
 public class Pile {
-    private static Pile pile;
-    private List<Card> cards;
-    private List<Card> discardPile;
+    private final List<Card> cards;
+    private final List<Card> discardPile;
 
-    private Pile() {
+    public Pile() {
+        cards = null;
+        discardPile = null;
     }
 
-    public static Pile getPile() {
-        if (pile == null) {
-            pile = new Pile();
-        }
-        return pile;
+    public Card drawCard() { // impl auto reshuffle
+        return null;
     }
 
-    public static void drawCard() {
+    public void discardCard(Card card){
+        discardCard(card, 1);
+    }
+
+    public void discardCard(Card card, int count){
 
     }
 }
