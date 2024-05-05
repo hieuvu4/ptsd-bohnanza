@@ -1,6 +1,4 @@
-
-
-enum Card {
+public enum Card {
     KAFFEEBOHNE("Kaffeebohne", new int[]{4, 7, 10, 12}, new int[]{1, 2, 3, 4}),
     WEINBRANDBOHNE("Weinbrandbohne", new int[]{4, 7, 9, 11}, new int[]{1, 2, 3, 4}),
     BLAUE_BOHNE("Blaue Bohne", new int[]{2, 3, 4, 5}, new int[]{1, 2, 3, 4}),

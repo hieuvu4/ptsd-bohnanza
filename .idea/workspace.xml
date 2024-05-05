@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="792ec6ea-2bd7-4073-968c-5bd109127bb9" name="Changes" comment="">
+    <list default="true" id="792ec6ea-2bd7-4073-968c-5bd109127bb9" name="Changes" comment="Change Card to an enum, adjust tests, remove wrong package-descr. TradingArea">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Card.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -23,6 +25,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.FieldTest.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "JavaDoc+Refactoring",
     "kotlin-language-version-configured": "true",
@@ -31,7 +35,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.HandTest.testAddCard">
     <configuration name="FieldTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ptsd-bohnanza" />
       <option name="PACKAGE_NAME" value="" />
@@ -41,8 +45,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="HandTest.testAddCard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ptsd-bohnanza" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="HandTest" />
+      <option name="METHOD_NAME" value="testAddCard" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.HandTest.testAddCard" />
         <item itemvalue="JUnit.FieldTest" />
       </list>
     </recent_temporary>
@@ -50,8 +65,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-8336523bb0d9-657b72ed" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
   </component>
@@ -64,7 +79,17 @@
       <option name="presentableId" value="Default" />
       <updated>1714406812780</updated>
       <workItem from="1714406813840" duration="3000" />
+      <workItem from="1714907778477" duration="1176000" />
     </task>
+    <task id="LOCAL-00001" summary="Change Card to an enum, adjust tests, remove wrong package-descr. TradingArea">
+      <option name="closed" value="true" />
+      <created>1714818667858</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1714818667858</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -80,5 +105,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Change Card to an enum, adjust tests, remove wrong package-descr. TradingArea" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change Card to an enum, adjust tests, remove wrong package-descr. TradingArea" />
   </component>
 </project>
