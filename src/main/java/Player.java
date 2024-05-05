@@ -13,7 +13,6 @@ public class Player {
         coins = null;
     }
 
-
     public void plant(int field, Card card) {
 
     }
@@ -26,7 +25,7 @@ public class Player {
 
     }
 
-    public void drawCards() {
+    public void drawCards(Pile pile) {
 
     }
 
@@ -38,4 +37,11 @@ public class Player {
         return 0;
     }
 
+    public Field getField(int index) {
+        return field[index];
+    }
+
+    public Hand getHand() {
+        return hand;
+    }
 }
