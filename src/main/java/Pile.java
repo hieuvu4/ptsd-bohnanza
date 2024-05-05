@@ -5,7 +5,8 @@ public class Pile {
     private List<Card> cards;
     private List<Card> discardPile;
 
-    private Pile() {}
+    private Pile() {
+    }
 
     public static Pile getPile() {
         if (pile == null) {

@@ -7,9 +7,9 @@ public class HandTest {
 
     @Test
     public void testAddCard() {
-        hand.addCard(new Card("Test", new int[4], new int[4]));
-        hand.addCard(new Card("Test", new int[4], new int[4]));
-        hand.addCard(new Card("Test", new int[4], new int[4]));
+        hand.addCard(Card.AUGENBOHNE);
+        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(Card.ROTE_BOHNE);
 
         Assertions.assertEquals(3, hand.getHandPile().size());
     }
@@ -17,9 +17,9 @@ public class HandTest {
 
     @Test
     public void testRemoveCard() {
-        hand.addCard(new Card("Test", new int[4], new int[4]));
-        hand.addCard(new Card("Test", new int[4], new int[4]));
-        hand.addCard(new Card("Test", new int[4], new int[4]));
+        hand.addCard(Card.GARTENBOHNE);
+        hand.addCard(Card.SAUBOHNE);
+        hand.addCard(Card.BRECHBOHNE);
 
         hand.removeCard(2);
 
