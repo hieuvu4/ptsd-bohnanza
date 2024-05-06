@@ -1,25 +1,51 @@
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.IntStream;
 
 public class FieldTest {
 
 
-    private Card card = Card.ROTE_BOHNE;
+    private Card card;
 
-    private Field field = new Field();
+    private Field field;
+
+    @BeforeEach
+    public void setUp() {
+        card = Card.ROTE_BOHNE;
+        field = new Field();
+    }
 
     @Test
-    public void testAddCardToField() {
+    public void testAddCardToFieldOne() {
         field.addCardToField();
 
         Assertions.assertEquals(1, field.getCardAmount());
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {2, 4, 6, 12})
+    public void testAddCardToFieldMoreThanOne(int amount) {
+        IntStream.range(0, amount).forEach(i -> field.addCardToField());
+
+        Assertions.assertEquals(amount, field.getCardAmount());
+    }
+
+
     @Test
     public void testIsEmpty() {
         Assertions.assertTrue(field.isEmpty());
+    }
+
+    @Test
+    public void testIsNotEmpty() {
+        field.setCardType(card);
+
+        Assertions.assertFalse(field.isEmpty());
+        Assertions.assertEquals(card, field.getCardType());
     }
 
     @Test
@@ -31,5 +57,10 @@ public class FieldTest {
         Assertions.assertEquals(3, result);
         Assertions.assertTrue(field.isEmpty());
         Assertions.assertEquals(0, field.getCardAmount());
+    }
+
+    @Test
+    public void testHarvestEmpty() {
+        Assertions.assertThrows(Throwable.class, () -> field.harvest());
     }
 }

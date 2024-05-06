@@ -23,7 +23,7 @@ public enum Card {
         this.coins = coins;
         this.amount = amount;
         if (numberNeedToHarvest.length != coins.length) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Size of coins must be equal to size of amount.");
         }
     }
 
