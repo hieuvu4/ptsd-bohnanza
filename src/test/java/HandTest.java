@@ -15,7 +15,7 @@ public class HandTest {
     public void testAddCardOne() {
         hand.addCard(Card.AUGENBOHNE);
 
-        Assertions.assertEquals(3, hand.getHandPile().size());
+        Assertions.assertEquals(1, hand.getHandPile().size());
     }
 
 

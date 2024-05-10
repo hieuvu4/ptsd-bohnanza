@@ -15,13 +15,13 @@ public enum Card {
     private final String name;
     private final int[] numberNeedToHarvest;
     private final int[] coins;
-    private final int amount;
+    private final int overallAmount;
 
-    Card(String name, int[] numberNeedToHarvest, int[] coins, int amount) {
+    Card(String name, int[] numberNeedToHarvest, int[] coins, int overallAmount) {
         this.name = name;
         this.numberNeedToHarvest = numberNeedToHarvest;
         this.coins = coins;
-        this.amount = amount;
+        this.overallAmount = overallAmount;
         if (numberNeedToHarvest.length != coins.length) {
             throw new IllegalArgumentException("Size of coins must be equal to size of amount.");
         }
@@ -39,11 +39,21 @@ public enum Card {
         return coins;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getOverallAmount() {
+        return overallAmount;
     }
 
-    public int coinValue(int count){
+    /**
+     * Returns the amount of coins for a specific amounts of cards. If the amount of cards is below 1, an
+     * IllegalMoveException will be thrown.
+     * @param   amountOfCards the specific amount of cards
+     * @return  the value of the specific amount of cards
+     */
+    public int getCoinValue(int amountOfCards){
+        if(amountOfCards < 1) throw new IllegalArgumentException("Count must be greater than zero.");
+        for(int i = numberNeedToHarvest.length-1; i >= 0; i--){
+            if(numberNeedToHarvest[i] <= amountOfCards) return coins[i];
+        }
         return 0;
     }
 }

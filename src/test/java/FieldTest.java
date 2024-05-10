@@ -49,7 +49,7 @@ public class FieldTest {
     }
 
     @Test
-    public void testHarvest() {
+    public void testHarvest() throws IllegalMoveException {
         field.setCardType(card);
         IntStream.range(0, 4).forEach(i -> field.addCardToField());
         int result = field.harvest();
@@ -61,6 +61,6 @@ public class FieldTest {
 
     @Test
     public void testHarvestEmpty() {
-        Assertions.assertThrows(Throwable.class, () -> field.harvest());
+        Assertions.assertThrows(IllegalMoveException.class, () -> field.harvest());
     }
 }

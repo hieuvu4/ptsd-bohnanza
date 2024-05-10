@@ -43,7 +43,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testHarvestOneCardEachField() {
+    public void testHarvestOneCardEachField() throws IllegalMoveException {
         player.plant(0, Card.ACKERBOHNE);
         player.plant(1, Card.AUGENBOHNE);
         player.harvest(0);
