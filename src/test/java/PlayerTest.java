@@ -20,9 +20,9 @@ public class PlayerTest {
 
     @Test
     public void testPlantOne() {
-        player.plant(0, Card.ACKERBOHNE);
+        player.plant(0, Card.BLAUE_BOHNE);
 
-        Assertions.assertEquals(Card.ACKERBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(0).getCardType());
         Assertions.assertEquals(1, player.getField(0).getCardAmount());
 
     }
@@ -30,21 +30,21 @@ public class PlayerTest {
     @ParameterizedTest
     @ValueSource(ints = {2, 4, 6, 12})
     public void testPlantMoreThanOne(int amount) {
-        IntStream.range(0, amount).forEach(i -> player.plant(0, Card.ACKERBOHNE));
+        IntStream.range(0, amount).forEach(i -> {player.plant(0, Card.BLAUE_BOHNE);});
 
-        Assertions.assertEquals(Card.ACKERBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(0).getCardType());
         Assertions.assertEquals(amount, player.getField(0).getCardAmount());
     }
 
     @Test
     public void testPlantSameFieldWrongType() {
-        player.plant(0, Card.ACKERBOHNE);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> player.plant(0, Card.AUGENBOHNE));
+        player.plant(0, Card.BLAUE_BOHNE);
+        Assertions.assertThrows(IllegalMoveException.class, () -> player.plant(0, Card.AUGENBOHNE));
     }
 
     @Test
     public void testHarvestOneCardEachField() throws IllegalMoveException {
-        player.plant(0, Card.ACKERBOHNE);
+        player.plant(0, Card.BLAUE_BOHNE);
         player.plant(1, Card.AUGENBOHNE);
         player.harvest(0);
 
@@ -55,23 +55,23 @@ public class PlayerTest {
 
     @Test
     public void testHarvestWrongField() {
-        player.plant(0, Card.ACKERBOHNE);
+        player.plant(0, Card.BLAUE_BOHNE);
         player.plant(1, Card.AUGENBOHNE);
         player.plant(1, Card.AUGENBOHNE);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> player.harvest(0));
+        Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
     }
 
     @Test
     public void testHarvestAllFieldsEmpty() {
-        Assertions.assertThrows(Throwable.class, () -> player.harvest(0));
+        Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
     }
 
     @Test
     public void testHarvestOnlyOneFieldPlanted() {
-        player.plant(0, Card.ACKERBOHNE);
+        player.plant(0, Card.BLAUE_BOHNE);
 
-        Assertions.assertThrows(Throwable.class, () -> player.harvest(0));
+        Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
     }
 
     @ParameterizedTest
@@ -85,14 +85,14 @@ public class PlayerTest {
     @Test
     public void testBuyThirdField() {
         Assertions.assertThrows(Throwable.class,
-                () -> player.buyThirdField(List.of(Card.ACKERBOHNE, Card.ACKERBOHNE, Card.ACKERBOHNE)));
+                () -> player.buyThirdField(List.of(Card.BLAUE_BOHNE, Card.BLAUE_BOHNE, Card.BLAUE_BOHNE)));
     }
 
     @Test
     public void testTrade() {
-        Assertions.assertThrows(Throwable.class, () -> player.tradeCards(List.of(Card.ACKERBOHNE), List.of(Card.AUGENBOHNE)));
-        player.getHand().addCard(Card.ACKERBOHNE);
-        Assertions.assertDoesNotThrow(() -> player.tradeCards(List.of(Card.ACKERBOHNE), List.of(Card.AUGENBOHNE)));
+        Assertions.assertThrows(Throwable.class, () -> player.tradeCards(List.of(Card.BLAUE_BOHNE), List.of(Card.AUGENBOHNE)));
+        player.getHand().addCard(Card.BLAUE_BOHNE);
+        Assertions.assertDoesNotThrow(() -> player.tradeCards(List.of(Card.BLAUE_BOHNE), List.of(Card.AUGENBOHNE)));
 
         Assertions.assertEquals(0, player.getHand().getHandPile().size());
     }

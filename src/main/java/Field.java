@@ -44,7 +44,7 @@ public class Field {
      */
     public int harvest() throws IllegalMoveException {
         if(isEmpty()) throw new IllegalMoveException("Field can't be harvest because field is empty.");
-        int coins =  cardType.getCoinValue(cardAmount);
+        int coins = cardType.getCoinValue(cardAmount);
         cardType = null;
         cardAmount = 0;
         return coins;
