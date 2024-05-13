@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Hand {
 
@@ -16,6 +17,7 @@ public class Hand {
      * @return first element of the hand pile
      */
     public Card popTopCard() {
+        if (handPile.isEmpty()) throw new NoSuchElementException("Hand pile is empty.");
         return handPile.getFirst();
     }
 

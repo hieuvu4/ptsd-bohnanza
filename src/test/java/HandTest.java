@@ -2,6 +2,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 
 public class HandTest {
     Hand hand;
@@ -9,6 +11,31 @@ public class HandTest {
     @BeforeEach
     public void setUp() {
         hand = new Hand();
+    }
+
+    @Test
+    public void testPopTopCardNone() {
+        Assertions.assertThrows(NoSuchElementException.class, () -> hand.popTopCard());
+    }
+
+    @Test
+    public void testPopTopCardOne() {
+        hand.addCard(Card.AUGENBOHNE);
+
+        Card card = hand.popTopCard();
+
+        Assertions.assertEquals(Card.AUGENBOHNE, card);
+    }
+
+    @Test
+    public void testPopTopCardMoreThanOne() {
+        hand.addCard(Card.AUGENBOHNE);
+        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(Card.ROTE_BOHNE);
+
+        Card card = hand.popTopCard();
+
+        Assertions.assertEquals(Card.AUGENBOHNE, card);
     }
 
     @Test

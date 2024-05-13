@@ -61,6 +61,7 @@ public class FieldTest {
 
     @Test
     public void testHarvestEmpty() {
-        Assertions.assertThrows(IllegalMoveException.class, () -> field.harvest());
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> field.harvest());
+        Assertions.assertEquals("Field can't be harvest because field is empty.", exception.getMessage());
     }
 }

@@ -15,10 +15,24 @@ public class Player {
         this.fields = new Field[2];
         tradedCards = null;
         coins = new ArrayList<>();
+
+        for(int i = 0; i < 2; i++) fields[i] = new Field();
     }
 
-    public void plant(int field, Card card) {
-
+    /**
+     * Player plants a given card to the specified field. If the field is not empty, an IllegalMoveException will be
+     * thrown.
+     * @param field the given field where the card should be planted on
+     * @param card the given card
+     * @throws IllegalMoveException if the given field is not empty
+     */
+    public void plant(int field, Card card) throws IllegalMoveException {
+        if(!fields[field].isEmpty() && fields[field].getCardType() != card)
+            throw new IllegalMoveException("The card type is not the same.");
+        if(fields[field].getCardType() == card || fields[field].isEmpty()) {
+            fields[field].setCardType(card);
+            fields[field].addCardToField();
+        }
     }
 
     /**
@@ -31,7 +45,8 @@ public class Player {
      */
     public void harvest(int fieldNumber) throws IllegalMoveException {
         // check if any field is null
-        if (Arrays.stream(fields).anyMatch(Objects::isNull)) throw new IllegalMoveException("A field is empty.");
+        if (Arrays.stream(fields).anyMatch(Objects::isNull))
+            throw new IllegalMoveException("Field cannot be harvested because a field is empty.");
         int maxAmount = Arrays.stream(fields).mapToInt(Field::getCardAmount).max().orElse(0);
         if (maxAmount > 1 && fields[fieldNumber].getCardAmount() > 1 || maxAmount == 1) {
             harvestValidField(fieldNumber);

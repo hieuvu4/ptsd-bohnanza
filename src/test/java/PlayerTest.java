@@ -19,7 +19,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testPlantOne() {
+    public void testPlantOne() throws IllegalMoveException {
         player.plant(0, Card.BLAUE_BOHNE);
 
         Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(0).getCardType());
@@ -29,17 +29,20 @@ public class PlayerTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 4, 6, 12})
-    public void testPlantMoreThanOne(int amount) {
-        IntStream.range(0, amount).forEach(i -> {player.plant(0, Card.BLAUE_BOHNE);});
+    public void testPlantMoreThanOne(int amount) throws IllegalMoveException {
+        for(int i = 0; i < amount; i++) player.plant(0, Card.BLAUE_BOHNE);
 
         Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(0).getCardType());
         Assertions.assertEquals(amount, player.getField(0).getCardAmount());
     }
 
     @Test
-    public void testPlantSameFieldWrongType() {
+    public void testPlantSameFieldWrongType() throws IllegalMoveException {
         player.plant(0, Card.BLAUE_BOHNE);
-        Assertions.assertThrows(IllegalMoveException.class, () -> player.plant(0, Card.AUGENBOHNE));
+
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () ->
+                player.plant(0, Card.AUGENBOHNE));
+        Assertions.assertEquals("The card type is not the same.", exception.getMessage());
     }
 
     @Test
@@ -54,24 +57,27 @@ public class PlayerTest {
     }
 
     @Test
-    public void testHarvestWrongField() {
+    public void testHarvestWrongField() throws IllegalMoveException {
         player.plant(0, Card.BLAUE_BOHNE);
         player.plant(1, Card.AUGENBOHNE);
         player.plant(1, Card.AUGENBOHNE);
 
-        Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
+        Assertions.assertEquals("Field cannot be harvested.", exception.getMessage());
     }
 
     @Test
     public void testHarvestAllFieldsEmpty() {
-        Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
+        Assertions.assertEquals("Field cannot be harvested because a field is empty.", exception.getMessage());
     }
 
     @Test
-    public void testHarvestOnlyOneFieldPlanted() {
+    public void testHarvestOnlyOneFieldPlanted() throws IllegalMoveException {
         player.plant(0, Card.BLAUE_BOHNE);
 
-        Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> player.harvest(0));
+        Assertions.assertEquals("Field cannot be harvested because a field is empty.", exception.getMessage());
     }
 
     @ParameterizedTest
