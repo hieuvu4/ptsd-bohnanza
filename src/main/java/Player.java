@@ -1,14 +1,12 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class Player {
     private final Hand hand;
     private Field[] fields;
     private final List<Card> tradedCards;
     private final List<Card> coins;
+    private Phase phase;
 
     public Player() {
         this.hand = new Hand();
@@ -20,19 +18,13 @@ public class Player {
     }
 
     /**
-     * Player plants a given card to the specified field. If the field is not empty, an IllegalMoveException will be
+     * Player plants a card to the specified field. If the field is not empty, an IllegalMoveException will be
      * thrown.
      * @param field the given field where the card should be planted on
-     * @param card the given card
      * @throws IllegalMoveException if the given field is not empty
      */
-    public void plant(int field, Card card) throws IllegalMoveException {
-        if(!fields[field].isEmpty() && fields[field].getCardType() != card)
-            throw new IllegalMoveException("The card type is not the same.");
-        if(fields[field].getCardType() == card || fields[field].isEmpty()) {
-            fields[field].setCardType(card);
-            fields[field].addCardToField();
-        }
+    public void plant(int field) throws IllegalMoveException {
+        phase.plant(this, field);
     }
 
     /**
@@ -44,15 +36,7 @@ public class Player {
      * @throws IllegalMoveException if player violates the game rule
      */
     public void harvest(int fieldNumber) throws IllegalMoveException {
-        // check if any field is null
-        if (Arrays.stream(fields).anyMatch(Objects::isNull))
-            throw new IllegalMoveException("Field cannot be harvested because a field is empty.");
-        int maxAmount = Arrays.stream(fields).mapToInt(Field::getCardAmount).max().orElse(0);
-        if (maxAmount > 1 && fields[fieldNumber].getCardAmount() > 1 || maxAmount == 1) {
-            harvestValidField(fieldNumber);
-        } else {
-            throw new IllegalMoveException("Field cannot be harvested.");
-        }
+        phase.harvest(this, fieldNumber);
     }
 
     public void tradeCards(List<Card> send, List<Card> receive) {
@@ -61,11 +45,12 @@ public class Player {
 
     /**
      * Player tries to draw three cards from a given pile. The cards will be added at the bottom of the hand pile.
-     * If there is not enough cards left, the game ends.
+     * The state of the player will change to PhaseOut. If there is not enough cards left, the game ends.
      * @param pile the given pile
      */
-    public void drawCards(Pile pile) {
-        IntStream.range(0, 3).forEach(i -> {hand.addCard(pile.drawCard());});
+    public void drawCards(Pile pile) throws IllegalMoveException {
+        phase.drawCards(this, pile);
+        this.phase = new PhaseOut();
     }
 
     public void buyThirdField(List<Card> payedCoins) {
@@ -74,6 +59,10 @@ public class Player {
 
     public Field getField(int index) {
         return fields[index];
+    }
+
+    public Field[] getFields() {
+        return fields;
     }
 
     public Hand getHand() {
@@ -88,14 +77,15 @@ public class Player {
         return coins.size();
     }
 
+    public List<Card> getCoins() {
+        return coins;
+    }
 
-    private void harvestValidField(int fieldNumber) throws IllegalMoveException {
-        Card cardType = fields[fieldNumber].getCardType();
-        int currentAmount = fields[fieldNumber].getCardAmount();
-        int coinAmount = fields[fieldNumber].harvest();
-        IntStream.range(0, coinAmount).forEach(i -> {coins.add(cardType);});
-        IntStream.range(0, currentAmount-coinAmount).forEach(i -> {
-            // TODO: add to discard pile
-        });
+    public void setPhase(Phase phase) {
+        this.phase = phase;
+    }
+
+    public List<Card> getTradedCards(List<Card> tradedCards) {
+        return tradedCards;
     }
 }

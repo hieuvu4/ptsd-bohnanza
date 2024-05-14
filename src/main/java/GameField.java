@@ -7,7 +7,7 @@ public class GameField {
     private Player turnPlayer;
 
     public GameField() {
-        this.pile = null;
+        this.pile = new Pile();
         players = null;
         tradingArea = null;
     }
