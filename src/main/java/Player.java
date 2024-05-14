@@ -7,12 +7,16 @@ public class Player {
     private final List<Card> tradedCards;
     private final List<Card> coins;
     private Phase phase;
+    private boolean planted = false;
+    private boolean traded = false;
+    private boolean drawn = false;
 
     public Player() {
         this.hand = new Hand();
         this.fields = new Field[2];
-        tradedCards = null;
+        tradedCards = new ArrayList<>();
         coins = new ArrayList<>();
+        phase = new PhaseOut();
 
         for(int i = 0; i < 2; i++) fields[i] = new Field();
     }
@@ -23,8 +27,9 @@ public class Player {
      * @param field the given field where the card should be planted on
      * @throws IllegalMoveException if the given field is not empty
      */
-    public void plant(int field) throws IllegalMoveException {
-        phase.plant(this, field);
+    public void plant(int field, Card card) throws IllegalMoveException {
+        phase.plant(this, field, card);
+        planted = true;
     }
 
     /**
@@ -39,21 +44,24 @@ public class Player {
         phase.harvest(this, fieldNumber);
     }
 
-    public void tradeCards(List<Card> send, List<Card> receive) {
-
+    public void tradeCards(List<Card> send, List<Card> receive) throws IllegalMoveException {
+        phase.tradeCards(this, send, receive);
+        traded = true;
     }
 
     /**
-     * Player tries to draw three cards from a given pile. The cards will be added at the bottom of the hand pile.
-     * The state of the player will change to PhaseOut. If there is not enough cards left, the game ends.
+     * Player tries to draw three cards from a given pile. This move is only possible in phase 4. The cards will be
+     * added at the bottom of the hand pile. The state of the player will change from phase 4 to PhaseOut. If there are
+     * not enough cards left, the game ends.
      * @param pile the given pile
      */
     public void drawCards(Pile pile) throws IllegalMoveException {
         phase.drawCards(this, pile);
-        this.phase = new PhaseOut();
+        drawn = true;
     }
 
-    public void buyThirdField(List<Card> payedCoins) {
+    public void buyThirdField() throws IllegalMoveException {
+        if(coins.size() < 3) throw new IllegalMoveException("Not enough coins to buy a third field.");
 
     }
 
@@ -85,7 +93,34 @@ public class Player {
         this.phase = phase;
     }
 
-    public List<Card> getTradedCards(List<Card> tradedCards) {
+    public List<Card> getTradedCards() {
         return tradedCards;
+    }
+
+    public void nextPhase() throws IllegalMoveException {
+        switch(phase.getClass().getSimpleName()) {
+            case "Phase1":
+                if (!(hand.getHandPile().isEmpty() || planted))
+                    throw new IllegalMoveException("A card from the hand pile should be planted.");
+                planted = false;
+                phase = new Phase2();
+                break;
+            case "Phase2":
+                if(!traded) throw new IllegalMoveException();
+                phase = new Phase3();
+                traded = false;
+                break;
+            case "Phase3":
+                if (!tradedCards.isEmpty()) throw new IllegalMoveException("Traded cards should be planted.");
+                phase = new Phase4();
+                break;
+            case "Phase4":
+                if (!drawn) throw new IllegalMoveException("Player should have draw cards.");
+                drawn = false;
+                phase = new PhaseOut();
+                break;
+            default:
+                break;
+        }
     }
 }

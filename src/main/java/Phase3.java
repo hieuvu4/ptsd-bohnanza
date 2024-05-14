@@ -1,24 +1,17 @@
-import java.util.List;
-
-public class Phase3 implements Phase {
+public class Phase3 extends Phase {
 
     @Override
-    public void plant(Player player, int field) {
+    public void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
+        if (player.getTradedCards().isEmpty())
+            throw new IllegalMoveException("There are no traded cards in this player.");
+        if (!player.getTradedCards().contains(card))
+            throw new IllegalMoveException("There is no such card in traded cards in this player.");
 
-    }
-
-    @Override
-    public void harvest(Player player, int fieldNumber) {
-
-    }
-
-    @Override
-    public void tradeCardes(Player player, List<Card> send, List<Card> receive) throws IllegalMoveException {
-        throw new IllegalMoveException("Unable to perform this action in the current phase.");
-    }
-
-    @Override
-    public void drawCards(Player player, Pile pile) throws IllegalMoveException {
-        throw new IllegalMoveException("Unable to perform this action in the current phase.");
+        Field currentField = player.getField(fieldNumber);
+        if(currentField.getCardType() == card || currentField.isEmpty()) {
+            currentField.setCardType(card);
+            currentField.addCardToField();
+            player.getTradedCards().remove(card);
+        }
     }
 }
