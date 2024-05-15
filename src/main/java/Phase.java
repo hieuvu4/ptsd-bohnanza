@@ -12,8 +12,8 @@ public abstract class Phase {
         Field field = player.getField(fieldNumber);
 
         // check if any field is null
-        if (Arrays.stream(player.getFields()).anyMatch(Objects::isNull))
-            throw new IllegalMoveException("Field cannot be harvested because a field is empty.");
+        for (Field f: player.getFields())
+            if (f.isEmpty()) throw new IllegalMoveException("Field cannot be harvested because a field is empty.");
 
         int maxAmount = Arrays.stream(player.getFields()).mapToInt(Field::getCardAmount).max().orElse(0);
         if (maxAmount > 1 && field.getCardAmount() > 1 || maxAmount == 1) {
