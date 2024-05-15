@@ -13,7 +13,7 @@ public class Field {
         return cardType;
     }
 
-    public void setCardType(Card card) {
+    public void setCardType(final Card card) {
         this.cardType = card;
     }
 
@@ -43,10 +43,10 @@ public class Field {
      * @throws  IllegalMoveException if the field is empty
      */
     public int harvest() throws IllegalMoveException {
-        if(isEmpty()) throw new IllegalMoveException("Field can't be harvest because field is empty.");
+        if(isEmpty()) throw new IllegalMoveException("Field can't be harvested because field is empty.");
         int coins = cardType.getCoinValue(cardAmount);
         cardType = null;
         cardAmount = 0;
         return coins;
-    }
+    } // Kann ich irgendwie auch erstmal nur diese Zeile committen/pushen?
 }
