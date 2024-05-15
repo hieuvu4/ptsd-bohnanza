@@ -48,5 +48,5 @@ public class Field {
         cardType = null;
         cardAmount = 0;
         return coins;
-    } // Kann ich irgendwie auch erstmal nur diese Zeile committen/pushen?
+    }
 }
