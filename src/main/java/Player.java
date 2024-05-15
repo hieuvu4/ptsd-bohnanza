@@ -10,6 +10,7 @@ public class Player {
     private boolean planted = false;
     private boolean traded = false;
     private boolean drawn = false;
+    private boolean bought = false;
 
     public Player() {
         this.hand = new Hand();
@@ -61,8 +62,9 @@ public class Player {
     }
 
     public void buyThirdField() throws IllegalMoveException {
+        if(bought) throw new IllegalMoveException("Already bought a field.");
         if(coins.size() < 3) throw new IllegalMoveException("Not enough coins to buy a third field.");
-
+        bought = true;
     }
 
     public Field getField(int index) {
@@ -97,24 +99,28 @@ public class Player {
         return tradedCards;
     }
 
+    public boolean getDrawn() {
+        return drawn;
+    }
+
     public void nextPhase() throws IllegalMoveException {
-        switch(phase.getClass().getSimpleName()) {
-            case "Phase1":
+        switch(phase) {
+            case Phase1 p1:
                 if (!(hand.getHandPile().isEmpty() || planted))
                     throw new IllegalMoveException("A card from the hand pile should be planted.");
                 planted = false;
                 phase = new Phase2();
                 break;
-            case "Phase2":
+            case Phase2 p2:
                 if(!traded) throw new IllegalMoveException();
                 phase = new Phase3();
                 traded = false;
                 break;
-            case "Phase3":
+            case Phase3 p3:
                 if (!tradedCards.isEmpty()) throw new IllegalMoveException("Traded cards should be planted.");
                 phase = new Phase4();
                 break;
-            case "Phase4":
+            case Phase4 p4:
                 if (!drawn) throw new IllegalMoveException("Player should have draw cards.");
                 drawn = false;
                 phase = new PhaseOut();

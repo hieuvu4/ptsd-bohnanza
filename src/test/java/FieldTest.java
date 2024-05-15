@@ -20,16 +20,16 @@ public class FieldTest {
     }
 
     @Test
-    public void testAddCardToFieldOne() {
-        field.addCardToField();
+    public void testIncreaseCardAmountOne() {
+        field.increaseCardAmount();
 
         Assertions.assertEquals(1, field.getCardAmount());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {2, 4, 6, 12})
-    public void testAddCardToFieldMoreThanOne(int amount) {
-        IntStream.range(0, amount).forEach(i -> field.addCardToField());
+    public void testIncreaseCardAmountMoreThanOne(int amount) {
+        IntStream.range(0, amount).forEach(i -> field.increaseCardAmount());
 
         Assertions.assertEquals(amount, field.getCardAmount());
     }
@@ -51,7 +51,7 @@ public class FieldTest {
     @Test
     public void testHarvest() throws IllegalMoveException {
         field.setCardType(card);
-        IntStream.range(0, 4).forEach(i -> field.addCardToField());
+        IntStream.range(0, 4).forEach(i -> field.increaseCardAmount());
         int result = field.harvest();
 
         Assertions.assertEquals(3, result);

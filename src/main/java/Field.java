@@ -24,7 +24,7 @@ public class Field {
     /**
      * Adds a card to this field and increases the card amount by 1.
      */
-    public void addCardToField() {
+    public void increaseCardAmount() {
         cardAmount++;
     }
 

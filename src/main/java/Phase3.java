@@ -10,7 +10,7 @@ public class Phase3 extends Phase {
         Field currentField = player.getField(fieldNumber);
         if(currentField.getCardType() == card || currentField.isEmpty()) {
             currentField.setCardType(card);
-            currentField.addCardToField();
+            currentField.increaseCardAmount();
             player.getTradedCards().remove(card);
         }
     }

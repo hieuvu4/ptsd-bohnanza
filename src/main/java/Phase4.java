@@ -1,8 +1,8 @@
 public class Phase4 extends Phase {
 
     @Override
-    public void harvest(Player player, int fieldNumber) throws IllegalMoveException {
-        throw new IllegalMoveException("Unable to perform this action in the current phase.");
+    public void drawCards(Player player, Pile pile) throws IllegalMoveException {
+        if(player.getDrawn()) throw new IllegalMoveException("Player already drawn three cards.");
+        for(int i = 0; i < 3; i++) player.getHand().addCard(pile.drawCard());
     }
-
 }
