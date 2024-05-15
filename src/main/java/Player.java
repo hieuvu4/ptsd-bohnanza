@@ -27,7 +27,7 @@ public class Player {
      * @param field the given field where the card should be planted on
      * @throws IllegalMoveException if the given field is not empty
      */
-    public void plant(int field, Card card) throws IllegalMoveException {
+    public void plant(final int field, final Card card) throws IllegalMoveException {
         phase.plant(this, field, card);
         planted = true;
     }
@@ -40,11 +40,11 @@ public class Player {
      * @param fieldNumber indicates which field to harvest
      * @throws IllegalMoveException if player violates the game rule
      */
-    public void harvest(int fieldNumber) throws IllegalMoveException {
+    public void harvest(final int fieldNumber) throws IllegalMoveException {
         phase.harvest(this, fieldNumber);
     }
 
-    public void tradeCards(List<Card> send, List<Card> receive) throws IllegalMoveException {
+    public void tradeCards(final List<Card> send, final List<Card> receive) throws IllegalMoveException {
         phase.tradeCards(this, send, receive);
         traded = true;
     }
@@ -55,7 +55,7 @@ public class Player {
      * not enough cards left, the game ends.
      * @param pile the given pile
      */
-    public void drawCards(Pile pile) throws IllegalMoveException {
+    public void drawCards(final Pile pile) throws IllegalMoveException {
         phase.drawCards(this, pile);
         drawn = true;
     }
@@ -65,7 +65,7 @@ public class Player {
 
     }
 
-    public Field getField(int index) {
+    public Field getField(final int index) {
         return fields[index];
     }
 
@@ -89,7 +89,7 @@ public class Player {
         return coins;
     }
 
-    public void setPhase(Phase phase) {
+    public void setPhase(final Phase phase) {
         this.phase = phase;
     }
 

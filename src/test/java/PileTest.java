@@ -28,7 +28,7 @@ public class PileTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 3, 4, 5})
-    public void drawCardMoreThanOne(int amount) {
+    public void drawCardMoreThanOne(final int amount) {
         int amountCardsBeforeDraw = pile.getCards().size();
         Card card = pile.getCards().get(amount);
         IntStream.range(0, amount).forEach(i -> pile.drawCard());

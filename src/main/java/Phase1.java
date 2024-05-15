@@ -1,7 +1,7 @@
 public class Phase1 extends Phase {
 
     @Override
-    public void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
+    public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
         if (card != player.getHand().popTopCard())
             throw new IllegalMoveException("The given card is not the first card.");
 

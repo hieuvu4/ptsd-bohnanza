@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public abstract class Phase {
 
-    public void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
+    public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
         throw new IllegalMoveException("Unable to perform this action in the current phase.");
     }
 
-    public void harvest(Player player, int fieldNumber) throws IllegalMoveException {
+    public void harvest(final Player player, final int fieldNumber) throws IllegalMoveException {
         Field field = player.getField(fieldNumber);
 
         // check if any field is null
@@ -23,15 +23,15 @@ public abstract class Phase {
         }
     }
 
-     public void tradeCards(Player player, List<Card> send, List<Card> receive) throws IllegalMoveException {
+     public void tradeCards(final Player player, final List<Card> send, final List<Card> receive) throws IllegalMoveException {
          throw new IllegalMoveException("Unable to perform this action in the current phase.");
      }
 
-    public void drawCards(Player player, Pile pile) throws IllegalMoveException {
+    public void drawCards(final Player player, Pile pile) throws IllegalMoveException {
         throw new IllegalMoveException("Unable to perform this action in the current phase.");
     }
 
-    private void harvestValidField(Player player, Field field) throws IllegalMoveException {
+    private void harvestValidField(final Player player, final Field field) throws IllegalMoveException {
         Card cardType = field.getCardType();
         int currentAmount = field.getCardAmount();
         int coinAmount = field.harvest();

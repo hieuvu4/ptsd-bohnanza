@@ -44,11 +44,11 @@ public class Pile {
         return drawedCard;
     }
 
-    public void discardCard(Card card){
+    public void discardCard(final Card card){
         discardCard(card, 1);
     }
 
-    public void discardCard(Card card, int count){
+    public void discardCard(final Card card, int count){
 
     }
 

@@ -25,7 +25,7 @@ public class PlayerTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 4, 6, 12})
-    public void testPlantMoreThanOne(int amount) throws IllegalMoveException {
+    public void testPlantMoreThanOne(final int amount) throws IllegalMoveException {
     }
 
     @Test
@@ -50,7 +50,7 @@ public class PlayerTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 4, 6})
-    public void testDrawCards(int amount) throws IllegalMoveException {
+    public void testDrawCards(final int amount) throws IllegalMoveException {
     }
 
     @Test

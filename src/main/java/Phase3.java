@@ -1,7 +1,7 @@
 public class Phase3 extends Phase {
 
     @Override
-    public void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
+    public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
         if (player.getTradedCards().isEmpty())
             throw new IllegalMoveException("There are no traded cards in this player.");
         if (!player.getTradedCards().contains(card))

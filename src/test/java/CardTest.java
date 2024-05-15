@@ -13,7 +13,7 @@ public class CardTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1, -2, -4})
-    public void testGetCoinValueBelowOne(int amount) {
+    public void testGetCoinValueBelowOne(final int amount) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> Card.AUGENBOHNE.getCoinValue(amount));
     }
 }

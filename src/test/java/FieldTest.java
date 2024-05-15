@@ -28,7 +28,7 @@ public class FieldTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 4, 6, 12})
-    public void testAddCardToFieldMoreThanOne(int amount) {
+    public void testAddCardToFieldMoreThanOne(final int amount) {
         IntStream.range(0, amount).forEach(i -> field.addCardToField());
 
         Assertions.assertEquals(amount, field.getCardAmount());
