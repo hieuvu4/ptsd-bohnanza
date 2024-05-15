@@ -20,7 +20,7 @@ public enum Card {
     private final int[] coins;
     private final int overallAmount;
 
-    Card(String name, int[] numberNeedToHarvest, int[] coins, int overallAmount) {
+    Card(final String name, final int[] numberNeedToHarvest, final int[] coins, final int overallAmount) {
         this.name = name;
         this.numberNeedToHarvest = numberNeedToHarvest;
         this.coins = coins;
@@ -52,7 +52,7 @@ public enum Card {
      * @param   amountOfCards the specific amount of cards
      * @return  the value of the specific amount of cards
      */
-    public int getCoinValue(int amountOfCards){
+    public int getCoinValue(final int amountOfCards){
         if(amountOfCards < 1) throw new IllegalArgumentException("Count must be greater than zero.");
         for(int i = numberNeedToHarvest.length-1; i >= 0; i--){
             if(numberNeedToHarvest[i] <= amountOfCards) return coins[i];

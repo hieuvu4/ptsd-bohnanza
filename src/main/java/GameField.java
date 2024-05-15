@@ -16,6 +16,9 @@ public class GameField {
         
     }
 
+    // Darf man im trade die Karten noch aendern?
+    // Oder sind die einmal festgesetzt, welche man tauschen will
+    // Je nachdem, wie der Trade funktioniert, die Methode mit final-Param anpassen
     public void trade(List<Card> send, List<Card> receive, Player other) {
 
     }

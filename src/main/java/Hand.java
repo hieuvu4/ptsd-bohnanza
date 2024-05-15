@@ -25,7 +25,7 @@ public class Hand {
      * Adds a card to the bottom of the hand pile.
      * @param card the card that is going to be added
      */
-    public void addCard(Card card) {
+    public void addCard(final Card card) {
         handPile.add(card);
     }
 
@@ -33,7 +33,7 @@ public class Hand {
      * Removes a card from the hand pile with a specific index.
      * @param index the index of the card that is going to be removed
      */
-    public void removeCard(int index) {
+    public void removeCard(final int index) {
         handPile.remove(index);
     }
 }
