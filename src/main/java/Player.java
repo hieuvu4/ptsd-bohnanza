@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
-public class Player {
+public class Player extends Observable {
+    private final String name;
     private final Hand hand;
     private Field[] fields;
     private final List<Card> tradedCards;
@@ -12,7 +14,8 @@ public class Player {
     private boolean drawn = false;
     private boolean bought = false;
 
-    public Player() {
+    public Player(String name) {
+        this.name = name;
         this.hand = new Hand();
         this.fields = new Field[2];
         tradedCards = new ArrayList<>();
@@ -25,11 +28,11 @@ public class Player {
     /**
      * Player plants a card to the specified field. If the field is not empty, an IllegalMoveException will be
      * thrown.
-     * @param field the given field where the card should be planted on
+     * @param fieldNumber the given field where the card should be planted on
      * @throws IllegalMoveException if the given field is not empty
      */
-    public void plant(final int field, final Card card) throws IllegalMoveException {
-        phase.plant(this, field, card);
+    public void plant(final int fieldNumber, final Card card) throws IllegalMoveException {
+        phase.plant(this, fieldNumber, card);
         planted = true;
     }
 
@@ -103,6 +106,18 @@ public class Player {
         return drawn;
     }
 
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Brings the player to the next Phase if certain conditions are fulfilled.
+     * @throws IllegalMoveException if the conditions are not fulfilled
+     */
     public void nextPhase() throws IllegalMoveException {
         switch(phase) {
             case Phase1 p1:
@@ -110,23 +125,31 @@ public class Player {
                     throw new IllegalMoveException("A card from the hand pile should be planted.");
                 planted = false;
                 phase = new Phase2();
+                setChanged();
+                notifyObservers(phase);
                 break;
             case Phase2 p2:
-                if(!traded) throw new IllegalMoveException();
-                phase = new Phase3();
+                if(!traded) throw new IllegalMoveException("Trading is not finished yet.");
                 traded = false;
+                phase = new Phase3();
+                setChanged();
+                notifyObservers(phase);
                 break;
             case Phase3 p3:
                 if (!tradedCards.isEmpty()) throw new IllegalMoveException("Traded cards should be planted.");
                 phase = new Phase4();
+                setChanged();
+                notifyObservers(phase);
                 break;
             case Phase4 p4:
                 if (!drawn) throw new IllegalMoveException("Player should have draw cards.");
                 drawn = false;
                 phase = new PhaseOut();
+                setChanged();
+                notifyObservers(phase);
                 break;
             default:
-                break;
+                throw new IllegalMoveException("Unable to perform this action in the current phase.");
         }
     }
 }

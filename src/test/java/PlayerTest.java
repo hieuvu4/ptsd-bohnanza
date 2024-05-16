@@ -13,7 +13,7 @@ public class PlayerTest {
 
     @BeforeEach
     public void setUp() {
-        player = new Player();
+        player = new Player("Test");
         pile = new Pile();
     }
 
