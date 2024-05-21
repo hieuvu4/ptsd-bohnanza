@@ -65,8 +65,8 @@ public class Player extends Observable {
     }
 
     public void buyThirdField() throws IllegalMoveException {
-        if(bought) throw new IllegalMoveException("Already bought a field.");
-        if(coins.size() < 3) throw new IllegalMoveException("Not enough coins to buy a third field.");
+        if(bought) throw new IllegalMoveException("Player " + this.getName() + ": Already bought a field.");
+        if(coins.size() < 3) throw new IllegalMoveException("Player " + this.getName() + ": Not enough coins to buy a third field.");
         bought = true;
     }
 
@@ -122,34 +122,34 @@ public class Player extends Observable {
         switch(phase) {
             case Phase1 p1:
                 if (!(hand.getHandPile().isEmpty() || planted))
-                    throw new IllegalMoveException("A card from the hand pile should be planted.");
+                    throw new IllegalMoveException("Player " + this.name + ": A card from the hand pile should be planted.");
                 planted = false;
                 phase = new Phase2();
                 setChanged();
                 notifyObservers(phase);
                 break;
             case Phase2 p2:
-                if(!traded) throw new IllegalMoveException("Trading is not finished yet.");
+                if(!traded) throw new IllegalMoveException("Player " + this.name + ": Trading is not finished yet.");
                 traded = false;
                 phase = new Phase3();
                 setChanged();
                 notifyObservers(phase);
                 break;
             case Phase3 p3:
-                if (!tradedCards.isEmpty()) throw new IllegalMoveException("Traded cards should be planted.");
+                if (!tradedCards.isEmpty()) throw new IllegalMoveException("Player " + this.name + ": Traded cards should be planted.");
                 phase = new Phase4();
                 setChanged();
                 notifyObservers(phase);
                 break;
             case Phase4 p4:
-                if (!drawn) throw new IllegalMoveException("Player should have draw cards.");
+                if (!drawn) throw new IllegalMoveException("Player " + this.name + ": Player should have draw cards.");
                 drawn = false;
                 phase = new PhaseOut();
                 setChanged();
                 notifyObservers(phase);
                 break;
             default:
-                throw new IllegalMoveException("Unable to perform this action in the current phase.");
+                throw new IllegalMoveException("Player " + this.name + ": Unable to perform this action in the current phase.");
         }
     }
 }

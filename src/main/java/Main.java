@@ -26,9 +26,19 @@ public class Main {
 
         nextPhaseOf(player1); // 2
 
-        player1.tradeCards(null, null);
+        showTradingArea(gameField);
 
         nextPhaseOf(player1); // 3
+
+        showTradedCards(player1);
+
+        player1.harvest(0);
+        player1.plant(0, player1.getTradedCards().getFirst());
+
+        player1.harvest(1);
+        player1.plant(1, player1.getTradedCards().getFirst());
+
+        getFieldsOf(player1);
 
         nextPhaseOf(player1); // 4
 
@@ -50,9 +60,19 @@ public class Main {
 
         nextPhaseOf(player2); // 2
 
-        player2.tradeCards(null, null);
+        showTradingArea(gameField);
 
         nextPhaseOf(player2); // 3
+
+        showTradedCards(player2);
+
+        player2.harvest(0);
+        player2.plant(0, player2.getTradedCards().getFirst());
+
+        player2.harvest(1);
+        player2.plant(1, player2.getTradedCards().getFirst());
+
+        getFieldsOf(player2);
 
         nextPhaseOf(player2); // 4
 
@@ -74,9 +94,19 @@ public class Main {
 
         nextPhaseOf(player3); // 2
 
-        player3.tradeCards(null, null);
+        showTradingArea(gameField);
 
         nextPhaseOf(player3); // 3
+
+        showTradedCards(player3);
+
+        player3.harvest(0);
+        player3.plant(0, player3.getTradedCards().getFirst());
+
+        player3.harvest(1);
+        player3.plant(1, player3.getTradedCards().getFirst());
+
+        getFieldsOf(player3);
 
         nextPhaseOf(player3); // 4
 
@@ -113,5 +143,15 @@ public class Main {
     private static void line() {
         System.out.println("------------------------------");
         System.out.println();
+    }
+
+    private static void showTradingArea(GameField gamefield) {
+        System.out.println("TradingArea 1: " + gamefield.getTradingArea()[0]);
+        System.out.println("TradingArea 2: " + gamefield.getTradingArea()[1]);
+        System.out.println();
+    }
+
+    private static void showTradedCards(Player player) {
+        System.out.println("TradedCards: " + player.getTradedCards());
     }
 }

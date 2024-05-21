@@ -24,7 +24,7 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
             player.plant(0, Card.AUGENBOHNE);
         });
-        Assertions.assertEquals("There are no cards in the hand.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": There are no cards in the hand.", exception.getMessage());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.plant(0, Card.BLAUE_BOHNE);
         });
-        Assertions.assertEquals("The given card is not the first card.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": The given card is not the first card.", exception.getMessage());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PlayerTest {
         });
         Assertions.assertEquals(Card.AUGENBOHNE, player.getField(0).getCardType());
         Assertions.assertEquals(1, player.getField(0).getCardAmount());
-        Assertions.assertEquals("The given card type is not the same.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": The given card type is not the same.", exception.getMessage());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class PlayerTest {
             Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
                 player.plant(0, Card.AUGENBOHNE);
             });
-            Assertions.assertEquals("Unable to perform this action in the current phase.", exception.getMessage());
+            Assertions.assertEquals("Player " + player.getName() + ": Unable to perform this action in the current phase.", exception.getMessage());
         }
     }
 
@@ -102,7 +102,7 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
-        Assertions.assertEquals("Field cannot be harvested because a field is empty.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Field cannot be harvested because a field is empty.", exception.getMessage());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
-        Assertions.assertEquals("Field cannot be harvested because a field is empty.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Field cannot be harvested because a field is empty.", exception.getMessage());
     }
 
     @Test
@@ -162,7 +162,7 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
-        Assertions.assertEquals("Field cannot be harvested.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Field cannot be harvested.", exception.getMessage());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class PlayerTest {
             player.drawCards(pile);
         });
 
-        Assertions.assertEquals("Player already drawn three cards.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Already drawn three cards.", exception.getMessage());
     }
 
     @Test
@@ -195,7 +195,7 @@ public class PlayerTest {
                 player.drawCards(pile);
             });
 
-            Assertions.assertEquals("Unable to perform this action in the current phase.",
+            Assertions.assertEquals("Player " + player.getName() + ": Unable to perform this action in the current phase.",
                     exception.getMessage());
         }
     }
@@ -217,7 +217,7 @@ public class PlayerTest {
         });
 
         Assertions.assertEquals(2, player.getFields().length);
-        Assertions.assertEquals("Not enough coins to buy a third field.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Not enough coins to buy a third field.", exception.getMessage());
     }
 
     @Test
@@ -230,7 +230,7 @@ public class PlayerTest {
         });
 
         Assertions.assertEquals(3, player.getFields().length);
-        Assertions.assertEquals("Already bought a field.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Already bought a field.", exception.getMessage());
     }
 
     @Test
