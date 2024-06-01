@@ -36,5 +36,13 @@ public class Hand {
     public void removeCard(final int index) {
         handPile.remove(index);
     }
+
+    /**
+     * Removes a specific card from the hand pile.
+     * @param card the card that should be removed
+     */
+    public void removeCard(final Card card) {
+        handPile.remove(card);
+    }
 }
 

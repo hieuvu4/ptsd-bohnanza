@@ -44,15 +44,11 @@ public class Pile {
         return drawedCard;
     }
 
-    public void discardCard(final Card card){
-        discardCard(card, 1);
-    }
-
-    public void discardCard(final Card card, int count){
-
-    }
-
     public List<Card> getCards() {
         return cards;
+    }
+
+    public List<Card> getDiscardPile() {
+        return discardPile;
     }
 }

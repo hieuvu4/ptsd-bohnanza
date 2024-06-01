@@ -19,7 +19,7 @@ public abstract class Phase {
     /**
      * Player can harvest any field any time. If the player violates the rule of harvesting, an IllegalMoveException
      * will be thrown
-     * @param player the given player
+     * @param player the player who tries to harvest
      * @param fieldNumber the index of the field
      * @throws IllegalMoveException if the player violates the rule
      */
@@ -39,8 +39,52 @@ public abstract class Phase {
         }
     }
 
-     public void tradeCards(final Player player, final List<Card> send, final List<Card> receive)
+    /**
+     * Player can check if there are any offers from other players. Player can only do it in phase 2, else an
+     * IllegalMoveException will be thrown.
+     * @param player the player who tries to check
+     * @throws IllegalMoveException if wrong phase
+     */
+     public void checkOffers(final Player player) throws IllegalMoveException {
+         throw new IllegalMoveException("Player " + player.getName()
+                 + ": Unable to perform this action in the current phase.");
+     }
+
+    /**
+     * Player can offer cards for getting a specific trading card. Only Player who are in Phase Out can perform this,
+     * else an IllegalMoveException will be thrown.
+     * @param player the player who wants to offer
+     * @param cards exchange cards for the trading card
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+     public void offerCards(final Player player, final List<Card> cards, int tradingCardFieldNumber)
              throws IllegalMoveException {
+         throw new IllegalMoveException("Player " + player.getName()
+                 + ": Unable to perform this action in the current phase.");
+     }
+
+    /**
+     * Player can accept an offer of another player in exchange for a trading card. Player can only perform this in
+     * phase 2, else an IllegalMoveException will be thrown.
+     * @param player the player who wants to accept an offer
+     * @param other the player who offered the card in exchange for the trading card
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+     public void acceptOffer(final Player player, final Player other, int tradingCardFieldNumber)
+             throws IllegalMoveException {
+         throw new IllegalMoveException("Player " + player.getName()
+                 + ": Unable to perform this action in the current phase.");
+     }
+
+    /**
+     * Player can take the trading card in phase 2, if that is not the case, an IllegalMoveException will be thrown.
+     * @param player the player who takes the trading card
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+     public void takeTradingCard(final Player player, int tradingCardFieldNumber) throws IllegalMoveException {
          throw new IllegalMoveException("Player " + player.getName()
                  + ": Unable to perform this action in the current phase.");
      }
@@ -61,8 +105,7 @@ public abstract class Phase {
         int currentAmount = field.getCardAmount();
         int coinAmount = field.harvest();
         for (int i = 0; i < coinAmount; i++) player.getCoins().add(cardType);
-        for (int i = 0; i < currentAmount-coinAmount; i++) {
-            // TODO: add to discard pile
-        }
+        for (int i = 0; i < currentAmount-coinAmount; i++)
+            player.getGameField().getPile().getDiscardPile().add(cardType);
     }
 }

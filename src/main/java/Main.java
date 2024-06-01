@@ -1,8 +1,11 @@
+import java.util.Arrays;
+
 public class Main {
 
     public static void main(String[] args) throws IllegalMoveException {
 
         GameField gameField = new GameField(3);
+        Pile pile = gameField.getPile();
 
         Player player1 = gameField.getPlayers().get(0);
         Player player2 = gameField.getPlayers().get(1);
@@ -11,147 +14,137 @@ public class Main {
         System.out.println();
 
         line();
-
-        getHandPileOf(player1);
-        getHandPileOf(player2);
-        getHandPileOf(player3);
-
+        handPile(player1);
+        handPile(player2);
+        handPile(player3);
         line();
 
-        player1.plant(0, player1.getHand().popTopCard());
-        player1.plant(1, player1.getHand().popTopCard());
+        plant(player1, 0, player1.getHand().getHandPile().getFirst());
+        plant(player1, 1, player1.getHand().getHandPile().getFirst());
+        getField(player1);
 
-        getHandPileOf(player1);
-        getFieldsOf(player1);
+        nextPhase(player1);
 
-        nextPhaseOf(player1); // 2
+        getTradingArea(gameField);
 
-        showTradingArea(gameField);
+        player1.takeTradingCards(0);
+        player1.takeTradingCards(1);
 
-        nextPhaseOf(player1); // 3
-
-        showTradedCards(player1);
+        nextPhase(player1);
 
         player1.harvest(0);
         player1.plant(0, player1.getTradedCards().getFirst());
-
         player1.harvest(1);
         player1.plant(1, player1.getTradedCards().getFirst());
+        getField(player1);
 
-        getFieldsOf(player1);
+        nextPhase(player1);
 
-        nextPhaseOf(player1); // 4
+        drawCards(player1, pile);
+        handPile(player1);
 
-        getFieldsOf(player1);
+        nextPhase(player1);
 
-        player1.drawCards(gameField.getPile());
-        getHandPileOf(player1);
+        /////////////////////////////////////////////////////////////////////////
 
-        nextPhaseOf(player1); // 5
 
-        ///////////////////////////////////////////////
+        plant(player2, 0, player2.getHand().getHandPile().getFirst());
+        plant(player2, 1, player2.getHand().getHandPile().getFirst());
+        getField(player2);
 
-        player2.plant(0, player2.getHand().popTopCard());
+        nextPhase(player2);
 
-        player2.plant(1, player2.getHand().popTopCard());
+        getTradingArea(gameField);
 
-        getHandPileOf(player2);
-        getFieldsOf(player2);
+        player2.takeTradingCards(0);
+        player2.takeTradingCards(1);
 
-        nextPhaseOf(player2); // 2
-
-        showTradingArea(gameField);
-
-        nextPhaseOf(player2); // 3
-
-        showTradedCards(player2);
+        nextPhase(player2);
 
         player2.harvest(0);
         player2.plant(0, player2.getTradedCards().getFirst());
-
         player2.harvest(1);
         player2.plant(1, player2.getTradedCards().getFirst());
+        getField(player2);
 
-        getFieldsOf(player2);
+        nextPhase(player2);
 
-        nextPhaseOf(player2); // 4
+        drawCards(player2, pile);
+        handPile(player2);
 
-        getFieldsOf(player2);
+        nextPhase(player2);
 
-        player2.drawCards(gameField.getPile());
-        getHandPileOf(player2);
+        /////////////////////////////////////////////////////////////////////////
 
-        nextPhaseOf(player2); // 5
+        plant(player3, 0, player3.getHand().getHandPile().getFirst());
+        plant(player3, 1, player3.getHand().getHandPile().getFirst());
+        getField(player3);
 
-        ///////////////////////////////////////////////
+        nextPhase(player3);
 
-        player3.plant(0, player3.getHand().popTopCard());
+        getTradingArea(gameField);
 
-        player3.plant(1, player3.getHand().popTopCard());
+        player3.takeTradingCards(0);
+        player3.takeTradingCards(1);
 
-        getHandPileOf(player3);
-        getFieldsOf(player3);
-
-        nextPhaseOf(player3); // 2
-
-        showTradingArea(gameField);
-
-        nextPhaseOf(player3); // 3
-
-        showTradedCards(player3);
+        nextPhase(player3);
 
         player3.harvest(0);
         player3.plant(0, player3.getTradedCards().getFirst());
-
         player3.harvest(1);
         player3.plant(1, player3.getTradedCards().getFirst());
+        getField(player3);
 
-        getFieldsOf(player3);
+        nextPhase(player3);
 
-        nextPhaseOf(player3); // 4
+        drawCards(player3, pile);
+        handPile(player3);
 
-        getFieldsOf(player3);
+        nextPhase(player3);
 
-        player3.drawCards(gameField.getPile());
-        getHandPileOf(player3);
-
-        nextPhaseOf(player3); // 5
-
+        /////////////////////////////////////////////////////////////////////////
 
     }
 
-    private static void getHandPileOf(Player player) {
-        System.out.println("Hand pile of player " + player.getName());
+    private static void handPile(Player player) {
+        System.out.println("Hand pile of player " + player.getName() + ":");
         System.out.println(player.getHand().getHandPile());
         System.out.println();
     }
 
-    private static void getFieldsOf(Player player) {
-        System.out.println("Fields of Player " + player.getName());
-        System.out.println("Field 1: " + player.getField(0).getCardType() + ", " + player.getField(0).getCardAmount());
-        System.out.println("Field 2: " + player.getField(1).getCardType() + ", " + player.getField(1).getCardAmount());
+    private static void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
+        player.plant(fieldNumber, card);
+        System.out.println("Player " + player.getName() + " planted in field " + fieldNumber + " with card " + card.getName());
         System.out.println();
-    }
-
-    private static void nextPhaseOf(Player player) throws IllegalMoveException {
-        System.out.println("---> Next Phase");
-        System.out.println();
-        player.nextPhase();
-
     }
 
     private static void line() {
-        System.out.println("------------------------------");
+        System.out.println("--------------------------------------");
         System.out.println();
     }
 
-    private static void showTradingArea(GameField gamefield) {
-        System.out.println("TradingArea 1: " + gamefield.getTradingArea()[0]);
-        System.out.println("TradingArea 2: " + gamefield.getTradingArea()[1]);
+    private static void getField(Player player) {
+        System.out.println("Field of player " + player.getName() + ":");
+        System.out.println(player.getField(0).getCardType() + ", " + player.getField(0).getCardAmount());
+        System.out.println(player.getField(1).getCardType() + ", " + player.getField(1).getCardAmount());
         System.out.println();
     }
 
-    private static void showTradedCards(Player player) {
-        System.out.println("TradedCards: " + player.getTradedCards());
+    private static void getTradingArea(GameField gameField) {
+        System.out.println("Trading Area:");
+        System.out.println(Arrays.toString(gameField.getTradingArea().getTradingCards()));
+        System.out.println();
+    }
+
+    private static void nextPhase(Player player) throws IllegalMoveException {
+        System.out.println(">> Next Phase <<");
+        player.nextPhase();
+        System.out.println();
+    }
+
+    private static void drawCards(Player player, Pile pile) throws IllegalMoveException {
+        player.drawCards(pile);
+        System.out.println("Player " + player.getName() + " drawed cards.");
+        System.out.println();
     }
 }
