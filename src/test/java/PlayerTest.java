@@ -5,6 +5,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.mockito.Mockito.mock;
@@ -15,13 +17,16 @@ public class PlayerTest {
     private Player player;
     private Pile pile;
     private GameField gameField;
+    private TradingArea tradingArea;
 
     @BeforeEach
     public void setUp() {
-        gameField = mock(GameField.class);
-        when(gameField.getPile()).thenReturn(new Pile());
-        player = new Player("Test", gameField);
         pile = new Pile();
+        tradingArea = new TradingArea(gameField);
+        gameField = mock(GameField.class);
+        when(gameField.getPile()).thenReturn(pile);
+        when(gameField.getTradingArea()).thenReturn(tradingArea);
+        player = new Player("Test", gameField);
     }
 
     @Test
@@ -31,7 +36,8 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
             player.plant(0, Card.AUGENBOHNE);
         });
-        Assertions.assertEquals("Player " + player.getName() + ": There are no cards in the hand.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": There are no cards in the hand.", exception.getMessage());
     }
 
     @Test
@@ -66,7 +72,8 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.plant(0, Card.BLAUE_BOHNE);
         });
-        Assertions.assertEquals("Player " + player.getName() + ": The given card is not the first card.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": The given card is not the first card.", exception.getMessage());
     }
 
     @Test
@@ -81,7 +88,8 @@ public class PlayerTest {
         });
         Assertions.assertEquals(Card.AUGENBOHNE, player.getField(0).getCardType());
         Assertions.assertEquals(1, player.getField(0).getCardAmount());
-        Assertions.assertEquals("Player " + player.getName() + ": The given card type is not the same.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": The given card type is not the same.", exception.getMessage());
     }
 
     @Test
@@ -94,7 +102,8 @@ public class PlayerTest {
             Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
                 player.plant(0, Card.AUGENBOHNE);
             });
-            Assertions.assertEquals("Player " + player.getName() + ": Unable to perform this action in the current phase.", exception.getMessage());
+            Assertions.assertEquals("Player " + player.getName()
+                    + ": Unable to perform this action in the current phase.", exception.getMessage());
         }
     }
 
@@ -145,7 +154,8 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
-        Assertions.assertEquals("Player " + player.getName() + ": Field cannot be harvested because a field is empty.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": Field cannot be harvested because a field is empty.", exception.getMessage());
     }
 
     @Test
@@ -156,7 +166,8 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
-        Assertions.assertEquals("Player " + player.getName() + ": Field cannot be harvested because a field is empty.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": Field cannot be harvested because a field is empty.", exception.getMessage());
     }
 
     @Test
@@ -205,7 +216,8 @@ public class PlayerTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
-        Assertions.assertEquals("Player " + player.getName() + ": Field cannot be harvested.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": Field cannot be harvested.", exception.getMessage());
     }
 
     @Test
@@ -225,7 +237,8 @@ public class PlayerTest {
             player.drawCards(pile);
         });
 
-        Assertions.assertEquals("Player " + player.getName() + ": Already drawn three cards.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": Already drawn three cards.", exception.getMessage());
     }
 
     @Test
@@ -238,7 +251,8 @@ public class PlayerTest {
                 player.drawCards(pile);
             });
 
-            Assertions.assertEquals("Player " + player.getName() + ": Unable to perform this action in the current phase.",
+            Assertions.assertEquals("Player " + player.getName()
+                            + ": Unable to perform this action in the current phase.",
                     exception.getMessage());
         }
     }
@@ -249,6 +263,7 @@ public class PlayerTest {
         player.buyThirdField();
 
         Assertions.assertEquals(3, player.getFields().length);
+        Assertions.assertEquals(0, player.getCoins().size());
     }
 
     @Test
@@ -260,7 +275,8 @@ public class PlayerTest {
         });
 
         Assertions.assertEquals(2, player.getFields().length);
-        Assertions.assertEquals("Player " + player.getName() + ": Not enough coins to buy a third field.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": Not enough coins to buy a third field.", exception.getMessage());
     }
 
     @Test
@@ -273,6 +289,133 @@ public class PlayerTest {
         });
 
         Assertions.assertEquals(3, player.getFields().length);
-        Assertions.assertEquals("Player " + player.getName() + ": Already bought a field.", exception.getMessage());
+        Assertions.assertEquals("Player " + player.getName() + ": Already bought a field.",
+                exception.getMessage());
+    }
+
+    @Test
+    public void testOfferCardsWrongPhase() {
+        Phase[] phases = {new Phase1(), new Phase2(), new Phase3(), new Phase4()};
+        for (Phase phase : phases) {
+            player.setPhase(phase);
+
+            Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+                player.offerCards(new ArrayList<>(), 0);
+            });
+            Assertions.assertEquals("Player " + player.getName()
+                    + ": Unable to perform this action in the current phase.", exception.getMessage());
+        }
+    }
+
+    @Test
+    public void testOfferCardsWrongCards() {
+        player.setPhase(new PhaseOut());
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.AUGENBOHNE);
+
+        Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            player.offerCards(cards, 0);
+        });
+        Assertions.assertEquals("Player " + player.getName() + " has doesn't have an offered card.",
+                exception.getMessage());
+    }
+
+    @Test
+    public void testOfferCardsNoCards() {
+        player.setPhase(new PhaseOut());
+        List<Card> cards = new ArrayList<>();
+
+        Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            player.offerCards(cards, 0);
+        });
+        Assertions.assertEquals("Player " + player.getName() + " didn't offered any cards.",
+                exception.getMessage());
+    }
+
+    @Test
+    public void testOfferCards() throws IllegalMoveException {
+        player.setPhase(new PhaseOut());
+        player.getHand().addCard(Card.AUGENBOHNE);
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.AUGENBOHNE);
+        player.offerCards(cards, 0);
+
+        Assertions.assertEquals(cards, tradingArea.getOffersForTCard0().get(player));
+    }
+
+    @Test
+    public void testCheckOffersWrongPhase() {
+        Phase[] phases = {new Phase1(), new Phase3(), new Phase4(), new PhaseOut()};
+
+        for (Phase phase : phases) {
+            player.setPhase(phase);
+
+            Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+                player.checkOffers();
+            });
+            Assertions.assertEquals("Player " + player.getName()
+                    + ": Unable to perform this action in the current phase.", exception.getMessage());
+        }
+    }
+
+    @Test
+    public void testAcceptOffersWrongPhase() {
+        Phase[] phases = {new Phase1(), new Phase3(), new Phase4(), new PhaseOut()};
+
+        for (Phase phase : phases) {
+            player.setPhase(phase);
+
+            Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+                player.acceptOffers(new Player("", gameField), 0);
+            });
+            Assertions.assertEquals("Player " + player.getName()
+                    + ": Unable to perform this action in the current phase.", exception.getMessage());
+        }
+    }
+
+    @Test
+    public void testAcceptOffers() throws IllegalMoveException {
+        Player other = new Player("other", gameField);
+        other.setPhase(new PhaseOut());
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            other.getHand().addCard(Card.AUGENBOHNE);
+            cards.add(Card.AUGENBOHNE);
+        }
+        tradingArea.getTradingCards()[0] = Card.BLAUE_BOHNE;
+        other.offerCards(cards, 0);
+
+        player.setPhase(new Phase2());
+        player.acceptOffers(other, 0);
+
+        Assertions.assertEquals(cards, player.getTradedCards());
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList((Card.BLAUE_BOHNE))), other.getTradedCards());
+        Assertions.assertNull(tradingArea.getTradingCards()[0]);
+    }
+
+    @Test
+    public void testTakeTradingCardsWrongPhase() {
+        Phase[] phases = {new Phase1(), new Phase3(), new Phase4(), new PhaseOut()};
+
+        for (Phase phase : phases) {
+            player.setPhase(phase);
+
+            Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+                player.takeTradingCards(0);
+            });
+            Assertions.assertEquals("Player " + player.getName()
+                    + ": Unable to perform this action in the current phase.", exception.getMessage());
+        }
+    }
+
+    @Test
+    public void testTakeTradingCards() throws IllegalMoveException {
+        tradingArea.getTradingCards()[0] = Card.BLAUE_BOHNE;
+
+        player.setPhase(new Phase2());
+        player.takeTradingCards(0);
+
+        Assertions.assertNull(tradingArea.getTradingCards()[0]);
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList((Card.BLAUE_BOHNE))), player.getTradedCards());
     }
 }

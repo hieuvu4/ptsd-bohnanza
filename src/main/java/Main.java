@@ -114,7 +114,8 @@ public class Main {
 
     private static void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
         player.plant(fieldNumber, card);
-        System.out.println("Player " + player.getName() + " planted in field " + fieldNumber + " with card " + card.getName());
+        System.out.println("Player " + player.getName() + " planted in field " + fieldNumber + " with card "
+                + card.getName());
         System.out.println();
     }
 

@@ -7,7 +7,8 @@ public class Phase1 extends Phase {
      * @param player the player who tries to plant
      * @param fieldNumber the index of the field
      * @param card the card which should be planted
-     * @throws IllegalMoveException if hand pile is empty, no such card exists in the hand pile or the field is occupied
+     * @throws IllegalMoveException if hand pile is empty, no such card exists in the hand pile or the field is
+     *  occupied
      */
     @Override
     public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
