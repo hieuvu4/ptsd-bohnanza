@@ -27,15 +27,15 @@ public class Main {
 
         getTradingArea(gameField);
 
-        player1.takeTradingCards(0);
-        player1.takeTradingCards(1);
+        player1.doAction(new TakingTradingCard(player1, 0));
+        player1.doAction(new TakingTradingCard(player1, 1));
 
         nextPhase(player1);
 
-        player1.harvest(0);
-        player1.plant(0, player1.getTradedCards().getFirst());
-        player1.harvest(1);
-        player1.plant(1, player1.getTradedCards().getFirst());
+        player1.doAction(new Harvesting(player1, 0));
+        plant(player1, 0, player1.getTradedCards().getFirst());
+        player1.doAction(new Harvesting(player1, 1));
+        plant(player1, 1, player1.getTradedCards().getFirst());
         getField(player1);
 
         nextPhase(player1);
@@ -47,7 +47,6 @@ public class Main {
 
         /////////////////////////////////////////////////////////////////////////
 
-
         plant(player2, 0, player2.getHand().getHandPile().getFirst());
         plant(player2, 1, player2.getHand().getHandPile().getFirst());
         getField(player2);
@@ -56,15 +55,15 @@ public class Main {
 
         getTradingArea(gameField);
 
-        player2.takeTradingCards(0);
-        player2.takeTradingCards(1);
+        player2.doAction(new TakingTradingCard(player2, 0));
+        player2.doAction(new TakingTradingCard(player2, 1));
 
         nextPhase(player2);
 
-        player2.harvest(0);
-        player2.plant(0, player2.getTradedCards().getFirst());
-        player2.harvest(1);
-        player2.plant(1, player2.getTradedCards().getFirst());
+        player2.doAction(new Harvesting(player2, 0));
+        plant(player2, 0, player2.getTradedCards().getFirst());
+        player2.doAction(new Harvesting(player2, 1));
+        plant(player2, 1, player2.getTradedCards().getFirst());
         getField(player2);
 
         nextPhase(player2);
@@ -73,6 +72,7 @@ public class Main {
         handPile(player2);
 
         nextPhase(player2);
+
 
         /////////////////////////////////////////////////////////////////////////
 
@@ -84,15 +84,15 @@ public class Main {
 
         getTradingArea(gameField);
 
-        player3.takeTradingCards(0);
-        player3.takeTradingCards(1);
+        player3.doAction(new TakingTradingCard(player3, 0));
+        player3.doAction(new TakingTradingCard(player3, 1));
 
         nextPhase(player3);
 
-        player3.harvest(0);
-        player3.plant(0, player3.getTradedCards().getFirst());
-        player3.harvest(1);
-        player3.plant(1, player3.getTradedCards().getFirst());
+        player3.doAction(new Harvesting(player3, 0));
+        plant(player3, 0, player3.getTradedCards().getFirst());
+        player3.doAction(new Harvesting(player3, 1));
+        plant(player3, 1, player3.getTradedCards().getFirst());
         getField(player3);
 
         nextPhase(player3);
@@ -113,7 +113,7 @@ public class Main {
     }
 
     private static void plant(Player player, int fieldNumber, Card card) throws IllegalMoveException {
-        player.plant(fieldNumber, card);
+        player.doAction(new Planting(player, fieldNumber, card));
         System.out.println("Player " + player.getName() + " planted in field " + fieldNumber + " with card "
                 + card.getName());
         System.out.println();
@@ -144,7 +144,7 @@ public class Main {
     }
 
     private static void drawCards(Player player, Pile pile) throws IllegalMoveException {
-        player.drawCards(pile);
+        player.doAction(new Drawing(player, pile));
         System.out.println("Player " + player.getName() + " drawed cards.");
         System.out.println();
     }
