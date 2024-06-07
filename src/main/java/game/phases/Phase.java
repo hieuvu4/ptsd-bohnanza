@@ -1,3 +1,7 @@
+package game.phases;
+
+import game.*;
+
 import java.util.Arrays;
 import java.util.List;
 

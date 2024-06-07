@@ -1,3 +1,5 @@
+package game;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +16,7 @@ public class Hand {
 
     /**
      * Returns the first card of the hand pile.
-     * @return first element of the hand pile
+     * @return  first element of the hand pile
      */
     public Card popTopCard() {
         if (handPile.isEmpty()) throw new NoSuchElementException("Hand pile is empty.");

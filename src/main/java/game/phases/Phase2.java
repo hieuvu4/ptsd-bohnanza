@@ -1,3 +1,9 @@
+package game.phases;
+
+import game.Card;
+import game.Player;
+import game.TradingArea;
+
 import java.util.List;
 import java.util.Map;
 

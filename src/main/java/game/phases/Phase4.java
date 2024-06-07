@@ -1,3 +1,9 @@
+package game.phases;
+
+import game.IllegalMoveException;
+import game.Pile;
+import game.Player;
+
 public class Phase4 extends Phase {
 
     /**

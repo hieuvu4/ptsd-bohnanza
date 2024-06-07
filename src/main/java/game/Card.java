@@ -1,5 +1,6 @@
+package game;
+
 public enum Card {
-    // Extension cards
 //    KAFFEEBOHNE("Kaffeebohne", new int[]{4, 7, 10, 12}, new int[]{1, 2, 3, 4}, 24),
 //    WEINBRANDBOHNE("Weinbrandbohne", new int[]{4, 7, 9, 11}, new int[]{1, 2, 3, 4}, 22),
 //    KAKAOBOHNE("Kakaobohne", new int[]{2, 3, 4}, new int[]{2, 3, 4}, 4),

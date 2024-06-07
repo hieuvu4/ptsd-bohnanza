@@ -1,3 +1,10 @@
+package game.phases;
+
+import game.Card;
+import game.Field;
+import game.IllegalMoveException;
+import game.Player;
+
 public class Phase3 extends Phase {
 
     /**

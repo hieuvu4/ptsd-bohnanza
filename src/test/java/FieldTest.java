@@ -1,3 +1,6 @@
+import game.Card;
+import game.Field;
+import game.IllegalMoveException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

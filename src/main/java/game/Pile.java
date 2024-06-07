@@ -1,3 +1,5 @@
+package game;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,7 @@ public class Pile {
 
         // shuffle cards
         Collections.shuffle(cards);
-//        for(Card card : cards) System.out.println(card.getName());
+//        for(bohnanza.Card card : cards) System.out.println(card.getName());
 
     }
 

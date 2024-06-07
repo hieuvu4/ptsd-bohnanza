@@ -1,3 +1,6 @@
+import game.GameField;
+import game.Pile;
+import game.TradingArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

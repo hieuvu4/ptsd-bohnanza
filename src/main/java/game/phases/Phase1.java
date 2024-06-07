@@ -1,3 +1,10 @@
+package game.phases;
+
+import game.Card;
+import game.Field;
+import game.IllegalMoveException;
+import game.Player;
+
 import java.util.NoSuchElementException;
 
 public class Phase1 extends Phase {
