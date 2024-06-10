@@ -2,8 +2,8 @@ package phases;
 
 import game.*;
 import game.phases.Phase;
-import game.phases.Phase1;
-import game.phases.Phase4;
+import game.phases.PhasePlanting;
+import game.phases.PhaseDrawing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class Phase4Test {
+public class PhaseDrawingTest {
 
     private Player player;
     private Pile pile;
@@ -27,16 +27,16 @@ public class Phase4Test {
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
-        phase = new Phase4();
+        phase = new PhaseDrawing();
         player.setPhase(phase);
     }
 
     @Test
     public void testPlantWrongPhase() {
-        player.getHand().addCard(Card.AUGENBOHNE);
+        player.getHand().addCard(Card.BRECHBOHNE);
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, Card.AUGENBOHNE);
+            player.plant(0, Card.BRECHBOHNE);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -44,7 +44,7 @@ public class Phase4Test {
 
     @Test
     public void testHarvestAllFieldsEmpty() {
-        player.setPhase(new Phase1());
+        player.setPhase(new PhasePlanting());
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
@@ -54,9 +54,9 @@ public class Phase4Test {
 
     @Test
     public void testHarvestOnlyOneFieldPlanted() throws IllegalMoveException {
-        player.setPhase(new Phase1());
-        player.getHand().addCard(Card.AUGENBOHNE);
-        player.plant(0, Card.AUGENBOHNE);
+        player.setPhase(new PhasePlanting());
+        player.getHand().addCard(Card.BRECHBOHNE);
+        player.plant(0, Card.BRECHBOHNE);
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
@@ -73,7 +73,7 @@ public class Phase4Test {
 
     @Test
     public void testDrawCardsTwoTimes() throws IllegalMoveException {
-        player.setPhase(new Phase4());
+        player.setPhase(new PhaseDrawing());
         player.drawCards(pile);
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {

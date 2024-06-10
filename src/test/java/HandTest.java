@@ -22,27 +22,27 @@ public class HandTest {
 
     @Test
     public void testPopTopCardOne() {
-        hand.addCard(Card.AUGENBOHNE);
+        hand.addCard(Card.BRECHBOHNE);
 
         Card card = hand.popTopCard();
 
-        Assertions.assertEquals(Card.AUGENBOHNE, card);
+        Assertions.assertEquals(Card.BRECHBOHNE, card);
     }
 
     @Test
     public void testPopTopCardMoreThanOne() {
-        hand.addCard(Card.AUGENBOHNE);
         hand.addCard(Card.BRECHBOHNE);
-        hand.addCard(Card.ROTE_BOHNE);
+        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(Card.BLAUE_BOHNE);
 
         Card card = hand.popTopCard();
 
-        Assertions.assertEquals(Card.AUGENBOHNE, card);
+        Assertions.assertEquals(Card.BRECHBOHNE, card);
     }
 
     @Test
     public void testAddCardOne() {
-        hand.addCard(Card.AUGENBOHNE);
+        hand.addCard(Card.BRECHBOHNE);
 
         Assertions.assertEquals(1, hand.getHandPile().size());
     }
@@ -50,9 +50,9 @@ public class HandTest {
 
     @Test
     public void testAddCardThree() {
-        hand.addCard(Card.AUGENBOHNE);
         hand.addCard(Card.BRECHBOHNE);
-        hand.addCard(Card.ROTE_BOHNE);
+        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(Card.BLAUE_BOHNE);
 
         Assertions.assertEquals(3, hand.getHandPile().size());
     }
@@ -60,7 +60,7 @@ public class HandTest {
 
     @Test
     public void testRemoveCard() {
-        hand.addCard(Card.GARTENBOHNE);
+        hand.addCard(Card.BLAUE_BOHNE);
         hand.addCard(Card.SAUBOHNE);
         hand.addCard(Card.BRECHBOHNE);
 

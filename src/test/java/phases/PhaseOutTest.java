@@ -35,10 +35,10 @@ public class PhaseOutTest {
 
     @Test
     public void testPlantWrongPhase() {
-        player.getHand().addCard(Card.AUGENBOHNE);
+        player.getHand().addCard(Card.BRECHBOHNE);
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, Card.AUGENBOHNE);
+            player.plant(0, Card.BRECHBOHNE);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -59,7 +59,7 @@ public class PhaseOutTest {
     @Test
     public void testOfferCardsWrongCards() {
         List<Card> cards = new ArrayList<>();
-        cards.add(Card.AUGENBOHNE);
+        cards.add(Card.BRECHBOHNE);
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             player.offerCards(cards, 0);
@@ -82,9 +82,9 @@ public class PhaseOutTest {
     @Test
     public void testOfferCards() throws IllegalMoveException {
         player.setPhase(new PhaseOut());
-        player.getHand().addCard(Card.AUGENBOHNE);
+        player.getHand().addCard(Card.BRECHBOHNE);
         List<Card> cards = new ArrayList<>();
-        cards.add(Card.AUGENBOHNE);
+        cards.add(Card.BRECHBOHNE);
         player.offerCards(cards, 0);
 
         Assertions.assertEquals(cards, tradingArea.getOffersForTCard0().get(player));

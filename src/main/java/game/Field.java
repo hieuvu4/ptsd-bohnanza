@@ -28,12 +28,24 @@ public class Field {
         cardAmount++;
     }
 
+    public void decreaseCardAmount() throws IllegalMoveException {
+        if (cardAmount < 1)
+            throw new IllegalMoveException("Not able to decrease because card amount is " + cardAmount + ".");
+        cardAmount--;
+        if(cardAmount == 0) clear();
+    }
+
     /**
      * Checks if the field is empty.
      * @return  true if field is empty else false
      */
     public boolean isEmpty() {
         return cardType == null && cardAmount == 0;
+    }
+
+    public void clear() {
+        cardType = null;
+        cardAmount = 0;
     }
 
     /**

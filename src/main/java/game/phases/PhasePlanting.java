@@ -7,7 +7,12 @@ import game.Player;
 
 import java.util.NoSuchElementException;
 
-public class Phase1 extends Phase {
+public class PhasePlanting extends Phase {
+
+    public PhasePlanting() {
+        System.out.println("Phase Planting");
+    }
+
     /**
      * Player tries to plant a given card to a certain field. If the field is occupied, the player doesn't have any
      * hand pile or the given card doesn't exist in the hand pile, the method will throw an IllegalMoveException.

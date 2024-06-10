@@ -8,13 +8,13 @@ public class CardTest {
 
     @Test
     public void testGetCoinValue() {
-        Assertions.assertEquals(4, Card.AUGENBOHNE.getCoinValue(6));
-        Assertions.assertEquals(1, Card.AUGENBOHNE.getCoinValue(3));
+        Assertions.assertEquals(4, Card.BRECHBOHNE.getCoinValue(10));
+        Assertions.assertEquals(1, Card.BRECHBOHNE.getCoinValue(4));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1, -2, -4})
     public void testGetCoinValueBelowOne(final int amount) {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Card.AUGENBOHNE.getCoinValue(amount));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Card.BRECHBOHNE.getCoinValue(amount));
     }
 }

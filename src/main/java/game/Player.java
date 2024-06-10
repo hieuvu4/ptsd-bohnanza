@@ -1,5 +1,6 @@
 package game;
 
+import game.mafia.Boss;
 import game.phases.*;
 
 import java.util.ArrayList;
@@ -10,13 +11,11 @@ public class Player extends Observable {
     private final String name;
     private final Hand hand;
     private Field[] fields;
-    private final List<Card> tradedCards;
     private final List<Card> coins;
     private Phase phase;
     private final GameField gameField;
 
     private boolean planted = false;
-    private boolean traded = false;
     private boolean drawn = false;
     private boolean bought = false;
 
@@ -24,7 +23,6 @@ public class Player extends Observable {
         this.name = name;
         this.hand = new Hand();
         this.fields = new Field[2];
-        tradedCards = new ArrayList<>();
         coins = new ArrayList<>();
         phase = new PhaseOut();
         this.gameField = gameField;
@@ -56,45 +54,25 @@ public class Player extends Observable {
     }
 
     /**
-     * Player tries to offer cards for a specific trading card while trading phase. If the player is not in the correct
-     * phase, an IllegalMoveException will be thrown.
-     * @param cards the offered cards
-     * @param tradingCardFieldNumber trading field number with the trading card
-     * @throws IllegalMoveException if not in correct phase
-     */
-    public void offerCards(final List<Card> cards, final int tradingCardFieldNumber) throws IllegalMoveException {
-        phase.offerCards(this, cards, tradingCardFieldNumber);
-    }
-
-    /**
-     * Player tries to check if there are any offers. If the player is not in the correct phase, an
-     * IllegalMoveException will be thrown.
-     * @throws IllegalMoveException if not in correct phase
-     */
-    public void checkOffers() throws IllegalMoveException {
-        phase.checkOffers(this);
-    }
-
-    /**
-     * Player tries to accept an offer of another player. The player gets the offered cards of the other player while
-     * the other player gets the trading card. If the player is not in the correct phase, an IllegalMoveException
-     * will be thrown.
-     * @param other the other player who gets the trading card
-     * @param tradingCardFieldNumber trading field number with the trading card
-     * @throws IllegalMoveException if not in correct phase
-     */
-    public void acceptOffer(final Player other, final int tradingCardFieldNumber) throws IllegalMoveException {
-        phase.acceptOffer(this, other, tradingCardFieldNumber);
-    }
-
-    /**
      * Player tries to take the trading card. If the player is not in the correct phase, an IllegalMoveException
      * will be thrown.
      * @param tradingCardFieldNumber trading field number with the trading card.
      * @throws IllegalMoveException if not in correct phase
      */
     public void takeTradingCards(final int tradingCardFieldNumber) throws IllegalMoveException {
-        phase.takeTradingCard(this, tradingCardFieldNumber);
+        phase.takeTradingCards(this, tradingCardFieldNumber);
+    }
+
+    public void putTradingCardsToDiscard(final int tradingCardFieldNumber) throws IllegalMoveException {
+        phase.putTradingCardsToDiscard(this, tradingCardFieldNumber);
+    }
+
+    public void cultivateOwnField(int tradingCardFieldNumber) throws IllegalMoveException {
+        phase.cultivateOwnField(this, tradingCardFieldNumber);
+    }
+
+    public void cultivateBossField(int tradingCardFieldNumber, Boss boss) throws IllegalMoveException {
+        phase.cultivateBossField(this, tradingCardFieldNumber, boss);
     }
 
     /**
@@ -115,15 +93,14 @@ public class Player extends Observable {
      */
     public void buyThirdField() throws IllegalMoveException {
         if(bought) throw new IllegalMoveException("Player " + this.getName() + ": Already bought a field.");
-        if(coins.size() < 3) throw new IllegalMoveException("Player " + this.getName()
+        int price = 4;
+        if(coins.size() < price) throw new IllegalMoveException("Player " + this.getName()
                 + ": Not enough coins to buy a third field.");
         bought = true;
-        Field[] newFields = new Field[3];
-        newFields[0] = fields[0];
-        newFields[1] = fields[1];
-        newFields[2] = null;
+        Field[] newFields = new Field[fields.length + 1];
+        for (int i = 0; i < fields.length; i++) newFields[i] = fields[i];
         fields = newFields;
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < price; i++) {
             Card card = coins.getFirst();
             coins.removeFirst();
             gameField.getPile().getDiscardPile().add(card);
@@ -158,10 +135,6 @@ public class Player extends Observable {
         this.phase = phase;
     }
 
-    public List<Card> getTradedCards() {
-        return tradedCards;
-    }
-
     public boolean getDrawn() {
         return drawn;
     }
@@ -184,32 +157,53 @@ public class Player extends Observable {
      */
     public void nextPhase() throws IllegalMoveException {
         switch(phase) {
-            case Phase1 p1:
+            case PhaseUsing phaseUsing:
+                boolean checkTradingFieldsEmpty = true;
+                for(int i = 0; i < 3; i++) {
+                    if(gameField.getTradingArea().getTradingFields().get(i) == null) {
+                        checkTradingFieldsEmpty = false;
+                        break;
+                    };
+                }
+                if(!checkTradingFieldsEmpty) throw new IllegalMoveException("Trading Fields should be empty.");
+
+                phase = new PhaseGiving();
+                setChanged();
+                notifyObservers(phase);
+                break;
+            case PhaseGiving phaseGiving:
+                phase = new PhasePlanting();
+                setChanged();
+                notifyObservers(phase);
+                break;
+            case PhasePlanting phasePlanting:
                 if (!(hand.getHandPile().isEmpty() || planted))
                     throw new IllegalMoveException("Player " + this.name
                             + ": A card from the hand pile should be planted.");
                 planted = false;
-                phase = new Phase2();
+                phase = new PhaseRevealing();
                 setChanged();
                 notifyObservers(phase);
                 break;
-            case Phase2 p2:
-                if(gameField.getTradingArea().getTradingCards()[0] == null
-                        && gameField.getTradingArea().getTradingCards()[1] == null) traded = true;
-                if(!traded) throw new IllegalMoveException("Player " + this.name + ": Trading is not finished yet.");
-                traded = false;
-                phase = new Phase3();
+            case PhaseRevealing phaseRevealing:
+
+                phase = new PhaseCultivating();
                 setChanged();
                 notifyObservers(phase);
                 break;
-            case Phase3 p3:
-                if (!tradedCards.isEmpty()) throw new IllegalMoveException("Player " + this.name
-                        + ": Traded cards should be planted.");
-                phase = new Phase4();
+            case PhaseCultivating phaseCultivating:
+
+                // only if 1 player
+                checkTradingFieldsEmpty();
+
+                if(checkBossEmpty() && !hand.getHandPile().isEmpty())
+                    throw new IllegalMoveException("Player " + this.name + " should give a boss a card.");
+
+                phase = new PhaseDrawing();
                 setChanged();
                 notifyObservers(phase);
                 break;
-            case Phase4 p4:
+            case PhaseDrawing phaseDrawing:
                 if (!drawn) throw new IllegalMoveException("Player " + this.name + ": Player should have draw cards.");
                 drawn = false;
                 phase = new PhaseOut();
@@ -220,5 +214,24 @@ public class Player extends Observable {
                 throw new IllegalMoveException("Player " + this.name
                         + ": Unable to perform this action in the current phase.");
         }
+    }
+
+    private void checkTradingFieldsEmpty() throws IllegalMoveException {
+        if(gameField.getPlayers().size() == 1
+                && !(gameField.getTradingArea().getTradingFields().get(0).getCardType() == null
+                && gameField.getTradingArea().getTradingFields().get(1).getCardType() == null
+                && gameField.getTradingArea().getTradingFields().get(2).getCardType() == null)
+        ) throw new IllegalMoveException("Trading Fields are not empty.");
+    }
+
+    private boolean checkBossEmpty() {
+        Boss[] bosses = (gameField.getPlayers().size() == 1) ?
+                new Boss[]{gameField.getAlCabohne(), gameField.getDonCorlebohne(), gameField.getJoeBohnano()} :
+                new Boss[]{gameField.getAlCabohne(), gameField.getDonCorlebohne()};
+
+        for (Boss boss : bosses) {
+            if(boss.getField().isEmpty()) return true;
+        }
+        return false;
     }
 }

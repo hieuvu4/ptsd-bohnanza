@@ -4,7 +4,11 @@ import game.IllegalMoveException;
 import game.Pile;
 import game.Player;
 
-public class Phase4 extends Phase {
+public class PhaseDrawing extends Phase {
+
+    public PhaseDrawing() {
+        System.out.println("Phase Drawing");
+    }
 
     /**
      * Player draws 3 cards. If the player has already drawn and tries to draw again,  an IllegalMoveException will be
@@ -18,7 +22,7 @@ public class Phase4 extends Phase {
         if(player.getDrawn()) throw new IllegalMoveException("Player " + player.getName()
                 + ": Already drawn three cards.");
 
-        for(int i = 0; i < 3; i++) player.getHand().addCard(pile.drawCard());
+        for(int i = 0; i < 2; i++) player.getHand().addCard(pile.drawCard());
     }
 
 }

@@ -2,17 +2,20 @@ package phases;
 
 import game.*;
 import game.phases.Phase;
-import game.phases.Phase3;
+import game.phases.PhasePlanting;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class Phase3Test {
+public class PhasePlantingTest {
 
     private Player player;
     private Pile pile;
@@ -28,46 +31,65 @@ public class Phase3Test {
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
-        phase = new Phase3();
+        phase = new PhasePlanting();
         player.setPhase(phase);
     }
 
     @Test
-    public void testPlantTradedCards() throws IllegalMoveException {
-        player.getTradedCards().add(Card.AUGENBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
-        player.plant(0, player.getTradedCards().getFirst());
-        player.plant(1, player.getTradedCards().getFirst());
-
-        Assertions.assertEquals(Card.AUGENBOHNE, player.getField(0).getCardType());
-        Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(1).getCardType());
-        Assertions.assertEquals(new ArrayList<>(), player.getTradedCards());
+    public void testPlantNoCards() {
+        Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
+            player.plant(0, Card.BRECHBOHNE);
+        });
+        Assertions.assertEquals("Player " + player.getName()
+                + ": There are no cards in the hand.", exception.getMessage());
     }
 
     @Test
-    public void testPlantTradedCardsNotPlanted() {
-        player.getTradedCards().add(Card.AUGENBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+    public void testPlantOne() throws IllegalMoveException {
+        player.getHand().addCard(Card.BRECHBOHNE);
+        player.plant(0, Card.BRECHBOHNE);
 
-        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.nextPhase();
-        });
-        Assertions.assertEquals("Player " + player.getName()
-                + ": Traded cards should be planted.", exception.getMessage());
+        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(1, player.getField(0).getCardAmount());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2, 4, 6, 12})
+    public void testPlantMoreThanOne(int amount) throws IllegalMoveException {
+        for(int i = 0; i < amount; i++) {
+            player.getHand().addCard(Card.BRECHBOHNE);
+            player.plant(0, Card.BRECHBOHNE);
+        }
+
+        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(amount, player.getField(0).getCardAmount());
     }
 
     @Test
-    public void testPlantTradedCardsNotComplete() throws IllegalMoveException {
-        player.getTradedCards().add(Card.AUGENBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
-        player.plant(0, player.getTradedCards().getFirst());
+    public void testPlantWrongCard() {
+        player.getHand().addCard(Card.BRECHBOHNE);
+        player.getHand().addCard(Card.BLAUE_BOHNE);
 
-        Assertions.assertEquals(Card.AUGENBOHNE, player.getField(0).getCardType());
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.nextPhase();
+            player.plant(0, Card.BLAUE_BOHNE);
         });
         Assertions.assertEquals("Player " + player.getName()
-                + ": Traded cards should be planted.", exception.getMessage());
+                + ": The given card is not the first card.", exception.getMessage());
+    }
+
+    @Test
+    public void testPlantSameFieldWrongType() throws IllegalMoveException {
+        player.getHand().addCard(Card.BRECHBOHNE);
+        player.getHand().addCard(Card.BLAUE_BOHNE);
+        player.plant(0, Card.BRECHBOHNE);
+
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+            player.plant(0, Card.BLAUE_BOHNE);
+        });
+        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(1, player.getField(0).getCardAmount());
+        Assertions.assertEquals("Player " + player.getName()
+                + ": The given card type is not the same.", exception.getMessage());
     }
 
     @Test
@@ -109,7 +131,8 @@ public class Phase3Test {
     }
 
     @Test
-    public void testTakeTradingCardsWrongPhase() {Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+    public void testTakeTradingCardsWrongPhase() {
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.takeTradingCards(0);
         });
         Assertions.assertEquals("Player " + player.getName()

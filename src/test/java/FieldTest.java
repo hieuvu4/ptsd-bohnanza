@@ -18,7 +18,7 @@ public class FieldTest {
 
     @BeforeEach
     public void setUp() {
-        card = Card.ROTE_BOHNE;
+        card = Card.BRECHBOHNE;
         field = new Field();
     }
 
@@ -54,10 +54,10 @@ public class FieldTest {
     @Test
     public void testHarvest() throws IllegalMoveException {
         field.setCardType(card);
-        IntStream.range(0, 4).forEach(i -> field.increaseCardAmount());
+        IntStream.range(0, 10).forEach(i -> field.increaseCardAmount());
         int result = field.harvest();
 
-        Assertions.assertEquals(3, result);
+        Assertions.assertEquals(4, result);
         Assertions.assertTrue(field.isEmpty());
         Assertions.assertEquals(0, field.getCardAmount());
     }

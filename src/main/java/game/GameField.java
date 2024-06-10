@@ -1,5 +1,6 @@
 package game;
 
+import game.mafia.*;
 import game.phases.*;
 
 import java.util.*;
@@ -12,20 +13,25 @@ public class GameField implements Observer {
     private Player turnPlayer;
     private Phase phase;
 
+    private final MafiaBank mafiaBank;
+    private AlCabohne alCabohne;
+    private DonCorlebohne donCorlebohne;
+    private JoeBohnano joeBohnano;
+
     public GameField(int playerAmount) {
+        if (playerAmount < 1 || playerAmount > 2)
+            throw new IllegalArgumentException("playerAmount must be 1 or 2.");
+
         this.pile = new Pile();
         players = new ArrayList<>();
         tradingArea = new TradingArea(this);
 
-        for (int i = 0; i < playerAmount; i++) {
-            players.add(new Player(i+1 + "", this));
-            for (int j = 0; j < 5; j++) players.get(i).getHand().addCard(pile.drawCard());
+        mafiaBank = new MafiaBank();
 
-            players.get(i).addObserver(this);
-        }
+        setUp(playerAmount);
 
         turnPlayer = players.getFirst();
-        turnPlayer.setPhase(new Phase1());
+        turnPlayer.setPhase(new PhasePlanting());
         phase = turnPlayer.getPhase();
         System.out.println("Turn of Player " + (players.indexOf(turnPlayer)+1) + ".");
     }
@@ -34,12 +40,143 @@ public class GameField implements Observer {
         return players;
     }
 
+    public MafiaBank getMafiaBank() {
+        return mafiaBank;
+    }
+
+    public AlCabohne getAlCabohne() {
+        return alCabohne;
+    }
+
+    public DonCorlebohne getDonCorlebohne() {
+        return donCorlebohne;
+    }
+
+    public JoeBohnano getJoeBohnano() {
+        return joeBohnano;
+    }
+
     public Pile getPile() {
         return pile;
     }
 
     public TradingArea getTradingArea() {
         return tradingArea;
+    }
+
+    private void setUp(int playerAmount) {
+        setUpCards(playerAmount);
+        setUpBoss(playerAmount);
+        setUpCardsBoss(playerAmount);
+    }
+
+    private void setUpBoss(int playerAmount) {
+        if(playerAmount == 1) {
+            joeBohnano = new JoeBohnano(this);
+        }
+        alCabohne = new AlCabohne(this);
+        donCorlebohne = new DonCorlebohne(this);
+    }
+
+    private void setUpCardsBoss(int playerAmount) {
+        Field alCabohnesField = alCabohne.getField();
+        Field donCorlebohneField = donCorlebohne.getField();
+
+        Card card = pile.drawCard();
+        alCabohnesField.setCardType(card);
+        alCabohnesField.increaseCardAmount();
+
+        while(donCorlebohneField.getCardAmount() != 1) {
+            Card nextCard = pile.drawCard();
+            if(nextCard == card) {
+                alCabohnesField.increaseCardAmount();
+            } else {
+                donCorlebohneField.setCardType(nextCard);
+                donCorlebohneField.increaseCardAmount();
+            }
+        }
+
+        if(playerAmount == 1) {
+            Field joeBohnanoField = joeBohnano.getField();
+            while(joeBohnanoField.getCardAmount() != 1) {
+                Card nextCard = pile.drawCard();
+                if(nextCard == card) {
+                    alCabohnesField.increaseCardAmount();
+                    if(nextCard == donCorlebohne.getField().getCardType()) {
+                        donCorlebohneField.increaseCardAmount();
+                    }
+                } else {
+                    joeBohnanoField.setCardType(nextCard);
+                    joeBohnanoField.increaseCardAmount();
+                }
+            }
+        }
+    }
+
+    private void setUpCards(int playerAmount) {
+        if (playerAmount == 1) {
+            players.add(new Player( "", this));
+            for (int j = 0; j < 5; j++) players.getFirst().getHand().addCard(pile.drawCard());
+            players.getFirst().addObserver(this);
+        }
+
+        if (playerAmount == 2) {
+            players.add(new Player("1", this));
+            players.add(new Player("2", this));
+
+            for (Player player : players) {
+                for (int j = 0; j < 5; j++) player.getHand().addCard(pile.drawCard());
+                player.addObserver(this);
+            }
+        }
+    }
+
+    private void checkTradingCardForBoss(int index) {
+        Field tradingField = tradingArea.getTradingFields().get(index);
+        List<Field> bossFields = new ArrayList<>();
+
+        if (players.size() == 2) {
+            bossFields = Arrays.asList(alCabohne.getField(), donCorlebohne.getField());
+        } else {
+            bossFields = Arrays.asList(alCabohne.getField(), donCorlebohne.getField(), joeBohnano.getField());
+        }
+
+        for (Field bossField : bossFields) {
+            if (tradingField.getCardType() == bossField.getCardType()) {
+                bossField.increaseCardAmount();
+                System.out.println("A Boss took " + tradingField.getCardType() + "!");
+                tradingField.clear();
+
+                tradingField.setCardType(pile.drawCard());
+                tradingField.increaseCardAmount();
+                checkTradingCardForBoss(index);
+                break;
+            }
+        }
+
+        checkTopDiscardPileMatch();
+    }
+
+    private void checkTopDiscardPileMatch() {
+        List<Card> discardPile = pile.getDiscardPile();
+        if(!discardPile.isEmpty()) {
+            for (Field tradingField : tradingArea.getTradingFields()) {
+                if(tradingField.getCardType() == discardPile.getLast()) {
+                    tradingField.increaseCardAmount();
+                    discardPile.removeLast();
+                    checkTopDiscardPileMatch();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void tryHarvestBoss() throws IllegalMoveException {
+        alCabohne.tryHarvest();
+        donCorlebohne.tryHarvest();
+        if (players.size() == 1) {
+            joeBohnano.tryHarvest();
+        }
     }
 
     /**
@@ -51,18 +188,84 @@ public class GameField implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         this.phase = (Phase) arg;
-        if(phase instanceof Phase2) {
-            this.tradingArea.fillTradingArea();
+
+        try {
+            tryHarvestBoss();
+        } catch (IllegalMoveException e) {
+            e.printStackTrace();
         }
-        if(phase instanceof Phase3) {
-            tradingArea.getOffersForTCard0().clear();
-            tradingArea.getOffersForTCard1().clear();
+
+        if(phase instanceof PhaseGiving) {
+            try {
+                giveBossCardIfAvailable();
+                turnPlayer.nextPhase();
+            } catch (IllegalMoveException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        if(phase instanceof PhaseRevealing) {
+            for(int i = 0; i < tradingArea.getTradingFields().size(); i++) {
+                System.out.println("Filling Trading Card " + (i+1) + "...");
+                tradingArea.fillTradingField(i);
+                checkTradingCardForBoss(i);
+                System.out.println(tradingArea.getTradingFields().get(0).getCardType() + ", "
+                        +tradingArea.getTradingFields().get(0).getCardAmount());
+                System.out.println(tradingArea.getTradingFields().get(1).getCardType() + ", "
+                        +tradingArea.getTradingFields().get(1).getCardAmount());
+                System.out.println(tradingArea.getTradingFields().get(2).getCardType() + ", "
+                        +tradingArea.getTradingFields().get(2).getCardAmount());
+            }
+            try {
+                turnPlayer.nextPhase();
+            } catch (IllegalMoveException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if(phase instanceof PhaseDrawing) {
+            try {
+                turnPlayer.drawCards(pile);
+                System.out.println("Player " + turnPlayer.getName() + " drew cards.");
+                turnPlayer.nextPhase();
+            } catch (IllegalMoveException e) {
+                e.printStackTrace();
+            }
+        }
+
         if (phase instanceof PhaseOut) {
-            int index = players.indexOf(turnPlayer);
-            turnPlayer = (index+1 >= players.size()) ? players.getFirst() : players.get(index+1);
-            turnPlayer.setPhase(new Phase1());
-            System.out.println("Turn of Player " + (players.indexOf(turnPlayer)+1) + ".");
+            if(players.size() == 2) {
+                turnPlayer = ("1".equals(turnPlayer.getName())) ? players.getLast() : players.getFirst();
+                phase = new PhaseUsing();
+                turnPlayer.setPhase(phase);
+                System.out.println();
+                System.out.println("Turn of Player " + turnPlayer.getName());
+            }
+            if(players.size() == 1) {
+                phase = new PhaseGiving();
+                turnPlayer.setPhase(phase);
+            }
+        }
+    }
+
+    private void giveBossCardIfAvailable() throws IllegalMoveException {
+        List<Boss> bosses = new ArrayList<>();
+        bosses.add(alCabohne);
+        bosses.add(donCorlebohne);
+        if(players.size() == 1) {
+            bosses.add(joeBohnano);
+        }
+        for(int i = 0; i < turnPlayer.getFields().length; i++) {
+            if (!turnPlayer.getField(i).isEmpty()) {
+                for(Boss boss : bosses) {
+                    if(turnPlayer.getField(i).getCardType() == boss.getField().getCardType()) {
+                        System.out.println("Card " + boss.getField().getCardType() + " was given away!");
+                        boss.getField().increaseCardAmount();
+                        turnPlayer.getField(i).decreaseCardAmount();
+                        break;
+                    }
+                }
+            }
         }
     }
 

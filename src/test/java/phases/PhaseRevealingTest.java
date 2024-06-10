@@ -2,7 +2,7 @@ package phases;
 
 import game.*;
 import game.phases.Phase;
-import game.phases.Phase2;
+import game.phases.PhaseRevealing;
 import game.phases.PhaseOut;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class Phase2Test {
+public class PhaseRevealingTest {
 
     private Player player;
     private Pile pile;
@@ -31,14 +31,14 @@ public class Phase2Test {
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
-        phase = new Phase2();
+        phase = new PhaseRevealing();
         player.setPhase(phase);
     }
 
     @Test
-    public void testPlantWrongPhase() {player.getHand().addCard(Card.AUGENBOHNE);
+    public void testPlantWrongPhase() {player.getHand().addCard(Card.BRECHBOHNE);
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, Card.AUGENBOHNE);
+            player.plant(0, Card.BRECHBOHNE);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -70,8 +70,8 @@ public class Phase2Test {
         other.setPhase(new PhaseOut());
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            other.getHand().addCard(Card.AUGENBOHNE);
-            cards.add(Card.AUGENBOHNE);
+            other.getHand().addCard(Card.BRECHBOHNE);
+            cards.add(Card.BRECHBOHNE);
         }
         tradingArea.getTradingCards()[0] = Card.BLAUE_BOHNE;
         other.offerCards(cards, 0);
@@ -87,7 +87,7 @@ public class Phase2Test {
     public void testTakeTradingCards() throws IllegalMoveException {
         tradingArea.getTradingCards()[0] = Card.BLAUE_BOHNE;
 
-        player.setPhase(new Phase2());
+        player.setPhase(new PhaseRevealing());
         player.takeTradingCards(0);
 
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
