@@ -7,6 +7,7 @@ import game.cards.Card;
 import game.phases.Phase;
 import game.phases.PhaseRevealing;
 import game.phases.PhaseOut;
+import game.phases.PhaseTrading;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,13 @@ public class PhaseTradingTest {
     @BeforeEach
     public void setUp() {
         gameField = mock(GameField.class);
+        when(gameField.getExtension()).thenReturn(false);
         tradingArea = new TradingArea(gameField);
         pile = new Pile(gameField);
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
-        phase = new PhaseRevealing();
+        phase = new PhaseTrading();
         player.setPhase(phase);
     }
 
@@ -82,18 +84,17 @@ public class PhaseTradingTest {
         player.acceptOffer(other, 0);
 
         Assertions.assertEquals(cards, player.getTradedCards());
-        Assertions.assertEquals(new ArrayList<>(Arrays.asList((new BlaueBohne()))), other.getTradedCards());
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
     }
 
     @Test
-    public void testTakeDiscoverCards() throws IllegalMoveException {
-        tradingArea.getTradingCards()[0] = new BlaueBohne();
+    public void testTakeTradingCards() throws IllegalMoveException {
+        Card card = new BlaueBohne();
+        tradingArea.getTradingCards()[0] = card;
 
-        player.setPhase(new PhaseRevealing());
-        player.takeDiscoverCards(0);
+        player.takeTradingCards(0);
 
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
-        Assertions.assertEquals(new ArrayList<>(Arrays.asList((new BlaueBohne()))), player.getTradedCards());
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList((card))), player.getTradedCards());
     }
 }

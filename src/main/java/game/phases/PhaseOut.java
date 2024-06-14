@@ -19,8 +19,12 @@ public class PhaseOut extends Phase {
         if (cards.isEmpty()) throw new IllegalArgumentException("Player " + player.getName()
                 + " didn't offered any cards.");
         for (Card card : cards) {
-            if(!player.getHand().getHandPile().contains(card)) throw new IllegalArgumentException("Player "
-                    + player.getName() + " has doesn't have an offered card.");
+            boolean hasCard = player.getHand().getHandPile()
+                    .stream()
+                    .anyMatch(handCard -> handCard.getName().equals(card.getName()));
+            if (!hasCard) {
+                throw new IllegalArgumentException("Player " + player.getName() + " doesn't have an offered card.");
+            }
         }
 
         switch (tradingCardFieldNumber) {

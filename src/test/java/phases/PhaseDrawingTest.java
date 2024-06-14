@@ -18,17 +18,17 @@ public class PhaseDrawingTest {
     private Player player;
     private Pile pile;
     private GameField gameField;
-    private DiscoverArea discoverArea;
+    private TradingArea tradingArea;
     private Phase phase;
 
     @BeforeEach
     public void setUp() {
-        pile = new Pile(gameField);
-        discoverArea = new DiscoverArea(gameField);
         gameField = mock(GameField.class);
-        when(gameField.getPile()).thenReturn(pile);
         when(gameField.getExtension()).thenReturn(false);
-        when(gameField.getDiscoverArea()).thenReturn(discoverArea);
+        tradingArea = new TradingArea(gameField);
+        pile = new Pile(gameField);
+        when(gameField.getPile()).thenReturn(pile);
+        when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
         phase = new PhaseDrawing();
         player.setPhase(phase);
@@ -58,8 +58,9 @@ public class PhaseDrawingTest {
     @Test
     public void testHarvestOnlyOneFieldPlanted() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(new Brechbohne());
-        player.plant(0, new Brechbohne());
+        Card card = new Brechbohne();
+        player.getHand().addCard(card);
+        player.plant(0, card);
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });

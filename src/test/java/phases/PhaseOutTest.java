@@ -67,7 +67,7 @@ public class PhaseOutTest {
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             player.offerCards(cards, 0);
         });
-        Assertions.assertEquals("Player " + player.getName() + " has doesn't have an offered card.",
+        Assertions.assertEquals("Player " + player.getName() + " doesn't have an offered card.",
                 exception.getMessage());
     }
 
@@ -85,9 +85,10 @@ public class PhaseOutTest {
     @Test
     public void testOfferCards() throws IllegalMoveException {
         player.setPhase(new PhaseOut());
-        player.getHand().addCard(new Brechbohne());
+        Card card = new Brechbohne();
+        player.getHand().addCard(card);
         List<Card> cards = new ArrayList<>();
-        cards.add(new Brechbohne());
+        cards.add(card);
         player.offerCards(cards, 0);
 
         Assertions.assertEquals(cards, tradingArea.getOffersForTCard0().get(player));

@@ -143,7 +143,7 @@ public class Player extends Observable {
      */
     public void buyThirdField() throws IllegalMoveException {
         if(bought) throw new IllegalMoveException("Player " + this.getName() + ": Already bought a field.");
-        int price = 4;
+        int price = (gameField.getExtension())? 4 : 3;
         if(coins.size() < price) throw new IllegalMoveException("Player " + this.getName()
                 + ": Not enough coins to buy a third field.");
         bought = true;
