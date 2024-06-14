@@ -1,36 +1,46 @@
 package game;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import game.cards.Card;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TradingArea {
 
-    private final Pile pile;
-    private final List<Field> tradingFields;
-    private final Field tradingField1;
-    private final Field tradingField2;
-    private final Field tradingField3;
+    private final Card[] tradingCards;
+    private final Map<Player, List<Card>> offersForTCard0;
+    private final Map<Player, List<Card>> offersForTCard1;
+    private final GameField gameField;
 
     public TradingArea(GameField gameField) {
-        this.pile = gameField.getPile();
-        tradingFields = new ArrayList<>();
-
-        tradingField1 = new Field();
-        tradingField2 = new Field();
-        tradingField3 = new Field();
-
-        tradingFields.add(tradingField1);
-        tradingFields.add(tradingField2);
-        tradingFields.add(tradingField3);
+        this.gameField = gameField;
+        this.tradingCards = new Card[2];
+        this.offersForTCard0 = new HashMap<>();
+        this.offersForTCard1 = new HashMap<>();
     }
 
-    public List<Field> getTradingFields() {
-        return tradingFields;
+    public Card[] getTradingCards() {
+        return tradingCards;
     }
 
-    public void fillTradingField(int index) {
-        tradingFields.get(index).setCardType(pile.drawCard());
-        tradingFields.get(index).increaseCardAmount();
+    public void emptyTradingField(int tradingFieldNumber) {
+        tradingCards[tradingFieldNumber] = null;
+    }
+
+    public Map<Player, List<Card>> getOffersForTCard0() {
+        return offersForTCard0;
+    }
+
+    public Map<Player, List<Card>> getOffersForTCard1() {
+        return offersForTCard1;
+    }
+
+    /**
+     * Fills the trading area by drawing two cards of the pile and added to the area.
+     */
+    public void fillTradingArea() {
+        tradingCards[0] = gameField.getPile().drawCard();
+        tradingCards[1] = gameField.getPile().drawCard();
     }
 }

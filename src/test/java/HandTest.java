@@ -1,5 +1,8 @@
-import game.Card;
+import game.cards.BlaueBohne;
+import game.cards.Brechbohne;
+import game.cards.Card;
 import game.Hand;
+import game.cards.Saubohne;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,27 +25,27 @@ public class HandTest {
 
     @Test
     public void testPopTopCardOne() {
-        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(new Brechbohne());
 
         Card card = hand.popTopCard();
 
-        Assertions.assertEquals(Card.BRECHBOHNE, card);
+        Assertions.assertEquals(new Brechbohne().getName(), card.getName());
     }
 
     @Test
     public void testPopTopCardMoreThanOne() {
-        hand.addCard(Card.BRECHBOHNE);
-        hand.addCard(Card.BRECHBOHNE);
-        hand.addCard(Card.BLAUE_BOHNE);
+        hand.addCard(new Brechbohne());
+        hand.addCard(new Brechbohne());
+        hand.addCard(new BlaueBohne());
 
         Card card = hand.popTopCard();
 
-        Assertions.assertEquals(Card.BRECHBOHNE, card);
+        Assertions.assertEquals(new Brechbohne().getName(), card.getName());
     }
 
     @Test
     public void testAddCardOne() {
-        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(new Brechbohne());
 
         Assertions.assertEquals(1, hand.getHandPile().size());
     }
@@ -50,9 +53,9 @@ public class HandTest {
 
     @Test
     public void testAddCardThree() {
-        hand.addCard(Card.BRECHBOHNE);
-        hand.addCard(Card.BRECHBOHNE);
-        hand.addCard(Card.BLAUE_BOHNE);
+        hand.addCard(new Brechbohne());
+        hand.addCard(new Brechbohne());
+        hand.addCard(new BlaueBohne());
 
         Assertions.assertEquals(3, hand.getHandPile().size());
     }
@@ -60,9 +63,9 @@ public class HandTest {
 
     @Test
     public void testRemoveCard() {
-        hand.addCard(Card.BLAUE_BOHNE);
-        hand.addCard(Card.SAUBOHNE);
-        hand.addCard(Card.BRECHBOHNE);
+        hand.addCard(new BlaueBohne());
+        hand.addCard(new Saubohne());
+        hand.addCard(new Brechbohne());
 
         hand.removeCard(2);
 

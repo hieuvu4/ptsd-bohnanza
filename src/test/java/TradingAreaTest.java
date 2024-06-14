@@ -12,11 +12,14 @@ public class TradingAreaTest {
 
     TradingArea tradingArea;
     GameField gameField;
+    Pile pile;
 
     @BeforeEach
     public void setUp() {
         gameField = mock(GameField.class);
-        when(gameField.getPile()).thenReturn(new Pile());
+        when(gameField.getExtension()).thenReturn(false);
+        pile = new Pile(gameField);
+        when(gameField.getPile()).thenReturn(pile);
         tradingArea = new TradingArea(gameField);
     }
 

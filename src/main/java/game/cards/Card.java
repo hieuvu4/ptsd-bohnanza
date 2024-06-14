@@ -1,14 +1,6 @@
-package game;
+package game.cards;
 
-public enum Card {
-
-    BLAUE_BOHNE("Blaue Bohne", new int[]{4, 6, 8, 10}, new int[]{1, 2, 3, 4}, 20),
-    KIDNEYBOHNE("Kidneybohne", new int[]{5, 6, 7, 8}, new int[]{1, 2, 3, 4}, 19),
-    FEUERBOHNE("Feuerbohne", new int[]{3, 6, 8, 9}, new int[]{1, 2, 3, 4}, 18),
-    PUFFBOHNE("Puffbohne", new int[]{4, 5, 6, 7}, new int[]{1, 2, 3, 4}, 16),
-    SAUBOHNE("Saubohne", new int[]{3, 5, 7, 8}, new int[]{1, 2, 3, 4}, 16),
-    BRECHBOHNE("Brechbohne", new int[]{3, 5, 6, 7}, new int[]{1, 2, 3, 4}, 14),
-    STANGENBOHNE("Stangenbohne", new int[]{3, 4, 5, 6}, new int[]{1, 2, 3, 4}, 14);
+public abstract class Card {
 
     private final String name;
     private final int[] numberNeedToHarvest;

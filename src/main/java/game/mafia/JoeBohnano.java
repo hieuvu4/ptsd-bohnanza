@@ -1,6 +1,6 @@
 package game.mafia;
 
-import game.Card;
+import game.cards.Card;
 import game.GameField;
 import game.IllegalMoveException;
 

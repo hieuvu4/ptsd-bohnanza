@@ -1,5 +1,7 @@
 package game;
 
+import game.cards.Card;
+
 public class Field {
     private Card cardType;
     private int cardAmount;

@@ -1,5 +1,7 @@
 package game;
 
+import game.cards.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,14 +11,25 @@ public class Pile {
     private final List<Card> discardPile;
     private int timesRefillCards;
 
-    public Pile() {
+    public Pile(GameField gameField) {
         cards = new ArrayList<>();
         discardPile = new ArrayList<>();
         timesRefillCards = 2;
 
-        // add all cards to pile
-        for(Card card : Card.values()) {
-            for(int i = 0; i < card.getOverallAmount(); i++) cards.add(card);
+        if(gameField.getExtension()) {
+            Card[] alCabohneCards = {new BlaueBohne(), new Brechbohne(), new Feuerbohne(),
+                    new Kidneybohne(), new Puffbohne(), new Saubohne(), new Stangenbohne()};
+            for(Card card : alCabohneCards) {
+                for(int i = 0; i < card.getOverallAmount(); i++) cards.add(card);
+            }
+        } else {
+            Card[] standardCards = {new Gartenbohne(), new RoteBohne(), new Augenbohne(),
+                    new Sojabohne(), new Brechbohne(), new Saubohne(), new Feuerbohne(),
+                    new BlaueBohne()};
+
+            for(Card card : standardCards) {
+                for(int i = 0; i < card.getOverallAmount(); i++) cards.add(card);
+            }
         }
 
         // shuffle cards

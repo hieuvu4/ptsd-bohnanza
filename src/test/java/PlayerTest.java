@@ -1,4 +1,7 @@
 import game.*;
+import game.cards.BlaueBohne;
+import game.cards.Brechbohne;
+import game.cards.Card;
 import game.phases.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +26,7 @@ public class PlayerTest {
 
     @BeforeEach
     public void setUp() {
-        pile = new Pile();
+        pile = new Pile(gameField);
         tradingArea = new TradingArea(gameField);
         gameField = mock(GameField.class);
         when(gameField.getPile()).thenReturn(pile);
@@ -36,7 +39,7 @@ public class PlayerTest {
         player.setPhase(new PhasePlanting());
 
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
-            player.plant(0, Card.BRECHBOHNE);
+            player.plant(0, new Brechbohne());
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": There are no cards in the hand.", exception.getMessage());
@@ -45,10 +48,10 @@ public class PlayerTest {
     @Test
     public void testPlantOne() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.plant(0, Card.BRECHBOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.plant(0, new Brechbohne());
 
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
         Assertions.assertEquals(1, player.getField(0).getCardAmount());
     }
 
@@ -57,22 +60,22 @@ public class PlayerTest {
     public void testPlantMoreThanOne(int amount) throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
         for(int i = 0; i < amount; i++) {
-            player.getHand().addCard(Card.BRECHBOHNE);
-            player.plant(0, Card.BRECHBOHNE);
+            player.getHand().addCard(new Brechbohne());
+            player.plant(0, new Brechbohne());
         }
 
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
         Assertions.assertEquals(amount, player.getField(0).getCardAmount());
     }
 
     @Test
     public void testPlantWrongCard() {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.getHand().addCard(Card.BLAUE_BOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.getHand().addCard(new BlaueBohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, Card.BLAUE_BOHNE);
+            player.plant(0, new BlaueBohne());
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": The given card is not the first card.", exception.getMessage());
@@ -81,14 +84,14 @@ public class PlayerTest {
     @Test
     public void testPlantSameFieldWrongType() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.getHand().addCard(Card.BLAUE_BOHNE);
-        player.plant(0, Card.BRECHBOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.getHand().addCard(new BlaueBohne());
+        player.plant(0, new Brechbohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, Card.BLAUE_BOHNE);
+            player.plant(0, new BlaueBohne());
         });
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
         Assertions.assertEquals(1, player.getField(0).getCardAmount());
         Assertions.assertEquals("Player " + player.getName()
                 + ": The given card type is not the same.", exception.getMessage());
@@ -99,10 +102,10 @@ public class PlayerTest {
         Phase[] phases = {new PhaseRevealing(), new PhaseDrawing(), new PhaseOut()};
         for(Phase phase : phases) {
             player.setPhase(phase);
-            player.getHand().addCard(Card.BRECHBOHNE);
+            player.getHand().addCard(new Brechbohne());
 
             Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-                player.plant(0, Card.BRECHBOHNE);
+                player.plant(0, new Brechbohne());
             });
             Assertions.assertEquals("Player " + player.getName()
                     + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -112,21 +115,21 @@ public class PlayerTest {
     @Test
     public void testPlantTradedCards() throws IllegalMoveException {
         player.setPhase(new PhaseCultivating());
-        player.getTradedCards().add(Card.BRECHBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+        player.getTradedCards().add(new Brechbohne());
+        player.getTradedCards().add(new BlaueBohne());
         player.plant( 0, player.getTradedCards().getFirst());
         player.plant(1, player.getTradedCards().getFirst());
 
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
-        Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(1).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
+        Assertions.assertEquals(new BlaueBohne(), player.getField(1).getCardType());
         Assertions.assertEquals(new ArrayList<>(), player.getTradedCards());
     }
 
     @Test
-    public void testPlantTradedCardsNotPlanted() throws IllegalMoveException {
+    public void testPlantTradedCardsNotPlanted() {
         player.setPhase(new PhaseCultivating());
-        player.getTradedCards().add(Card.BRECHBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+        player.getTradedCards().add(new Brechbohne());
+        player.getTradedCards().add(new BlaueBohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.nextPhase();
@@ -138,11 +141,11 @@ public class PlayerTest {
     @Test
     public void testPlantTradedCardsNotComplete() throws IllegalMoveException {
         player.setPhase(new PhaseCultivating());
-        player.getTradedCards().add(Card.BRECHBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+        player.getTradedCards().add(new Brechbohne());
+        player.getTradedCards().add(new BlaueBohne());
         player.plant(0, player.getTradedCards().getFirst());
 
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.nextPhase();
         });
@@ -163,8 +166,8 @@ public class PlayerTest {
     @Test
     public void testHarvestOnlyOneFieldPlanted() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.plant(0, Card.BRECHBOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.plant(0, new Brechbohne());
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
@@ -175,14 +178,14 @@ public class PlayerTest {
     @Test
     public void testHarvestOneCardEachField() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.getHand().addCard(Card.BLAUE_BOHNE);
-        player.plant(0, Card.BRECHBOHNE);
-        player.plant(1, Card.BLAUE_BOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.getHand().addCard(new BlaueBohne());
+        player.plant(0, new Brechbohne());
+        player.plant(1, new BlaueBohne());
         player.harvest( 0);
 
         Assertions.assertNull(player.getField(0).getCardType());
-        Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(1).getCardType());
+        Assertions.assertEquals(new BlaueBohne(), player.getField(1).getCardType());
     }
 
     @Test
@@ -192,28 +195,28 @@ public class PlayerTest {
         for(Phase phase : phases) {
             player.setPhase(new PhasePlanting());
             for (int i = 0; i < 3; i++) {
-                player.getHand().addCard(Card.BRECHBOHNE);
-                player.getHand().addCard(Card.BLAUE_BOHNE);
-                player.plant(0, Card.BRECHBOHNE);
-                player.plant(1, Card.BLAUE_BOHNE);
+                player.getHand().addCard(new Brechbohne());
+                player.getHand().addCard(new BlaueBohne());
+                player.plant(0, new Brechbohne());
+                player.plant(1, new BlaueBohne());
             }
             player.setPhase(phase);
             player.harvest(0);
 
             Assertions.assertNull(player.getField(0).getCardType());
-            Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(1).getCardType());
+            Assertions.assertEquals(new BlaueBohne(), player.getField(1).getCardType());
         }
     }
 
     @Test
     public void testHarvestWrongField() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.getHand().addCard(Card.BLAUE_BOHNE);
-        player.getHand().addCard(Card.BLAUE_BOHNE);
-        player.plant(0, Card.BRECHBOHNE);
-        player.plant(1, Card.BLAUE_BOHNE);
-        player.plant(1, Card.BLAUE_BOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.getHand().addCard(new BlaueBohne());
+        player.getHand().addCard(new BlaueBohne());
+        player.plant(0, new Brechbohne());
+        player.plant(1, new BlaueBohne());
+        player.plant(1, new BlaueBohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
@@ -261,7 +264,7 @@ public class PlayerTest {
 
     @Test
     public void testBuyThirdField() throws IllegalMoveException {
-        for(int i = 0; i < 3; i++) player.getCoins().add(Card.BRECHBOHNE);
+        for(int i = 0; i < 3; i++) player.getCoins().add(new Brechbohne());
         player.buyThirdField();
 
         Assertions.assertEquals(3, player.getFields().length);
@@ -270,7 +273,7 @@ public class PlayerTest {
 
     @Test
     public void testBuyThirdFieldNotEnoughCoins() {
-        for(int i = 0; i < 2; i++) player.getCoins().add(Card.BRECHBOHNE);
+        for(int i = 0; i < 2; i++) player.getCoins().add(new Brechbohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.buyThirdField();
@@ -283,7 +286,7 @@ public class PlayerTest {
 
     @Test
     public void testBuyThirdFieldTwoTimes() throws IllegalMoveException {
-        for(int i = 0; i < 10; i++) player.getCoins().add(Card.BRECHBOHNE);
+        for(int i = 0; i < 10; i++) player.getCoins().add(new Brechbohne());
         player.buyThirdField();
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
@@ -313,7 +316,7 @@ public class PlayerTest {
     public void testOfferCardsWrongCards() {
         player.setPhase(new PhaseOut());
         List<Card> cards = new ArrayList<>();
-        cards.add(Card.BRECHBOHNE);
+        cards.add(new Brechbohne());
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             player.offerCards(cards, 0);
@@ -337,9 +340,9 @@ public class PlayerTest {
     @Test
     public void testOfferCards() throws IllegalMoveException {
         player.setPhase(new PhaseOut());
-        player.getHand().addCard(Card.BRECHBOHNE);
+        player.getHand().addCard(new Brechbohne());
         List<Card> cards = new ArrayList<>();
-        cards.add(Card.BRECHBOHNE);
+        cards.add(new Brechbohne());
         player.offerCards(cards, 0);
 
         Assertions.assertEquals(cards, tradingArea.getOffersForTCard0().get(player));
@@ -381,29 +384,29 @@ public class PlayerTest {
         other.setPhase(new PhaseOut());
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            other.getHand().addCard(Card.BRECHBOHNE);
-            cards.add(Card.BRECHBOHNE);
+            other.getHand().addCard(new Brechbohne());
+            cards.add(new Brechbohne());
         }
-        tradingArea.getTradingCards()[0] = Card.BLAUE_BOHNE;
+        tradingArea.getTradingCards()[0] = new BlaueBohne();
         other.offerCards(cards, 0);
 
         player.setPhase(new PhaseRevealing());
         player.acceptOffer(other, 0);
 
         Assertions.assertEquals(cards, player.getTradedCards());
-        Assertions.assertEquals(new ArrayList<>(Arrays.asList((Card.BLAUE_BOHNE))), other.getTradedCards());
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList((new BlaueBohne()))), other.getTradedCards());
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
     }
 
     @Test
-    public void testTakeTradingCardsWrongPhase() {
+    public void testTakeDiscoverCardsWrongPhase() {
         Phase[] phases = {new PhasePlanting(), new PhaseCultivating(), new PhaseDrawing(), new PhaseOut()};
 
         for (Phase phase : phases) {
             player.setPhase(phase);
 
             Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-                player.takeTradingCards(0);
+                player.takeDiscoverCards(0);
             });
             Assertions.assertEquals("Player " + player.getName()
                     + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -411,13 +414,13 @@ public class PlayerTest {
     }
 
     @Test
-    public void testTakeTradingCards() throws IllegalMoveException {
-        tradingArea.getTradingCards()[0] = Card.BLAUE_BOHNE;
+    public void testTakeDiscoverCards() throws IllegalMoveException {
+        tradingArea.getTradingCards()[0] = new BlaueBohne();
 
         player.setPhase(new PhaseRevealing());
-        player.takeTradingCards(0);
+        player.takeDiscoverCards(0);
 
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
-        Assertions.assertEquals(new ArrayList<>(Arrays.asList((Card.BLAUE_BOHNE))), player.getTradedCards());
+        Assertions.assertEquals(new ArrayList<>(Arrays.asList((new BlaueBohne()))), player.getTradedCards());
     }
 }

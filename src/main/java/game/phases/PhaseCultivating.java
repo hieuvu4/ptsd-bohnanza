@@ -10,20 +10,20 @@ public class PhaseCultivating extends Phase {
     }
 
     @Override
-    public void cultivateOwnField(Player player, int tradingCardFieldNumber) throws IllegalMoveException {
-        if (tradingCardFieldNumber < 0 || tradingCardFieldNumber > 2)
-            throw new IllegalArgumentException("Trading card field number must be between 0 and 2.");
+    public void cultivateOwnField(Player player, int discoverCardFieldNumber) throws IllegalMoveException {
+        if (discoverCardFieldNumber < 0 || discoverCardFieldNumber > 2)
+            throw new IllegalArgumentException("Discover card field number must be between 0 and 2.");
 
-        TradingArea tradingArea = player.getGameField().getTradingArea();
-        Field tradingField = tradingArea.getTradingFields().get(tradingCardFieldNumber);
+        DiscoverArea discoverArea = player.getGameField().getDiscoverArea();
+        Field discoverField = discoverArea.getDiscoverFields().get(discoverCardFieldNumber);
 
-        if (tradingField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null) throw new IllegalMoveException();
 
         boolean cardFound = false;
         int index = -1;
         for(int i = 0; i < player.getFields().length; i++) {
             Field playerField = player.getField(i);
-            if(playerField.getCardType() == tradingField.getCardType() || playerField.getCardType() == null) {
+            if(playerField.getCardType() == discoverField.getCardType() || playerField.getCardType() == null) {
                 cardFound = true;
                 index = i;
                 break;
@@ -31,31 +31,31 @@ public class PhaseCultivating extends Phase {
         }
         if (!cardFound) throw new IllegalMoveException();
 
-        for(int i = 0; i < tradingField.getCardAmount(); i++) {
-            player.getField(index).setCardType(tradingField.getCardType());
+        for(int i = 0; i < discoverField.getCardAmount(); i++) {
+            player.getField(index).setCardType(discoverField.getCardType());
             player.getField(index).increaseCardAmount();
         }
 
-        tradingField.clear();
+        discoverField.clear();
     }
 
     @Override
-    public void cultivateBossField(Player player, int tradingCardFieldNumber, Boss boss) throws IllegalMoveException {
-        if (tradingCardFieldNumber < 0 || tradingCardFieldNumber > 2)
-            throw new IllegalArgumentException("Trading card field number must be between 0 and 2.");
-        TradingArea tradingArea = player.getGameField().getTradingArea();
-        Field tradingField = tradingArea.getTradingFields().get(tradingCardFieldNumber);
+    public void cultivateBossField(Player player, int discoverCardFieldNumber, Boss boss) throws IllegalMoveException {
+        if (discoverCardFieldNumber < 0 || discoverCardFieldNumber > 2)
+            throw new IllegalArgumentException("Discover card field number must be between 0 and 2.");
+        DiscoverArea discoverArea = player.getGameField().getDiscoverArea();
+        Field discoverField = discoverArea.getDiscoverFields().get(discoverCardFieldNumber);
 
-        if (tradingField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null) throw new IllegalMoveException();
 
-        if (tradingField.getCardType() != boss.getField().getCardType()) {
+        if (discoverField.getCardType() != boss.getField().getCardType()) {
             boss.harvest();
 
-            boss.getField().setCardType(tradingField.getCardType());
+            boss.getField().setCardType(discoverField.getCardType());
         }
 
-        for(int i = 0; i < tradingField.getCardAmount(); i++) boss.getField().increaseCardAmount();
+        for(int i = 0; i < discoverField.getCardAmount(); i++) boss.getField().increaseCardAmount();
 
-        tradingField.clear();
+        discoverField.clear();
     }
 }

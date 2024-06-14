@@ -1,9 +1,11 @@
 package game.phases;
 
 import game.*;
+import game.cards.Card;
 import game.mafia.Boss;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class Phase {
 
@@ -42,30 +44,80 @@ public abstract class Phase {
             throw new IllegalMoveException("Player " + player.getName() + ": Field cannot be harvested.");
         }
     }
+    /**
+     * Player can check if there are any offers from other players. Player can only do it in phase 2, else an
+     * IllegalMoveException will be thrown.
+     * @param player the player who tries to check
+     * @throws IllegalMoveException if wrong phase
+     */
+    public void checkOffers(final Player player) throws IllegalMoveException {
+        throw new IllegalMoveException("Player " + player.getName()
+                + ": Unable to perform this action in the current phase.");
+    }
 
     /**
-     * Player can take the trading cards. If the phase is wrong, an IllegalMoveException will be thrown.
-     * @param player the player who takes the trading card
+     * Player can offer cards for getting a specific trading card. Only Player who are in Phase Out can perform this,
+     * else an IllegalMoveException will be thrown.
+     * @param player the player who wants to offer
+     * @param cards exchange cards for the trading card
      * @param tradingCardFieldNumber trading field number with the trading card
      * @throws IllegalMoveException if not in correct phase
      */
-     public void takeTradingCards(final Player player, int tradingCardFieldNumber) throws IllegalMoveException {
-         throw new IllegalMoveException("Player " + player.getName()
-                 + ": Unable to perform this action in the current phase.");
-     }
-
-     public void putTradingCardsToDiscard(final Player player, int tradingCardFieldNumber) throws IllegalMoveException {
-         throw new IllegalMoveException("Player " + player.getName()
-                 + ": Unable to perform this action in the current phase.");
-     }
-
-    public void cultivateOwnField(final Player player, final int tradingCardFieldNumber)
+    public void offerCards(final Player player, final List<Card> cards, int tradingCardFieldNumber)
             throws IllegalMoveException {
         throw new IllegalMoveException("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.");
     }
 
-    public void cultivateBossField(final Player player, final int tradingCardFieldNumber, Boss boss)
+    /**
+     * Player can accept an offer of another player in exchange for a trading card. Player can only perform this in
+     * phase 2, else an IllegalMoveException will be thrown.
+     * @param player the player who wants to accept an offer
+     * @param other the player who offered the card in exchange for the trading card
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+    public void acceptOffer(final Player player, final Player other, int tradingCardFieldNumber)
+            throws IllegalMoveException {
+        throw new IllegalMoveException("Player " + player.getName()
+                + ": Unable to perform this action in the current phase.");
+    }
+
+    /**
+     * Player can take the trading card in phase 2, if that is not the case, an IllegalMoveException will be thrown.
+     * @param player the player who takes the trading card
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+    public void takeTradingCard(final Player player, int tradingCardFieldNumber) throws IllegalMoveException {
+        throw new IllegalMoveException("Player " + player.getName()
+                + ": Unable to perform this action in the current phase.");
+    }
+
+
+    /**
+     * Player can take the discover cards. If the phase is wrong, an IllegalMoveException will be thrown.
+     * @param player the player who takes the discover card
+     * @param discoverCardFieldNumber discover field number with the discover card
+     * @throws IllegalMoveException if not in correct phase
+     */
+     public void takeDiscoverCards(final Player player, int discoverCardFieldNumber) throws IllegalMoveException {
+         throw new IllegalMoveException("Player " + player.getName()
+                 + ": Unable to perform this action in the current phase.");
+     }
+
+     public void putDiscoverCardsToDiscard(final Player player, int discoverCardFieldNumber) throws IllegalMoveException {
+         throw new IllegalMoveException("Player " + player.getName()
+                 + ": Unable to perform this action in the current phase.");
+     }
+
+    public void cultivateOwnField(final Player player, final int discoverCardFieldNumber)
+            throws IllegalMoveException {
+        throw new IllegalMoveException("Player " + player.getName()
+                + ": Unable to perform this action in the current phase.");
+    }
+
+    public void cultivateBossField(final Player player, final int discoverCardFieldNumber, Boss boss)
      throws IllegalMoveException {
     throw new IllegalMoveException("Player " + player.getName()
          + ": Unable to perform this action in the current phase.");

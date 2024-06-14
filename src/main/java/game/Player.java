@@ -1,5 +1,6 @@
 package game;
 
+import game.cards.Card;
 import game.mafia.Boss;
 import game.phases.*;
 
@@ -15,7 +16,10 @@ public class Player extends Observable {
     private Phase phase;
     private final GameField gameField;
 
+    private List<Card> tradedCards = null;
+
     private boolean planted = false;
+    private boolean traded = false;
     private boolean drawn = false;
     private boolean bought = false;
 
@@ -27,7 +31,53 @@ public class Player extends Observable {
         phase = new PhaseOut();
         this.gameField = gameField;
 
+        if(!gameField.getExtension()) {
+            tradedCards = new ArrayList<>();
+        }
+
         for(int i = 0; i < 2; i++) fields[i] = new Field();
+    }
+
+    /**
+     * Player tries to offer cards for a specific trading card while trading phase. If the player is not in the correct
+     * phase, an IllegalMoveException will be thrown.
+     * @param cards the offered cards
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+    public void offerCards(final List<Card> cards, final int tradingCardFieldNumber) throws IllegalMoveException {
+        phase.offerCards(this, cards, tradingCardFieldNumber);
+    }
+
+    /**
+     * Player tries to check if there are any offers. If the player is not in the correct phase, an
+     * IllegalMoveException will be thrown.
+     * @throws IllegalMoveException if not in correct phase
+     */
+    public void checkOffers() throws IllegalMoveException {
+        phase.checkOffers(this);
+    }
+
+    /**
+     * Player tries to accept an offer of another player. The player gets the offered cards of the other player while
+     * the other player gets the trading card. If the player is not in the correct phase, an IllegalMoveException
+     * will be thrown.
+     * @param other the other player who gets the trading card
+     * @param tradingCardFieldNumber trading field number with the trading card
+     * @throws IllegalMoveException if not in correct phase
+     */
+    public void acceptOffer(final Player other, final int tradingCardFieldNumber) throws IllegalMoveException {
+        phase.acceptOffer(this, other, tradingCardFieldNumber);
+    }
+
+    /**
+     * Player tries to take the trading card. If the player is not in the correct phase, an IllegalMoveException
+     * will be thrown.
+     * @param tradingCardFieldNumber trading field number with the trading card.
+     * @throws IllegalMoveException if not in correct phase
+     */
+    public void takeTradingCards(final int tradingCardFieldNumber) throws IllegalMoveException {
+        phase.takeTradingCard(this, tradingCardFieldNumber);
     }
 
     /**
@@ -54,25 +104,25 @@ public class Player extends Observable {
     }
 
     /**
-     * Player tries to take the trading card. If the player is not in the correct phase, an IllegalMoveException
+     * Player tries to take the discover card. If the player is not in the correct phase, an IllegalMoveException
      * will be thrown.
-     * @param tradingCardFieldNumber trading field number with the trading card.
+     * @param discoverCardFieldNumber discover field number with the discover card.
      * @throws IllegalMoveException if not in correct phase
      */
-    public void takeTradingCards(final int tradingCardFieldNumber) throws IllegalMoveException {
-        phase.takeTradingCards(this, tradingCardFieldNumber);
+    public void takeDiscoverCards(final int discoverCardFieldNumber) throws IllegalMoveException {
+        phase.takeDiscoverCards(this, discoverCardFieldNumber);
     }
 
-    public void putTradingCardsToDiscard(final int tradingCardFieldNumber) throws IllegalMoveException {
-        phase.putTradingCardsToDiscard(this, tradingCardFieldNumber);
+    public void putDiscoverCardsToDiscard(final int discoverCardFieldNumber) throws IllegalMoveException {
+        phase.putDiscoverCardsToDiscard(this, discoverCardFieldNumber);
     }
 
-    public void cultivateOwnField(int tradingCardFieldNumber) throws IllegalMoveException {
-        phase.cultivateOwnField(this, tradingCardFieldNumber);
+    public void cultivateOwnField(int discoverCardFieldNumber) throws IllegalMoveException {
+        phase.cultivateOwnField(this, discoverCardFieldNumber);
     }
 
-    public void cultivateBossField(int tradingCardFieldNumber, Boss boss) throws IllegalMoveException {
-        phase.cultivateBossField(this, tradingCardFieldNumber, boss);
+    public void cultivateBossField(int discoverCardFieldNumber, Boss boss) throws IllegalMoveException {
+        phase.cultivateBossField(this, discoverCardFieldNumber, boss);
     }
 
     /**
@@ -151,21 +201,75 @@ public class Player extends Observable {
         return gameField;
     }
 
+    public List<Card> getTradedCards() {
+        return tradedCards;
+    }
+
     /**
      * Brings the player to the next Phase if certain conditions are fulfilled.
      * @throws IllegalMoveException if the conditions are not fulfilled
      */
     public void nextPhase() throws IllegalMoveException {
+        if(gameField.getExtension()) {
+            handleExtensionPhases();
+        }
+        else {
+            handlePhases();
+        }
+
+    }
+
+    private void handlePhases() throws IllegalMoveException {
+        switch(phase) {
+            case PhasePlanting p1:
+                if (!(hand.getHandPile().isEmpty() || planted))
+                    throw new IllegalMoveException("Player " + this.name
+                            + ": A card from the hand pile should be planted.");
+                planted = false;
+                phase = new PhaseTrading();
+                setChanged();
+                notifyObservers(phase);
+                break;
+            case PhaseTrading p2:
+                if(gameField.getTradingArea().getTradingCards()[0] == null
+                        && gameField.getTradingArea().getTradingCards()[1] == null) traded = true;
+                if(!traded) throw new IllegalMoveException("Player " + this.name + ": Trading is not finished yet.");
+                traded = false;
+                phase = new PhasePlantingTraded();
+                setChanged();
+                notifyObservers(phase);
+                break;
+            case PhasePlantingTraded p3:
+                if (!tradedCards.isEmpty()) throw new IllegalMoveException("Player " + this.name
+                        + ": Traded cards should be planted.");
+                phase = new PhaseDrawing();
+                setChanged();
+                notifyObservers(phase);
+                break;
+            case PhaseDrawing p4:
+                if (!drawn) throw new IllegalMoveException("Player " + this.name + ": Player should have draw cards.");
+                drawn = false;
+                phase = new PhaseOut();
+                setChanged();
+                notifyObservers(phase);
+                break;
+            default:
+                throw new IllegalMoveException("Player " + this.name
+                        + ": Unable to perform this action in the current phase.");
+        }
+    }
+
+    private void handleExtensionPhases() throws IllegalMoveException {
         switch(phase) {
             case PhaseUsing phaseUsing:
-                boolean checkTradingFieldsEmpty = true;
+                boolean checkDiscoverFieldsEmpty = true;
                 for(int i = 0; i < 3; i++) {
-                    if(gameField.getTradingArea().getTradingFields().get(i) == null) {
-                        checkTradingFieldsEmpty = false;
+                    if(gameField.getDiscoverArea().getDiscoverFields().get(i) == null) {
+                        checkDiscoverFieldsEmpty = false;
                         break;
                     };
                 }
-                if(!checkTradingFieldsEmpty) throw new IllegalMoveException("Trading Fields should be empty.");
+                if(!checkDiscoverFieldsEmpty) throw new IllegalMoveException("Discover Fields should be empty.");
 
                 phase = new PhaseGiving();
                 setChanged();
@@ -194,7 +298,7 @@ public class Player extends Observable {
             case PhaseCultivating phaseCultivating:
 
                 // only if 1 player
-                checkTradingFieldsEmpty();
+                checkDiscoverFieldsEmpty();
 
                 if(checkBossEmpty() && !hand.getHandPile().isEmpty())
                     throw new IllegalMoveException("Player " + this.name + " should give a boss a card.");
@@ -216,12 +320,12 @@ public class Player extends Observable {
         }
     }
 
-    private void checkTradingFieldsEmpty() throws IllegalMoveException {
+    private void checkDiscoverFieldsEmpty() throws IllegalMoveException {
         if(gameField.getPlayers().size() == 1
-                && !(gameField.getTradingArea().getTradingFields().get(0).getCardType() == null
-                && gameField.getTradingArea().getTradingFields().get(1).getCardType() == null
-                && gameField.getTradingArea().getTradingFields().get(2).getCardType() == null)
-        ) throw new IllegalMoveException("Trading Fields are not empty.");
+                && !(gameField.getDiscoverArea().getDiscoverFields().get(0).getCardType() == null
+                && gameField.getDiscoverArea().getDiscoverFields().get(1).getCardType() == null
+                && gameField.getDiscoverArea().getDiscoverFields().get(2).getCardType() == null)
+        ) throw new IllegalMoveException("Discover Fields are not empty.");
     }
 
     private boolean checkBossEmpty() {

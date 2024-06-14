@@ -1,6 +1,7 @@
 package game.mafia;
 
 import game.*;
+import game.cards.Card;
 
 public abstract class Boss {
 

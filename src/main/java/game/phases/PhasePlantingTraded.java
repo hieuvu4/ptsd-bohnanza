@@ -1,34 +1,30 @@
 package game.phases;
 
-import game.cards.Card;
 import game.Field;
 import game.IllegalMoveException;
 import game.Player;
+import game.cards.Card;
 
-import java.util.NoSuchElementException;
-
-public class PhasePlanting extends Phase {
-
-    public PhasePlanting() {
-        System.out.println("Phase Planting");
-    }
+public class PhasePlantingTraded extends Phase {
 
     /**
      * Player tries to plant a given card to a certain field. If the field is occupied, the player doesn't have any
-     * hand pile or the given card doesn't exist in the hand pile, the method will throw an IllegalMoveException.
+     * traded cards or the given card doesn't exist in the traded cards, the method will throw an
+     * IllegalMoveException.
      * @param player the player who tries to plant
      * @param fieldNumber the index of the field
      * @param card the card which should be planted
-     * @throws IllegalMoveException if hand pile is empty, no such card exists in the hand pile or the field is
-     *  occupied
+     * @throws IllegalMoveException if card doesn't exist, list of traded cards is empty or field is occupied
      */
     @Override
     public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
-        if(player.getHand().getHandPile().isEmpty())
-            throw new NoSuchElementException("Player " + player.getName() + ": There are no cards in the hand.");
+        if (player.getTradedCards().isEmpty())
+            throw new IllegalMoveException("Player " + player.getName()
+                    + ": There are no traded cards in this player.");
 
-        if (card != player.getHand().popTopCard())
-            throw new IllegalMoveException("Player " + player.getName() + ": The given card is not the first card.");
+        if (!player.getTradedCards().contains(card))
+            throw new IllegalMoveException("Player " + player.getName()
+                    + ": There is no such card in traded cards in this player.");
 
         Field currentField = player.getField(fieldNumber);
         if(!currentField.isEmpty() && currentField.getCardType() != card)
@@ -37,7 +33,7 @@ public class PhasePlanting extends Phase {
         if(currentField.getCardType() == card || currentField.isEmpty()) {
             currentField.setCardType(card);
             currentField.increaseCardAmount();
-            player.getHand().removeCard(0);
+            player.getTradedCards().remove(card);
         }
     }
 }

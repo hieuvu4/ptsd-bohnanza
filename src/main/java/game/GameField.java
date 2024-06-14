@@ -1,5 +1,6 @@
 package game;
 
+import game.cards.Card;
 import game.mafia.*;
 import game.phases.*;
 
@@ -9,26 +10,39 @@ public class GameField implements Observer {
 
     private final Pile pile;
     private final List<Player> players;
-    private final TradingArea tradingArea;
+    private DiscoverArea discoverArea;
+    private TradingArea tradingArea;
+
     private Player turnPlayer;
     private Phase phase;
 
-    private final MafiaBank mafiaBank;
+    private final boolean extension;
+
+    private  MafiaBank mafiaBank;
     private AlCabohne alCabohne;
     private DonCorlebohne donCorlebohne;
     private JoeBohnano joeBohnano;
 
-    public GameField(int playerAmount) {
-        if (playerAmount < 1 || playerAmount > 2)
-            throw new IllegalArgumentException("playerAmount must be 1 or 2.");
-
-        this.pile = new Pile();
+    public GameField(int playerAmount, boolean extension) {
+        this.extension = extension;
+        this.pile = new Pile(this);
         players = new ArrayList<>();
-        tradingArea = new TradingArea(this);
 
-        mafiaBank = new MafiaBank();
+        if(extension) {
+            if (playerAmount < 1 || playerAmount > 2)
+                throw new IllegalArgumentException("playerAmount must be 1 or 2.");
+            discoverArea = new DiscoverArea(this);
 
-        setUp(playerAmount);
+            mafiaBank = new MafiaBank();
+            setUpExt(playerAmount);
+        }
+        else {
+            if (playerAmount < 3 || playerAmount > 5)
+                throw new IllegalArgumentException("playerAmount must be between 3 or 5.");
+            setUp(playerAmount);
+            tradingArea = new TradingArea(this);
+        }
+
 
         turnPlayer = players.getFirst();
         turnPlayer.setPhase(new PhasePlanting());
@@ -64,17 +78,34 @@ public class GameField implements Observer {
         return pile;
     }
 
+    public DiscoverArea getDiscoverArea() {
+        return discoverArea;
+    }
+
     public TradingArea getTradingArea() {
         return tradingArea;
     }
 
-    private void setUp(int playerAmount) {
-        setUpCards(playerAmount);
-        setUpBoss(playerAmount);
-        setUpCardsBoss(playerAmount);
+    public boolean getExtension() {
+        return extension;
     }
 
-    private void setUpBoss(int playerAmount) {
+    private void setUp(int playerAmount) {
+        for(int i = 0; i < playerAmount; i++) {
+            players.add(new Player(i+1 + "", this));
+
+            for (int j = 0; j < 5; j++) players.get(i).getHand().addCard(pile.drawCard());
+            players.get(i).addObserver(this);
+        }
+    }
+
+    private void setUpExt(int playerAmount) {
+        setUpCardsExt(playerAmount);
+        setUpBossExt(playerAmount);
+        setUpCardsBossExt(playerAmount);
+    }
+
+    private void setUpBossExt(int playerAmount) {
         if(playerAmount == 1) {
             joeBohnano = new JoeBohnano(this);
         }
@@ -82,7 +113,7 @@ public class GameField implements Observer {
         donCorlebohne = new DonCorlebohne(this);
     }
 
-    private void setUpCardsBoss(int playerAmount) {
+    private void setUpCardsBossExt(int playerAmount) {
         Field alCabohnesField = alCabohne.getField();
         Field donCorlebohneField = donCorlebohne.getField();
 
@@ -118,10 +149,10 @@ public class GameField implements Observer {
 
     }
 
-    private void setUpCards(int playerAmount) {
+    private void setUpCardsExt(int playerAmount) {
         if (playerAmount == 1) {
             players.add(new Player( "", this));
-            for (int j = 0; j < 5; j++) players.getFirst().getHand().addCard(pile.drawCard());
+            for (int j = 0; j < 7; j++) players.getFirst().getHand().addCard(pile.drawCard());
             players.getFirst().addObserver(this);
         }
 
@@ -136,8 +167,8 @@ public class GameField implements Observer {
         }
     }
 
-    private void checkTradingCardForBoss(int index) {
-        Field tradingField = tradingArea.getTradingFields().get(index);
+    private void checkDiscoverCardForBoss(int index) {
+        Field discoverField = discoverArea.getDiscoverFields().get(index);
         List<Field> bossFields;
 
         if (players.size() == 2) {
@@ -147,14 +178,14 @@ public class GameField implements Observer {
         }
 
         for (Field bossField : bossFields) {
-            if (tradingField.getCardType() == bossField.getCardType()) {
+            if (discoverField.getCardType() == bossField.getCardType()) {
                 bossField.increaseCardAmount();
-                System.out.println("A Boss took " + tradingField.getCardType() + "!");
-                tradingField.clear();
+                System.out.println("A Boss took " + discoverField.getCardType() + "!");
+                discoverField.clear();
 
-                tradingField.setCardType(pile.drawCard());
-                tradingField.increaseCardAmount();
-                checkTradingCardForBoss(index);
+                discoverField.setCardType(pile.drawCard());
+                discoverField.increaseCardAmount();
+                checkDiscoverCardForBoss(index);
                 break;
             }
         }
@@ -165,9 +196,9 @@ public class GameField implements Observer {
     private void checkTopDiscardPileMatch() {
         List<Card> discardPile = pile.getDiscardPile();
         if(!discardPile.isEmpty()) {
-            for (Field tradingField : tradingArea.getTradingFields()) {
-                if(tradingField.getCardType() == discardPile.getLast()) {
-                    tradingField.increaseCardAmount();
+            for (Field discoverField : discoverArea.getDiscoverFields()) {
+                if(discoverField.getCardType() == discardPile.getLast()) {
+                    discoverField.increaseCardAmount();
                     discardPile.removeLast();
                     checkTopDiscardPileMatch();
                     break;
@@ -192,7 +223,29 @@ public class GameField implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        this.phase = (Phase) arg;
+        if(extension) {
+            updatePhasesExt((Phase) arg);
+        }
+        else {
+            this.phase = (Phase) arg;
+            if(phase instanceof PhaseTrading) {
+                this.tradingArea.fillTradingArea();
+            }
+            if(phase instanceof PhasePlantingTraded) {
+                tradingArea.getOffersForTCard0().clear();
+                tradingArea.getOffersForTCard1().clear();
+            }
+            if (phase instanceof PhaseOut) {
+                int index = players.indexOf(turnPlayer);
+                turnPlayer = (index+1 >= players.size()) ? players.getFirst() : players.get(index+1);
+                turnPlayer.setPhase(new PhasePlanting());
+                System.out.println("Turn of Player " + (players.indexOf(turnPlayer)+1) + ".");
+            }
+        }
+    }
+
+    private void updatePhasesExt(Phase arg) {
+        this.phase = arg;
 
         try {
             tryHarvestBoss();
@@ -210,16 +263,16 @@ public class GameField implements Observer {
         }
 
         if(phase instanceof PhaseRevealing) {
-            for(int i = 0; i < tradingArea.getTradingFields().size(); i++) {
-                System.out.println("Filling Trading Card " + (i+1) + "...");
-                tradingArea.fillTradingField(i);
-                checkTradingCardForBoss(i);
-                System.out.println(tradingArea.getTradingFields().get(0).getCardType() + ", "
-                        +tradingArea.getTradingFields().get(0).getCardAmount());
-                System.out.println(tradingArea.getTradingFields().get(1).getCardType() + ", "
-                        +tradingArea.getTradingFields().get(1).getCardAmount());
-                System.out.println(tradingArea.getTradingFields().get(2).getCardType() + ", "
-                        +tradingArea.getTradingFields().get(2).getCardAmount());
+            for(int i = 0; i < discoverArea.getDiscoverFields().size(); i++) {
+                System.out.println("Filling Discover Card " + (i+1) + "...");
+                discoverArea.fillDiscoverCard(i);
+                checkDiscoverCardForBoss(i);
+                System.out.println(discoverArea.getDiscoverFields().get(0).getCardType() + ", "
+                        + discoverArea.getDiscoverFields().get(0).getCardAmount());
+                System.out.println(discoverArea.getDiscoverFields().get(1).getCardType() + ", "
+                        + discoverArea.getDiscoverFields().get(1).getCardAmount());
+                System.out.println(discoverArea.getDiscoverFields().get(2).getCardType() + ", "
+                        + discoverArea.getDiscoverFields().get(2).getCardAmount());
             }
             try {
                 turnPlayer.nextPhase();

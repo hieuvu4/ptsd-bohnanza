@@ -2,8 +2,6 @@ package game.phases;
 
 import game.*;
 
-import java.util.Arrays;
-
 public class PhaseUsing extends Phase {
 
     public PhaseUsing() {
@@ -11,16 +9,16 @@ public class PhaseUsing extends Phase {
     }
 
     @Override
-    public void takeTradingCards(final Player player, int tradingCardFieldNumber) throws IllegalMoveException {
-        Field tradingField = getField(player, tradingCardFieldNumber);
+    public void takeDiscoverCards(final Player player, int discoverCardFieldNumber) throws IllegalMoveException {
+        Field discoverField = getField(player, discoverCardFieldNumber);
 
-        if (tradingField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null) throw new IllegalMoveException();
 
         boolean cardFound = false;
         int index = -1;
         for(int i = 0; i < player.getFields().length; i++) {
             Field playerField = player.getField(i);
-            if(playerField.getCardType() == tradingField.getCardType() || playerField.getCardType() == null) {
+            if(playerField.getCardType() == discoverField.getCardType() || playerField.getCardType() == null) {
                 cardFound = true;
                 index = i;
                 break;
@@ -28,36 +26,36 @@ public class PhaseUsing extends Phase {
         }
         if (!cardFound) throw new IllegalMoveException();
 
-        for(int i = 0; i < tradingField.getCardAmount(); i++) {
-            player.getField(index).setCardType(tradingField.getCardType());
+        for(int i = 0; i < discoverField.getCardAmount(); i++) {
+            player.getField(index).setCardType(discoverField.getCardType());
             player.getField(index).increaseCardAmount();
         }
 
-        tradingField.clear();
+        discoverField.clear();
     }
 
     @Override
-    public void putTradingCardsToDiscard(Player player, int tradingCardFieldNumber) throws IllegalMoveException {
-        Field tradingField = getField(player, tradingCardFieldNumber);
+    public void putDiscoverCardsToDiscard(Player player, int discoverCardFieldNumber) throws IllegalMoveException {
+        Field discoverField = getField(player, discoverCardFieldNumber);
 
-        if (tradingField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null) throw new IllegalMoveException();
 
         Pile pile = player.getGameField().getPile();
 
-        for(int i = 0; i < tradingField.getCardAmount(); i++) {
-            pile.getDiscardPile().add(tradingField.getCardType());
+        for(int i = 0; i < discoverField.getCardAmount(); i++) {
+            pile.getDiscardPile().add(discoverField.getCardType());
         }
 
-        tradingField.clear();
+        discoverField.clear();
     }
 
-    private static Field getField(Player player, int tradingCardFieldNumber) {
-        if (tradingCardFieldNumber < 0 || tradingCardFieldNumber > 2) {
-            throw new IllegalArgumentException("Trading card field number must be between 0 and 2.");
+    private static Field getField(Player player, int discoverCardFieldNumber) {
+        if (discoverCardFieldNumber < 0 || discoverCardFieldNumber > 2) {
+            throw new IllegalArgumentException("Discover card field number must be between 0 and 2.");
         }
 
-        TradingArea tradingArea = player.getGameField().getTradingArea();
-        Field tradingField = tradingArea.getTradingFields().get(tradingCardFieldNumber);
-        return tradingField;
+        DiscoverArea discoverArea = player.getGameField().getDiscoverArea();
+        Field discoverField = discoverArea.getDiscoverFields().get(discoverCardFieldNumber);
+        return discoverField;
     }
 }

@@ -1,4 +1,5 @@
-import game.Card;
+import game.GameField;
+import game.cards.Card;
 import game.Pile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,13 +9,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.IntStream;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class PileTest {
 
     Pile pile;
+    GameField gameField;
 
     @BeforeEach
     public void setUp() {
-        pile = new Pile();
+        gameField = mock(GameField.class);
+        when(gameField.getExtension()).thenReturn(false);
+        pile = new Pile(gameField);
     }
 
     @Test
@@ -25,7 +32,7 @@ public class PileTest {
         Card drawedCard = pile.drawCard();
 
         Assertions.assertEquals(amountCardsBeforeDraw - 1, pile.getCards().size());
-        Assertions.assertEquals(firstCard, drawedCard);
+        Assertions.assertEquals(firstCard.getName(), drawedCard.getName());
     }
 
     @ParameterizedTest
@@ -36,6 +43,6 @@ public class PileTest {
         IntStream.range(0, amount).forEach(i -> pile.drawCard());
 
         Assertions.assertEquals(amountCardsBeforeDraw - amount, pile.getCards().size());
-        Assertions.assertEquals(card, pile.getCards().getFirst());
+        Assertions.assertEquals(card.getName(), pile.getCards().getFirst().getName());
     }
 }

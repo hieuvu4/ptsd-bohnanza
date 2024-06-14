@@ -3,7 +3,7 @@ package game;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Main {
+public class ExtensionClient {
 
     public static void main(String[] args) throws IllegalMoveException {
 
@@ -14,13 +14,13 @@ public class Main {
         run(gameField);
     }
 
-    private static void tradingFields(GameField gameField) {
-        System.out.println("[ Trading Field 1: " + gameField.getTradingArea().getTradingFields().get(0).getCardType()
-                + ", " + gameField.getTradingArea().getTradingFields().get(0).getCardAmount() + "]");
-        System.out.println("[ Trading Field 2: " + gameField.getTradingArea().getTradingFields().get(1).getCardType()
-                + ", " + gameField.getTradingArea().getTradingFields().get(1).getCardAmount() + "]");
-        System.out.println("[ Trading Field 3: " + gameField.getTradingArea().getTradingFields().get(2).getCardType()
-                + ", " + gameField.getTradingArea().getTradingFields().get(2).getCardAmount() + "]");
+    private static void discoverFields(GameField gameField) {
+        System.out.println("[ Discover Field 1: " + gameField.getDiscoverArea().getDiscoverFields().get(0).getCardType()
+                + ", " + gameField.getDiscoverArea().getDiscoverFields().get(0).getCardAmount() + "]");
+        System.out.println("[ Discover Field 2: " + gameField.getDiscoverArea().getDiscoverFields().get(1).getCardType()
+                + ", " + gameField.getDiscoverArea().getDiscoverFields().get(1).getCardAmount() + "]");
+        System.out.println("[ Discover Field 3: " + gameField.getDiscoverArea().getDiscoverFields().get(2).getCardType()
+                + ", " + gameField.getDiscoverArea().getDiscoverFields().get(2).getCardAmount() + "]");
     }
 
     private static void bossFields(GameField gameField) {
@@ -45,7 +45,11 @@ public class Main {
     }
 
     private static void playerHand(Player player) {
-        System.out.println("[ Player " + player.getName() + "'s hand: " + player.getHand().getHandPile() + " ]");
+        System.out.print("[ Player " + player.getName() + "'s hand: ");
+        for(int i = 0; i <  player.getHand().getHandPile().size(); i++ ) {
+            System.out.print(" " + player.getHand().getHandPile().get(i).getName() + " ");
+        }
+        System.out.println("]");
         System.out.println();
     }
 
@@ -58,14 +62,14 @@ public class Main {
         int playerAmount = scanner.nextInt();
 
         if (playerAmount == 1) {
-            gameField = new GameField(1);
+            gameField = new GameField(1, true);
             p1 = gameField.getPlayers().getFirst();
 
             bossFields(gameField);
             playerHand(p1);
         }
         else if (playerAmount == 2) {
-            gameField = new GameField(2);
+            gameField = new GameField(2, true);
             p1 = gameField.getPlayers().getFirst();
             p2 = gameField.getPlayers().getLast();
 
@@ -81,7 +85,7 @@ public class Main {
     }
 
     private static void run(GameField gameField) throws IllegalMoveException {
-        System.out.print("Actions: hand | field | trading | boss | harvest | next");
+        System.out.print("Actions: hand | field | discover | boss | harvest | next");
         if(gameField.getTurnPlayer().getPhase().getClass().getSimpleName().equals("PhasePlanting"))
             System.out.print(" | plant");
 
@@ -102,8 +106,8 @@ public class Main {
                 playerField(gameField.getTurnPlayer());
                 run(gameField);
             }
-            case "trading" -> {
-                tradingFields(gameField);
+            case "discover" -> {
+                discoverFields(gameField);
                 run(gameField);
             }
             case "boss" -> {
@@ -159,14 +163,14 @@ public class Main {
 
     private static void cultivate(GameField gameField) throws IllegalMoveException {
         System.out.println("Which card should be cultivated? ( 1 / 2 / 3 )" );
-        Scanner tradingCard = new Scanner(System.in);
-        if (Objects.equals(tradingCard.next().trim(), "1")) {
+        Scanner discoverCard = new Scanner(System.in);
+        if (Objects.equals(discoverCard.next().trim(), "1")) {
             cultivating(gameField, 0);
         }
-        else if (Objects.equals(tradingCard.next().trim(), "2")) {
+        else if (Objects.equals(discoverCard.next().trim(), "2")) {
             cultivating(gameField, 1);
         }
-        else if (Objects.equals(tradingCard.next().trim(), "3")) {
+        else if (Objects.equals(discoverCard.next().trim(), "3")) {
             cultivating(gameField, 2);
         } else {
             System.out.println("Invalid input.");
@@ -174,7 +178,7 @@ public class Main {
         }
     }
 
-    private static void cultivating(GameField gameField, int tradingCardFieldNumber) throws IllegalMoveException {
+    private static void cultivating(GameField gameField, int discoverCardFieldNumber) throws IllegalMoveException {
         if (gameField.getPlayers().size() == 1) {
             System.out.println("On which field should it be planted? ( own / al / don / joe )");
         } else {
@@ -182,13 +186,13 @@ public class Main {
         }
         Scanner field = new Scanner(System.in);
         if (Objects.equals(field.next().trim(), "own")) {
-            gameField.getTurnPlayer().cultivateOwnField(tradingCardFieldNumber);
+            gameField.getTurnPlayer().cultivateOwnField(discoverCardFieldNumber);
         } else if (Objects.equals(field.next().trim(), "al")) {
-            gameField.getTurnPlayer().cultivateBossField(tradingCardFieldNumber, gameField.getAlCabohne());
+            gameField.getTurnPlayer().cultivateBossField(discoverCardFieldNumber, gameField.getAlCabohne());
         } else if (Objects.equals(field.next().trim(), "don")) {
-            gameField.getTurnPlayer().cultivateBossField(tradingCardFieldNumber, gameField.getDonCorlebohne());
+            gameField.getTurnPlayer().cultivateBossField(discoverCardFieldNumber, gameField.getDonCorlebohne());
         } else if (Objects.equals(field.next().trim(), "joe")) {
-            gameField.getTurnPlayer().cultivateBossField(tradingCardFieldNumber, gameField.getJoeBohnano());
+            gameField.getTurnPlayer().cultivateBossField(discoverCardFieldNumber, gameField.getJoeBohnano());
         } else {
             System.out.println("Invalid input.");
             run(gameField);

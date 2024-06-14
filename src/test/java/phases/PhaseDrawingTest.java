@@ -1,6 +1,8 @@
 package phases;
 
 import game.*;
+import game.cards.Brechbohne;
+import game.cards.Card;
 import game.phases.Phase;
 import game.phases.PhasePlanting;
 import game.phases.PhaseDrawing;
@@ -16,16 +18,17 @@ public class PhaseDrawingTest {
     private Player player;
     private Pile pile;
     private GameField gameField;
-    private TradingArea tradingArea;
+    private DiscoverArea discoverArea;
     private Phase phase;
 
     @BeforeEach
     public void setUp() {
-        pile = new Pile();
-        tradingArea = new TradingArea(gameField);
+        pile = new Pile(gameField);
+        discoverArea = new DiscoverArea(gameField);
         gameField = mock(GameField.class);
         when(gameField.getPile()).thenReturn(pile);
-        when(gameField.getTradingArea()).thenReturn(tradingArea);
+        when(gameField.getExtension()).thenReturn(false);
+        when(gameField.getDiscoverArea()).thenReturn(discoverArea);
         player = new Player("Test", gameField);
         phase = new PhaseDrawing();
         player.setPhase(phase);
@@ -33,10 +36,10 @@ public class PhaseDrawingTest {
 
     @Test
     public void testPlantWrongPhase() {
-        player.getHand().addCard(Card.BRECHBOHNE);
+        player.getHand().addCard(new Brechbohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, Card.BRECHBOHNE);
+            player.plant(0, new Brechbohne());
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -55,8 +58,8 @@ public class PhaseDrawingTest {
     @Test
     public void testHarvestOnlyOneFieldPlanted() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        player.getHand().addCard(Card.BRECHBOHNE);
-        player.plant(0, Card.BRECHBOHNE);
+        player.getHand().addCard(new Brechbohne());
+        player.plant(0, new Brechbohne());
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);
         });
@@ -103,9 +106,9 @@ public class PhaseDrawingTest {
     }
 
     @Test
-    public void testTakeTradingCardsWrongPhase() {
+    public void testTakeDiscoverCardsWrongPhase() {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.takeTradingCards(0);
+            player.takeDiscoverCards(0);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());

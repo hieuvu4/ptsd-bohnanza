@@ -22,7 +22,14 @@ public class PhaseDrawing extends Phase {
         if(player.getDrawn()) throw new IllegalMoveException("Player " + player.getName()
                 + ": Already drawn three cards.");
 
-        for(int i = 0; i < 2; i++) player.getHand().addCard(pile.drawCard());
+        boolean extension = player.getGameField().getExtension();
+
+        if(extension){
+            for(int i = 0; i < 2; i++) player.getHand().addCard(pile.drawCard());
+        }
+        else {
+            for(int i = 0; i < 3; i++) player.getHand().addCard(pile.drawCard());
+        }
     }
 
 }

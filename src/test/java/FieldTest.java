@@ -1,4 +1,5 @@
-import game.Card;
+import game.cards.Brechbohne;
+import game.cards.Card;
 import game.Field;
 import game.IllegalMoveException;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +19,7 @@ public class FieldTest {
 
     @BeforeEach
     public void setUp() {
-        card = Card.BRECHBOHNE;
+        card = new Brechbohne();
         field = new Field();
     }
 

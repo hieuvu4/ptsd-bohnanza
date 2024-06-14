@@ -1,6 +1,8 @@
 package phases;
 
 import game.*;
+import game.cards.BlaueBohne;
+import game.cards.Brechbohne;
 import game.phases.Phase;
 import game.phases.PhaseCultivating;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PhaseCultivatingTest {
+public class PhasePlantingTradedTest {
 
     private Player player;
     private Pile pile;
@@ -22,9 +24,9 @@ public class PhaseCultivatingTest {
 
     @BeforeEach
     public void setUp() {
-        pile = new Pile();
         tradingArea = new TradingArea(gameField);
         gameField = mock(GameField.class);
+        pile = new Pile(gameField);
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
@@ -34,20 +36,20 @@ public class PhaseCultivatingTest {
 
     @Test
     public void testPlantTradedCards() throws IllegalMoveException {
-        player.getTradedCards().add(Card.BRECHBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+        player.getTradedCards().add(new Brechbohne());
+        player.getTradedCards().add(new BlaueBohne());
         player.plant(0, player.getTradedCards().getFirst());
         player.plant(1, player.getTradedCards().getFirst());
 
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
-        Assertions.assertEquals(Card.BLAUE_BOHNE, player.getField(1).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
+        Assertions.assertEquals(new BlaueBohne(), player.getField(1).getCardType());
         Assertions.assertEquals(new ArrayList<>(), player.getTradedCards());
     }
 
     @Test
     public void testPlantTradedCardsNotPlanted() {
-        player.getTradedCards().add(Card.BRECHBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+        player.getTradedCards().add(new Brechbohne());
+        player.getTradedCards().add(new BlaueBohne());
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.nextPhase();
@@ -58,11 +60,11 @@ public class PhaseCultivatingTest {
 
     @Test
     public void testPlantTradedCardsNotComplete() throws IllegalMoveException {
-        player.getTradedCards().add(Card.BRECHBOHNE);
-        player.getTradedCards().add(Card.BLAUE_BOHNE);
+        player.getTradedCards().add(new Brechbohne());
+        player.getTradedCards().add(new BlaueBohne());
         player.plant(0, player.getTradedCards().getFirst());
 
-        Assertions.assertEquals(Card.BRECHBOHNE, player.getField(0).getCardType());
+        Assertions.assertEquals(new Brechbohne(), player.getField(0).getCardType());
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.nextPhase();
         });
@@ -109,8 +111,8 @@ public class PhaseCultivatingTest {
     }
 
     @Test
-    public void testTakeTradingCardsWrongPhase() {Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.takeTradingCards(0);
+    public void testTakeDiscoverCardsWrongPhase() {Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+            player.takeDiscoverCards(0);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
