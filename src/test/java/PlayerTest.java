@@ -9,7 +9,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -56,17 +55,23 @@ public class PlayerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {2, 4, 6, 12})
+    @ValueSource(ints = {4, 6, 12})
     public void testPlantMoreThanOne(int amount) throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        for(int i = 0; i < amount; i++) {
+        for(int i = 0; i < 2; i++) {
             Card card = new Card(CardType.BRECHBOHNE);
             player.getHand().addCard(card);
             player.plant(0, player.getHand().peekTopCard());
         }
-
-        Assertions.assertEquals(CardType.BRECHBOHNE, player.getField(0).getCardType());
-        Assertions.assertEquals(amount, player.getField(0).getCardAmount());
+        for(int i = 0; i < amount; i++) {
+            Card card = new Card(CardType.BRECHBOHNE);
+            player.getHand().addCard(card);
+            Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+                player.plant(0, player.getHand().peekTopCard());
+            });
+            Assertions.assertEquals("Player "
+                    + player.getName() + ": Can't plant a third time.", exception.getMessage());
+        }
     }
 
     @Test
@@ -102,7 +107,7 @@ public class PlayerTest {
 
     @Test
     public void testPlantWrongPhase() {
-        Phase[] phases = {new PhaseTrading(), new PhaseDrawing(), new PhaseOut()};
+        Phase[] phases = {new PhaseTrading(), new PhaseDrawing()};
         for(Phase phase : phases) {
             player.setPhase(phase);
             player.getHand().addCard(new Card(CardType.BRECHBOHNE));
@@ -205,15 +210,14 @@ public class PlayerTest {
         Phase[] phases = {new PhasePlanting(), new PhaseTrading(), new PhasePlantingTraded(), new PhaseDrawing(), new PhaseOut()};
 
         for(Phase phase : phases) {
+            Player player = new Player("", gameField);
             player.setPhase(new PhasePlanting());
-            for (int i = 0; i < 3; i++) {
-                Card card1 = new Card(CardType.BRECHBOHNE);
-                Card card2 = new Card(CardType.BLAUE_BOHNE);
-                player.getHand().addCard(card1);
-                player.getHand().addCard(card2);
-                player.plant(0, card1);
-                player.plant(1, card2);
-            }
+            Card card1 = new Card(CardType.BRECHBOHNE);
+            Card card2 = new Card(CardType.BLAUE_BOHNE);
+            player.getHand().addCard(card1);
+            player.getHand().addCard(card2);
+            player.plant(0, card1);
+            player.plant(1, card2);
             player.setPhase(phase);
             player.harvest(0);
 
@@ -228,14 +232,14 @@ public class PlayerTest {
 
         Card card1 = new Card(CardType.BRECHBOHNE);
         Card card2 = new Card(CardType.BLAUE_BOHNE);
-        Card card3 = new Card(CardType.BLAUE_BOHNE);
+        CardType card3 = CardType.BLAUE_BOHNE;
 
         player.getHand().addCard(card1);
         player.getHand().addCard(card2);
-        player.getHand().addCard(card3);
+        player.getField(1).setCardType(card3);
+        player.getField(1).increaseCardAmount();
         player.plant(0, card1);
         player.plant(1, card2);
-        player.plant(1, card3);
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
             player.harvest(0);

@@ -58,16 +58,22 @@ public class PhasePlantingTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {2, 4, 6, 12})
+    @ValueSource(ints = {4, 6, 12})
     public void testPlantMoreThanOne(int amount) throws IllegalMoveException {
-        for(int i = 0; i < amount; i++) {
+        for(int i = 0; i < 2; i++) {
             Card card = new Card(CardType.BRECHBOHNE);
             player.getHand().addCard(card);
             player.plant(0, player.getHand().peekTopCard());
         }
-
-        Assertions.assertEquals(CardType.BRECHBOHNE, player.getField(0).getCardType());
-        Assertions.assertEquals(amount, player.getField(0).getCardAmount());
+        for(int i = 0; i < amount; i++) {
+            Card card = new Card(CardType.BRECHBOHNE);
+            player.getHand().addCard(card);
+            Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+                player.plant(0, player.getHand().peekTopCard());
+            });
+            Assertions.assertEquals("Player "
+                    + player.getName() + ": Can't plant a third time.", exception.getMessage());
+        }
     }
 
     @Test

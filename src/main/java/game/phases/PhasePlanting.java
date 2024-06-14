@@ -10,6 +10,8 @@ import java.util.Objects;
 
 public class PhasePlanting extends Phase {
 
+    private int plantedAmount = 0;
+
     public PhasePlanting() {
         System.out.println("Phase Planting");
     }
@@ -25,6 +27,8 @@ public class PhasePlanting extends Phase {
      */
     @Override
     public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
+        if (plantedAmount > 1)
+            throw new IllegalMoveException("Player " + player.getName() + ": Can't plant a third time.");
         if(player.getHand().getHandPile().isEmpty())
             throw new NoSuchElementException("Player " + player.getName() + ": There are no cards in the hand.");
 
@@ -39,6 +43,7 @@ public class PhasePlanting extends Phase {
             currentField.setCardType(card.cardType());
             currentField.increaseCardAmount();
             player.getHand().removeCard(0);
+            plantedAmount++;
         }
     }
 }
