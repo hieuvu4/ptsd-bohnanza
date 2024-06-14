@@ -15,23 +15,18 @@ public class Pile {
         cards = new ArrayList<>();
         discardPile = new ArrayList<>();
         timesRefillCards = 2;
-
+        CardType[] cardTypes;
         if(gameField.getExtension()) {
-            Card[] alCabohneCards = {new BlaueBohne(), new Brechbohne(), new Feuerbohne(),
-                    new Kidneybohne(), new Puffbohne(), new Saubohne(), new Stangenbohne()};
-            for(Card card : alCabohneCards) {
-                for(int i = 0; i < card.getOverallAmount(); i++) cards.add(card);
-            }
+            cardTypes = new CardType[]{CardType.BLAUE_BOHNE, CardType.BRECHBOHNE, CardType.FEUERBOHNE,
+                    CardType.KIDNEYBOHNE, CardType.PUFFBOHNE, CardType.SAUBOHNE, CardType.STANGENBOHNE};
         } else {
-            Card[] standardCards = {new Gartenbohne(), new RoteBohne(), new Augenbohne(),
-                    new Sojabohne(), new Brechbohne(), new Saubohne(), new Feuerbohne(),
-                    new BlaueBohne()};
-
-            for(Card card : standardCards) {
-                for(int i = 0; i < card.getOverallAmount(); i++) cards.add(card);
-            }
+            cardTypes = new CardType[]{CardType.GARTENBOHNE, CardType.ROTE_BOHNE, CardType.AUGENBOHNE,
+                    CardType.SOJABOHNE, CardType.BRECHBOHNE, CardType.SAUBOHNE, CardType.FEUERBOHNE,
+                    CardType.BLAUE_BOHNE};
         }
-
+        for(CardType cardType : cardTypes) {
+            for(int i = 0; i < cardType.getOverallAmount(); i++) cards.add(new Card(cardType));
+        }
         // shuffle cards
         Collections.shuffle(cards);
 //        for(bohnanza.Card card : cards) System.out.println(card.getName());
@@ -42,6 +37,7 @@ public class Pile {
      * Draws the top card from pile. If the pile is empty and  times to refill cards is 0, the game is over. If the
      * pile is empty and times to refill cards bigger than 0, cards gets refilled with the cards of the discard pile
      * and cards gets shuffled. The times for refilling cards is decreased by 1.
+     *
      * @return the first card from the pile
      */
     public Card drawCard() { // impl auto reshuffle

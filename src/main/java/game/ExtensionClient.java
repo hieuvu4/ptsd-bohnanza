@@ -47,7 +47,7 @@ public class ExtensionClient {
     private static void playerHand(Player player) {
         System.out.print("[ Player " + player.getName() + "'s hand: ");
         for(int i = 0; i <  player.getHand().getHandPile().size(); i++ ) {
-            System.out.print(" " + player.getHand().getHandPile().get(i).getName() + " ");
+            System.out.print(" " + player.getHand().getHandPile().get(i).cardType() + " ");
         }
         System.out.println("]");
         System.out.println();
@@ -146,12 +146,12 @@ public class ExtensionClient {
         System.out.println("Which field should be planted? ( 1 / 2 )");
         Scanner fieldNumber = new Scanner(System.in);
         if (Objects.equals(fieldNumber.next().trim(), "1")) {
-            gameField.getTurnPlayer().plant(0, gameField.getTurnPlayer().getHand().popTopCard());
+            gameField.getTurnPlayer().plant(0, gameField.getTurnPlayer().getHand().peekTopCard());
             playerHand(gameField.getTurnPlayer());
             playerField(gameField.getTurnPlayer());
         }
         else if (Objects.equals(fieldNumber.next().trim(), "2")) {
-            gameField.getTurnPlayer().plant(1, gameField.getTurnPlayer().getHand().popTopCard());
+            gameField.getTurnPlayer().plant(1, gameField.getTurnPlayer().getHand().peekTopCard());
             playerHand(gameField.getTurnPlayer());
             playerField(gameField.getTurnPlayer());
         }
@@ -219,4 +219,5 @@ public class ExtensionClient {
             run(gameField);
         }
     }
+
 }

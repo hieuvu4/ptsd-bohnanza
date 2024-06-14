@@ -3,6 +3,7 @@ package game.phases;
 import game.Player;
 import game.TradingArea;
 import game.cards.Card;
+import game.cards.CardType;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,7 @@
 package game;
 
 import game.cards.Card;
+import game.cards.CardType;
 import game.mafia.Boss;
 import game.phases.*;
 

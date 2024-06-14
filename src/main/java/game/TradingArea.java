@@ -1,6 +1,7 @@
 package game;
 
 import game.cards.Card;
+import game.cards.CardType;
 
 import java.util.HashMap;
 import java.util.List;

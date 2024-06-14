@@ -1,9 +1,9 @@
 package game;
 
-import game.cards.Card;
+import game.cards.CardType;
 
 public class Field {
-    private Card cardType;
+    private CardType cardType;
     private int cardAmount;
 
     public Field() {
@@ -11,12 +11,12 @@ public class Field {
         cardAmount = 0;
     }
 
-    public Card getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
 
-    public void setCardType(final Card card) {
-        this.cardType = card;
+    public void setCardType(final CardType cardType) {
+        this.cardType = cardType;
     }
 
     public int getCardAmount() {

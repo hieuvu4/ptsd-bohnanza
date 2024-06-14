@@ -4,6 +4,7 @@ import game.Field;
 import game.IllegalMoveException;
 import game.Player;
 import game.cards.Card;
+import game.cards.CardType;
 
 import java.util.Objects;
 
@@ -24,16 +25,16 @@ public class PhasePlantingTraded extends Phase {
             throw new IllegalMoveException("Player " + player.getName()
                     + ": There are no traded cards in this player.");
 
-        if (player.getTradedCards().stream().anyMatch(card.getName()::equals))
+        if (!player.getTradedCards().contains(card))
             throw new IllegalMoveException("Player " + player.getName()
                     + ": There is no such card in traded cards in this player.");
 
         Field currentField = player.getField(fieldNumber);
-        if(!currentField.isEmpty() && !Objects.equals(currentField.getCardType().getName(), card.getName()))
+        if(!currentField.isEmpty() && !currentField.getCardType().equals(card.cardType()))
             throw new IllegalMoveException("Player " + player.getName() + ": The given card type is not the same.");
 
-        if(currentField.isEmpty() || Objects.equals(currentField.getCardType().getName(), card.getName())) {
-            currentField.setCardType(card);
+        if(currentField.isEmpty() || currentField.getCardType().equals(card.cardType())) {
+            currentField.setCardType(card.cardType());
             currentField.increaseCardAmount();
             player.getTradedCards().remove(card);
         }

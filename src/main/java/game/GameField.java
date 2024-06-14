@@ -1,6 +1,7 @@
 package game;
 
 import game.cards.Card;
+import game.cards.CardType;
 import game.mafia.*;
 import game.phases.*;
 
@@ -118,7 +119,7 @@ public class GameField implements Observer {
         Field donCorlebohneField = donCorlebohne.getField();
 
         Card card = pile.drawCard();
-        alCabohnesField.setCardType(card);
+        alCabohnesField.setCardType(card.cardType());
         alCabohnesField.increaseCardAmount();
 
         while(donCorlebohneField.getCardAmount() != 1) {
@@ -126,7 +127,7 @@ public class GameField implements Observer {
             if (nextCard == card) {
                 alCabohnesField.increaseCardAmount();
             } else {
-                donCorlebohneField.setCardType(nextCard);
+                donCorlebohneField.setCardType(nextCard.cardType());
                 donCorlebohneField.increaseCardAmount();
             }
         }
@@ -138,10 +139,10 @@ public class GameField implements Observer {
                 if(nextCard == card) {
                     alCabohnesField.increaseCardAmount();
                 }
-                else if(nextCard == donCorlebohneField.getCardType()) {
+                else if(nextCard.cardType() == donCorlebohneField.getCardType()) {
                     donCorlebohneField.increaseCardAmount();
                 } else {
-                    joeBohnanoField.setCardType(nextCard);
+                    joeBohnanoField.setCardType(nextCard.cardType());
                     joeBohnanoField.increaseCardAmount();
                 }
             }
@@ -183,7 +184,7 @@ public class GameField implements Observer {
                 System.out.println("A Boss took " + discoverField.getCardType() + "!");
                 discoverField.clear();
 
-                discoverField.setCardType(pile.drawCard());
+                discoverField.setCardType(pile.drawCard().cardType());
                 discoverField.increaseCardAmount();
                 checkDiscoverCardForBoss(index);
                 break;
@@ -197,7 +198,7 @@ public class GameField implements Observer {
         List<Card> discardPile = pile.getDiscardPile();
         if(!discardPile.isEmpty()) {
             for (Field discoverField : discoverArea.getDiscoverFields()) {
-                if(discoverField.getCardType() == discardPile.getLast()) {
+                if(discoverField.getCardType() == discardPile.getLast().cardType()) {
                     discoverField.increaseCardAmount();
                     discardPile.removeLast();
                     checkTopDiscardPileMatch();

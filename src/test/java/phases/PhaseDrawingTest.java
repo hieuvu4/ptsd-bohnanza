@@ -1,8 +1,8 @@
 package phases;
 
 import game.*;
-import game.cards.Brechbohne;
 import game.cards.Card;
+import game.cards.CardType;
 import game.phases.Phase;
 import game.phases.PhasePlanting;
 import game.phases.PhaseDrawing;
@@ -36,10 +36,11 @@ public class PhaseDrawingTest {
 
     @Test
     public void testPlantWrongPhase() {
-        player.getHand().addCard(new Brechbohne());
+        Card card = new Card(CardType.BRECHBOHNE);
+        player.getHand().addCard(card);
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, new Brechbohne());
+            player.plant(0, card);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -58,7 +59,7 @@ public class PhaseDrawingTest {
     @Test
     public void testHarvestOnlyOneFieldPlanted() throws IllegalMoveException {
         player.setPhase(new PhasePlanting());
-        Card card = new Brechbohne();
+        Card card = new Card(CardType.BRECHBOHNE);
         player.getHand().addCard(card);
         player.plant(0, card);
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {

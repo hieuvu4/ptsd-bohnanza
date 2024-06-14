@@ -1,6 +1,6 @@
 package game.mafia;
 
-import game.cards.Card;
+import game.cards.CardType;
 import game.GameField;
 import game.IllegalMoveException;
 
@@ -12,8 +12,8 @@ public class AlCabohne extends Boss {
 
     @Override
     public void tryHarvest() throws IllegalMoveException {
-        Card currentCard = super.getField().getCardType();
-        if (currentCard.getCoinValue(super.getField().getCardAmount()) >= 3) {
+        CardType currentCardType = super.getField().getCardType();
+        if (currentCardType.getCoinValue(super.getField().getCardAmount()) >= 3) {
             this.harvest();
         }
     }

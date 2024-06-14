@@ -2,6 +2,7 @@ package game.mafia;
 
 import game.*;
 import game.cards.Card;
+import game.cards.CardType;
 
 public abstract class Boss {
 
@@ -20,12 +21,12 @@ public abstract class Boss {
     }
 
     public void harvest() throws IllegalMoveException {
-        Card card = field.getCardType();
+        CardType cardType = field.getCardType();
         int fieldSize = field.getCardAmount();
         int coinAmount = field.harvest();
         int diff = fieldSize - coinAmount;
-        for(int i = 0; i < coinAmount; i++) bank.addCoin(card);
-        for(int i = 0; i < diff; i++) gameField.getPile().getDiscardPile().add(card);
+        for(int i = 0; i < coinAmount; i++) bank.addCoin(cardType);
+        for(int i = 0; i < diff; i++) gameField.getPile().getDiscardPile().add(new Card(cardType));
         field.clear();
     }
 

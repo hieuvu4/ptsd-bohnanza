@@ -1,8 +1,6 @@
-import game.cards.BlaueBohne;
-import game.cards.Brechbohne;
 import game.cards.Card;
+import game.cards.CardType;
 import game.Hand;
-import game.cards.Saubohne;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,33 +17,31 @@ public class HandTest {
     }
 
     @Test
-    public void testPopTopCardNone() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> hand.popTopCard());
+    public void testPeekTopCardNone() {
+        Assertions.assertThrows(NoSuchElementException.class, () -> hand.peekTopCard());
     }
 
     @Test
-    public void testPopTopCardOne() {
-        hand.addCard(new Brechbohne());
+    public void testPeekTopCardOne() {
+        Card card = new Card(CardType.BRECHBOHNE);
+        hand.addCard(card);
 
-        Card card = hand.popTopCard();
-
-        Assertions.assertEquals(new Brechbohne().getName(), card.getName());
+        Assertions.assertEquals(card, hand.peekTopCard());
     }
 
     @Test
-    public void testPopTopCardMoreThanOne() {
-        hand.addCard(new Brechbohne());
-        hand.addCard(new Brechbohne());
-        hand.addCard(new BlaueBohne());
+    public void testPeekTopCardMoreThanOne() {
+        Card card = new Card(CardType.BRECHBOHNE);
+        hand.addCard(card);
+        hand.addCard(new Card(CardType.BRECHBOHNE));
+        hand.addCard(new Card(CardType.BRECHBOHNE));
 
-        Card card = hand.popTopCard();
-
-        Assertions.assertEquals(new Brechbohne().getName(), card.getName());
+        Assertions.assertEquals(card, hand.peekTopCard());
     }
 
     @Test
     public void testAddCardOne() {
-        hand.addCard(new Brechbohne());
+        hand.addCard(new Card(CardType.BRECHBOHNE));
 
         Assertions.assertEquals(1, hand.getHandPile().size());
     }
@@ -53,9 +49,9 @@ public class HandTest {
 
     @Test
     public void testAddCardThree() {
-        hand.addCard(new Brechbohne());
-        hand.addCard(new Brechbohne());
-        hand.addCard(new BlaueBohne());
+        hand.addCard(new Card(CardType.BRECHBOHNE));
+        hand.addCard(new Card(CardType.BRECHBOHNE));
+        hand.addCard(new Card(CardType.BRECHBOHNE));
 
         Assertions.assertEquals(3, hand.getHandPile().size());
     }
@@ -63,9 +59,9 @@ public class HandTest {
 
     @Test
     public void testRemoveCard() {
-        hand.addCard(new BlaueBohne());
-        hand.addCard(new Saubohne());
-        hand.addCard(new Brechbohne());
+        hand.addCard(new Card(CardType.BLAUE_BOHNE));
+        hand.addCard(new Card(CardType.SAUBOHNE));
+        hand.addCard(new Card(CardType.BRECHBOHNE));
 
         hand.removeCard(2);
 

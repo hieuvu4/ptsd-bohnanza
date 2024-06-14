@@ -1,23 +1,23 @@
 package game.mafia;
 
-import game.cards.Card;
+import game.cards.CardType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MafiaBank {
 
-    List<Card> coins;
+    List<CardType> coins;
 
     public MafiaBank() {
         coins = new ArrayList<>();
     }
 
-    public void addCoin(Card card) {
-        coins.add(card);
+    public void addCoin(CardType cardType) {
+        coins.add(cardType);
     }
 
-    public List<Card> getCoins() {
+    public List<CardType> getCoins() {
         return coins;
     }
 }

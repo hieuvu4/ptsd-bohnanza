@@ -1,11 +1,9 @@
 package phases;
 
 import game.*;
-import game.cards.BlaueBohne;
-import game.cards.Brechbohne;
 import game.cards.Card;
+import game.cards.CardType;
 import game.phases.Phase;
-import game.phases.PhaseRevealing;
 import game.phases.PhaseOut;
 import game.phases.PhaseTrading;
 import org.junit.jupiter.api.Assertions;
@@ -41,9 +39,11 @@ public class PhaseTradingTest {
     }
 
     @Test
-    public void testPlantWrongPhase() {player.getHand().addCard(new Brechbohne());
+    public void testPlantWrongPhase() {
+        Card card = new Card(CardType.BRECHBOHNE);
+        player.getHand().addCard(card);
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, new Brechbohne());
+            player.plant(0, card);
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -75,10 +75,11 @@ public class PhaseTradingTest {
         other.setPhase(new PhaseOut());
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            other.getHand().addCard(new Brechbohne());
-            cards.add(new Brechbohne());
+            var card = new Card(CardType.BRECHBOHNE);
+            other.getHand().addCard(card);
+            cards.add(card);
         }
-        tradingArea.getTradingCards()[0] = new BlaueBohne();
+        tradingArea.getTradingCards()[0] = new Card(CardType.BLAUE_BOHNE);
         other.offerCards(cards, 0);
 
         player.acceptOffer(other, 0);
@@ -89,12 +90,12 @@ public class PhaseTradingTest {
 
     @Test
     public void testTakeTradingCards() throws IllegalMoveException {
-        Card card = new BlaueBohne();
+        Card card = new Card(CardType.BLAUE_BOHNE);
         tradingArea.getTradingCards()[0] = card;
 
         player.takeTradingCards(0);
 
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
-        Assertions.assertEquals(new ArrayList<>(Arrays.asList((card))), player.getTradedCards());
+        Assertions.assertEquals(new ArrayList<>(List.of(card)), player.getTradedCards());
     }
 }

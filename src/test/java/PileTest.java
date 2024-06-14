@@ -1,5 +1,6 @@
 import game.GameField;
 import game.cards.Card;
+import game.cards.CardType;
 import game.Pile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ public class PileTest {
         Card drawedCard = pile.drawCard();
 
         Assertions.assertEquals(amountCardsBeforeDraw - 1, pile.getCards().size());
-        Assertions.assertEquals(firstCard.getName(), drawedCard.getName());
+        Assertions.assertEquals(firstCard, drawedCard);
     }
 
     @ParameterizedTest
@@ -43,6 +44,6 @@ public class PileTest {
         IntStream.range(0, amount).forEach(i -> pile.drawCard());
 
         Assertions.assertEquals(amountCardsBeforeDraw - amount, pile.getCards().size());
-        Assertions.assertEquals(card.getName(), pile.getCards().getFirst().getName());
+        Assertions.assertEquals(card, pile.getCards().getFirst());
     }
 }

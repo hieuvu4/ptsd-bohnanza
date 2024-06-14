@@ -1,6 +1,7 @@
 package game.phases;
 
 import game.*;
+import game.cards.Card;
 
 public class PhaseUsing extends Phase {
 
@@ -43,7 +44,7 @@ public class PhaseUsing extends Phase {
         Pile pile = player.getGameField().getPile();
 
         for(int i = 0; i < discoverField.getCardAmount(); i++) {
-            pile.getDiscardPile().add(discoverField.getCardType());
+            pile.getDiscardPile().add(new Card(discoverField.getCardType()));
         }
 
         discoverField.clear();

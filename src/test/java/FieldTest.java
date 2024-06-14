@@ -1,5 +1,4 @@
-import game.cards.Brechbohne;
-import game.cards.Card;
+import game.cards.CardType;
 import game.Field;
 import game.IllegalMoveException;
 import org.junit.jupiter.api.Assertions;
@@ -13,13 +12,13 @@ import java.util.stream.IntStream;
 public class FieldTest {
 
 
-    private Card card;
+    private CardType cardType;
 
     private Field field;
 
     @BeforeEach
     public void setUp() {
-        card = new Brechbohne();
+        cardType = CardType.BRECHBOHNE;
         field = new Field();
     }
 
@@ -46,15 +45,15 @@ public class FieldTest {
 
     @Test
     public void testIsNotEmpty() {
-        field.setCardType(card);
+        field.setCardType(cardType);
 
         Assertions.assertFalse(field.isEmpty());
-        Assertions.assertEquals(card, field.getCardType());
+        Assertions.assertEquals(cardType, field.getCardType());
     }
 
     @Test
     public void testHarvest() throws IllegalMoveException {
-        field.setCardType(card);
+        field.setCardType(cardType);
         IntStream.range(0, 10).forEach(i -> field.increaseCardAmount());
         int result = field.harvest();
 

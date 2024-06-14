@@ -28,15 +28,15 @@ public class PhasePlanting extends Phase {
         if(player.getHand().getHandPile().isEmpty())
             throw new NoSuchElementException("Player " + player.getName() + ": There are no cards in the hand.");
 
-        if (!Objects.equals(card.getName(), player.getHand().popTopCard().getName()))
+        if (!card.equals(player.getHand().peekTopCard()))
             throw new IllegalMoveException("Player " + player.getName() + ": The given card is not the first card.");
 
         Field currentField = player.getField(fieldNumber);
-        if(!currentField.isEmpty() && !Objects.equals(currentField.getCardType().getName(), card.getName()))
+        if(!currentField.isEmpty() && !currentField.getCardType().equals(card.cardType()))
             throw new IllegalMoveException("Player " + player.getName() + ": The given card type is not the same.");
 
-        if(currentField.isEmpty() || Objects.equals(currentField.getCardType().getName(), card.getName())) {
-            currentField.setCardType(card);
+        if(currentField.isEmpty() || currentField.getCardType().equals(card.cardType())) {
+            currentField.setCardType(card.cardType());
             currentField.increaseCardAmount();
             player.getHand().removeCard(0);
         }

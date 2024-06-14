@@ -29,7 +29,7 @@ public class DiscoverArea {
     }
 
     public void fillDiscoverCard(int index) {
-        discoverFields.get(index).setCardType(pile.drawCard());
+        discoverFields.get(index).setCardType(pile.drawCard().cardType());
         discoverFields.get(index).increaseCardAmount();
     }
 }

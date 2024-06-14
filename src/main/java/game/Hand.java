@@ -20,17 +20,17 @@ public class Hand {
      * Returns the first card of the hand pile.
      * @return  first element of the hand pile
      */
-    public Card popTopCard() {
+    public Card peekTopCard() {
         if (handPile.isEmpty()) throw new NoSuchElementException("Hand pile is empty.");
         return handPile.getFirst();
     }
 
     /**
      * Adds a card to the bottom of the hand pile.
-     * @param card the card that is going to be added
+     * @param cardType the card that is going to be added
      */
-    public void addCard(final Card card) {
-        handPile.add(card);
+    public void addCard(final Card cardType) {
+        handPile.add(cardType);
     }
 
     /**

@@ -2,6 +2,7 @@ package game.phases;
 
 import game.*;
 import game.cards.Card;
+import game.cards.CardType;
 import game.mafia.Boss;
 
 import java.util.Arrays;
@@ -14,7 +15,7 @@ public abstract class Phase {
      * the method will throw an IllegalMoveException.
      * @param player the player who tries to plant
      * @param fieldNumber the index of the field
-     * @param card the card which should be planted
+     * @param cardType the card which should be planted
      * @throws IllegalMoveException if the phase is not correct
      */
     public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
@@ -59,7 +60,7 @@ public abstract class Phase {
      * Player can offer cards for getting a specific trading card. Only Player who are in Phase Out can perform this,
      * else an IllegalMoveException will be thrown.
      * @param player the player who wants to offer
-     * @param cards exchange cards for the trading card
+     * @param cardTypes exchange cards for the trading card
      * @param tradingCardFieldNumber trading field number with the trading card
      * @throws IllegalMoveException if not in correct phase
      */
@@ -135,11 +136,11 @@ public abstract class Phase {
     }
 
     private void harvestValidField(final Player player, final Field field) throws IllegalMoveException {
-        Card cardType = field.getCardType();
+        Card card = new Card(field.getCardType());
         int currentAmount = field.getCardAmount();
         int coinAmount = field.harvest();
-        for (int i = 0; i < coinAmount; i++) player.getCoins().add(cardType);
-        for (int i = 0; i < currentAmount-coinAmount; i++)
-            player.getGameField().getPile().getDiscardPile().add(cardType);
+        for (int i = 0; i < coinAmount; i++) player.getCoins().add(card);
+        for (int i = 0; i < currentAmount - coinAmount; i++)
+            player.getGameField().getPile().getDiscardPile().add(card);
     }
 }

@@ -1,8 +1,8 @@
 package phases;
 
 import game.*;
-import game.cards.Brechbohne;
 import game.cards.Card;
+import game.cards.CardType;
 import game.phases.Phase;
 import game.phases.PhaseOut;
 import org.junit.jupiter.api.Assertions;
@@ -38,10 +38,10 @@ public class PhaseOutTest {
 
     @Test
     public void testPlantWrongPhase() {
-        player.getHand().addCard(new Brechbohne());
+        player.getHand().addCard(new Card(CardType.BRECHBOHNE));
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
-            player.plant(0, new Brechbohne());
+            player.plant(0, new Card(CardType.BRECHBOHNE));
         });
         Assertions.assertEquals("Player " + player.getName()
                 + ": Unable to perform this action in the current phase.", exception.getMessage());
@@ -62,7 +62,7 @@ public class PhaseOutTest {
     @Test
     public void testOfferCardsWrongCards() {
         List<Card> cards = new ArrayList<>();
-        cards.add(new Brechbohne());
+        cards.add(new Card(CardType.BRECHBOHNE));
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             player.offerCards(cards, 0);
@@ -85,7 +85,7 @@ public class PhaseOutTest {
     @Test
     public void testOfferCards() throws IllegalMoveException {
         player.setPhase(new PhaseOut());
-        Card card = new Brechbohne();
+        Card card = new Card(CardType.BRECHBOHNE);
         player.getHand().addCard(card);
         List<Card> cards = new ArrayList<>();
         cards.add(card);
