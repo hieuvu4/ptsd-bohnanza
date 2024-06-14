@@ -15,7 +15,7 @@ public abstract class Phase {
      * the method will throw an IllegalMoveException.
      * @param player the player who tries to plant
      * @param fieldNumber the index of the field
-     * @param cardType the card which should be planted
+     * @param card the card which should be planted
      * @throws IllegalMoveException if the phase is not correct
      */
     public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
@@ -60,7 +60,7 @@ public abstract class Phase {
      * Player can offer cards for getting a specific trading card. Only Player who are in Phase Out can perform this,
      * else an IllegalMoveException will be thrown.
      * @param player the player who wants to offer
-     * @param cardTypes exchange cards for the trading card
+     * @param cards exchange cards for the trading card
      * @param tradingCardFieldNumber trading field number with the trading card
      * @throws IllegalMoveException if not in correct phase
      */
