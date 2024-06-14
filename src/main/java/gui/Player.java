@@ -1,9 +1,7 @@
 package gui;
 
-import io.bitbucket.plt.sdp.bohnanza.gui.Compartment;
-import io.bitbucket.plt.sdp.bohnanza.gui.Coordinate;
-import io.bitbucket.plt.sdp.bohnanza.gui.GUI;
-import io.bitbucket.plt.sdp.bohnanza.gui.Size;
+import game.IllegalMoveException;
+import io.bitbucket.plt.sdp.bohnanza.gui.*;
 
 import java.util.List;
 
@@ -28,6 +26,8 @@ public class Player {
         containerList.add(hand);
         tradedCards = new TradedCards(gui, new Coordinate(pos.x + container_width * 7, pos.y),
                 new Size(container_width, size.height), player);
+        gui.addButton("Third Field", new Coordinate(pos.x + container_width * 7, pos.y + (size.height / 7) * 6),
+                new Size(container_width, size.height / 7), this::buyThirdField);
         for (int i = 0; i < offerFields.length; i++) {
             offerFields[i] = new OfferField(gui, new Coordinate(pos.x + container_width * 8 + i * container_width, pos.y),
                     new Size(container_width, size.height), player, i);
@@ -39,6 +39,12 @@ public class Player {
         fieldBackground = gui.addCompartment(pos, new Size(pos.x + (size.width * 6) / 10, (size.height * 6) / 7),
                 "", "BOHNENFELD_ALLE");
         hand.reload();
+    }
+
+    private void buyThirdField(Button button) {
+        try {
+            hand.getPlayer().buyThirdField();
+        } catch (IllegalMoveException ignored) {}
     }
 
 }

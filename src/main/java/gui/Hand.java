@@ -2,7 +2,7 @@ package gui;
 
 import game.IllegalMoveException;
 import game.Player;
-import game.phases.Phase3;
+import game.phases.Phase2;
 import io.bitbucket.plt.sdp.bohnanza.gui.Button;
 import io.bitbucket.plt.sdp.bohnanza.gui.Coordinate;
 import io.bitbucket.plt.sdp.bohnanza.gui.Size;
@@ -62,6 +62,6 @@ public class Hand extends PlayerContainer{
 
     @Override
     public boolean putInOfferField(OfferField offerField, Card card) {
-        return getPlayer() == getGui().turnPlayer() && offerField.getPlayer() == getPlayer() && !(getGui().turnPlayer().getPhase() instanceof Phase3);
+        return !(getPlayer() == getGui().turnPlayer()) && offerField.getPlayer() == getPlayer() && (getGui().turnPlayer().getPhase() instanceof Phase2);
     }
 }

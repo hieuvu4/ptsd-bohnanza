@@ -19,8 +19,8 @@ public class Gui {
 
 
     public Gui() {
-        game = new GameField(2);
-        gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(50, 100), new Color(255, 255, 255), new Color(0, 0, 0));
+        game = new GameField(3);
+        gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(180, 400), new Color(255, 255, 255), new Color(0, 0, 0));
         gui.setCardDnDHandler(this::dndUpdate);
         nextPhaseButton = addButton("Next Phase", new Coordinate(1000, 0), new Size(100, 50), this::nextPhase);
         for (int i = 0; i < game.getPlayers().size(); i++) {
