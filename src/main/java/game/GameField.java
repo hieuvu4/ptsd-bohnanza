@@ -42,6 +42,10 @@ public class GameField implements Observer {
         return tradingArea;
     }
 
+    public Player getTurnPlayer() {
+        return turnPlayer;
+    }
+
     /**
      * This method updates the attributes phase which represent the current phase of the current player's turn.
      * @param o     the observable object.
