@@ -89,7 +89,8 @@ public class Player extends Observable {
      */
     public void plant(final int fieldNumber, final Card card) throws IllegalMoveException {
         phase.plant(this, fieldNumber, card);
-        planted = true;
+        if (phase instanceof PhasePlanting)
+            planted = true;
     }
 
     /**
@@ -150,6 +151,7 @@ public class Player extends Observable {
         bought = true;
         Field[] newFields = new Field[fields.length + 1];
         for (int i = 0; i < fields.length; i++) newFields[i] = fields[i];
+        newFields[fields.length] = new Field();
         fields = newFields;
         for(int i = 0; i < price; i++) {
             Card card = coins.getFirst();
@@ -241,7 +243,10 @@ public class Player extends Observable {
                 notifyObservers(phase);
                 break;
             case PhasePlantingTraded p3:
-                if (!tradedCards.isEmpty()) throw new IllegalMoveException("Player " + this.name
+                boolean empty = getGameField().getPlayers().stream()
+                        .map(Player::getTradedCards)
+                        .allMatch(List::isEmpty);
+                if (!empty) throw new IllegalMoveException("Player " + this.name
                         + ": Traded cards should be planted.");
                 phase = new PhaseDrawing();
                 setChanged();

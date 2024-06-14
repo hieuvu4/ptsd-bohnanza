@@ -2,7 +2,7 @@ package gui;
 
 import game.GameField;
 import game.IllegalMoveException;
-import game.phases.Phase4;
+import game.phases.PhaseDrawing;
 import io.bitbucket.plt.sdp.bohnanza.gui.*;
 
 import java.util.ArrayList;
@@ -16,18 +16,20 @@ public class Gui {
     private final GUI gui;
     private final GameField game;
     private final Button nextPhaseButton;
+    private Compartment phaseInfo;
 
 
     public Gui() {
-        game = new GameField(3);
+        game = new GameField(3, false);
         gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(180, 400), new Color(255, 255, 255), new Color(0, 0, 0));
         gui.setCardDnDHandler(this::dndUpdate);
-        nextPhaseButton = addButton("Next Phase", new Coordinate(1000, 0), new Size(100, 50), this::nextPhase);
+        nextPhaseButton = addButton("Next Phase", new Coordinate(1100, 0), new Size(100, 50), this::nextPhase);
         for (int i = 0; i < game.getPlayers().size(); i++) {
-            new Player(this, new Coordinate(0, i * 350), new Size(1000, 350), game.getPlayers().get(i), containers);
+            new Player(this, new Coordinate(0, i * 350), new Size(1100, 350), game.getPlayers().get(i), containers);
         }
-        containers.add(new TradingArea(this, new Coordinate(1000, 200), new Size(100, 150), game.getTradingArea(), 0));
-        containers.add(new TradingArea(this, new Coordinate(1000, 350), new Size(100, 150), game.getTradingArea(), 1));
+        containers.add(new TradingArea(this, new Coordinate(1100, 50), new Size(100, 300), game.getTradingArea(), 0));
+        containers.add(new TradingArea(this, new Coordinate(1100, 350), new Size(100, 300), game.getTradingArea(), 1));
+        reload();
         gui.start();
     }
 
@@ -47,11 +49,11 @@ public class Gui {
         return gui.addCompartment(upperLeft, size, label, imageName);
     }
 
-    public Card addCard(game.Card cardType, Coordinate pos, Container currentContainer) {
-        var cardObject = gui.addCard(Util.toGUIType(cardType), pos);
-        var card = new Card(this, currentContainer, cardType, cardObject);
-        cards.put(cardObject, card);
-        return card;
+    public Card addCard(game.cards.Card card, Coordinate pos, Container currentContainer) {
+        var cardObject = gui.addCard(Util.toGUIType(card.cardType()), pos);
+        var cardT = new Card(this, currentContainer, card, cardObject);
+        cards.put(cardObject, cardT);
+        return cardT;
     }
 
     public void removeCard(CardObject cardObject) {
@@ -60,6 +62,10 @@ public class Gui {
 
     public CardObject[] cardsInCompartment(Compartment compartment) {
         return gui.getCardObjectsInCompartment(compartment);
+    }
+
+    public void removeCompartment(Compartment compartment) {
+        gui.removeCompartment(compartment);
     }
 
     public game.Player turnPlayer() {
@@ -83,10 +89,17 @@ public class Gui {
     private void nextPhase(Button button) {
         try {
             game.getTurnPlayer().nextPhase();
-            if (game.getTurnPlayer().getPhase() instanceof Phase4) {
+            if (game.getTurnPlayer().getPhase() instanceof PhaseDrawing) {
                 game.getTurnPlayer().drawCards(game.getPile());
                 game.getTurnPlayer().nextPhase();
             }
+            if (phaseInfo != null) {
+                gui.removeCompartment(phaseInfo);
+            }
+            phaseInfo = gui.addCompartment(new Coordinate(1100, 700), new Size(100, 40), "Player " +
+                    game.getTurnPlayer().getName() + System.lineSeparator() +
+                    game.getTurnPlayer().getPhase().getClass().getSimpleName()
+            );
             reload();
         } catch (IllegalMoveException ignored) {
         }

@@ -2,12 +2,13 @@ package gui;
 
 import game.IllegalMoveException;
 import game.Player;
-import game.phases.Phase2;
+import game.phases.PhaseTrading;
 import io.bitbucket.plt.sdp.bohnanza.gui.Button;
 import io.bitbucket.plt.sdp.bohnanza.gui.Coordinate;
 import io.bitbucket.plt.sdp.bohnanza.gui.Size;
 
 import java.util.Collections;
+import java.util.NoSuchElementException;
 
 public class Hand extends PlayerContainer{
 
@@ -46,7 +47,7 @@ public class Hand extends PlayerContainer{
 
     @Override
     public boolean getFrom(Container container, Card card) {
-        return container.putInHand(this, card);
+        return false;
     }
 
     @Override
@@ -55,13 +56,13 @@ public class Hand extends PlayerContainer{
         try {
             getPlayer().plant(field.getNumber(), card.getCardType());
             return true;
-        } catch (IllegalMoveException | IllegalArgumentException e) {
+        } catch (IllegalMoveException | ArrayIndexOutOfBoundsException | NoSuchElementException e) {
             return false;
         }
     }
 
     @Override
     public boolean putInOfferField(OfferField offerField, Card card) {
-        return !(getPlayer() == getGui().turnPlayer()) && offerField.getPlayer() == getPlayer() && (getGui().turnPlayer().getPhase() instanceof Phase2);
+        return !(getPlayer() == getGui().turnPlayer()) && offerField.getPlayer() == getPlayer() && (getGui().turnPlayer().getPhase() instanceof PhaseTrading);
     }
 }

@@ -22,11 +22,7 @@ public abstract class Container extends GuiElement implements Reloadable {
         card.setCurrentContainer(container);
     }
 
-    public void removeCard(Card card) {
-        containedCards.remove(card);
-    }
-
-    public Card addCard(game.Card gameCard) {
+    public Card addCard(game.cards.Card gameCard) {
         var card = getGui().addCard(gameCard, upperLeftCorner(), this);
         containedCards.add(card);
         return card;
@@ -55,10 +51,6 @@ public abstract class Container extends GuiElement implements Reloadable {
     }
 
     public abstract boolean getFrom(Container container, Card card);
-
-    public boolean putInHand(Hand hand, Card card) {
-        return false;
-    }
 
     public boolean putInField(Field field, Card card){
         return false;

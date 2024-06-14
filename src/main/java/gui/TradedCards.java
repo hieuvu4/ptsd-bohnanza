@@ -4,6 +4,8 @@ import game.IllegalMoveException;
 import io.bitbucket.plt.sdp.bohnanza.gui.Coordinate;
 import io.bitbucket.plt.sdp.bohnanza.gui.Size;
 
+import java.util.NoSuchElementException;
+
 public class TradedCards extends PlayerContainer{
 
 
@@ -22,7 +24,7 @@ public class TradedCards extends PlayerContainer{
         try {
             getPlayer().plant(field.getNumber(), card.getCardType());
             return true;
-        } catch (IllegalMoveException | IllegalArgumentException e) {
+        } catch (IllegalMoveException | ArrayIndexOutOfBoundsException | NoSuchElementException e) {
             return false;
         }
     }
