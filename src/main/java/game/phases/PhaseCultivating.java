@@ -48,9 +48,11 @@ public class PhaseCultivating extends Phase {
 
         if (tradingField.getCardType() == null) throw new IllegalMoveException();
 
-        boss.harvest();
+        if (tradingField.getCardType() != boss.getField().getCardType()) {
+            boss.harvest();
 
-        boss.getField().setCardType(tradingField.getCardType());
+            boss.getField().setCardType(tradingField.getCardType());
+        }
 
         for(int i = 0; i < tradingField.getCardAmount(); i++) boss.getField().increaseCardAmount();
 

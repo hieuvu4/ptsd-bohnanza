@@ -40,6 +40,10 @@ public class GameField implements Observer {
         return players;
     }
 
+    public Player getTurnPlayer() {
+        return turnPlayer;
+    }
+
     public MafiaBank getMafiaBank() {
         return mafiaBank;
     }
@@ -88,7 +92,7 @@ public class GameField implements Observer {
 
         while(donCorlebohneField.getCardAmount() != 1) {
             Card nextCard = pile.drawCard();
-            if(nextCard == card) {
+            if (nextCard == card) {
                 alCabohnesField.increaseCardAmount();
             } else {
                 donCorlebohneField.setCardType(nextCard);
@@ -102,15 +106,16 @@ public class GameField implements Observer {
                 Card nextCard = pile.drawCard();
                 if(nextCard == card) {
                     alCabohnesField.increaseCardAmount();
-                    if(nextCard == donCorlebohne.getField().getCardType()) {
-                        donCorlebohneField.increaseCardAmount();
-                    }
+                }
+                else if(nextCard == donCorlebohneField.getCardType()) {
+                    donCorlebohneField.increaseCardAmount();
                 } else {
                     joeBohnanoField.setCardType(nextCard);
                     joeBohnanoField.increaseCardAmount();
                 }
             }
         }
+
     }
 
     private void setUpCards(int playerAmount) {
@@ -133,7 +138,7 @@ public class GameField implements Observer {
 
     private void checkTradingCardForBoss(int index) {
         Field tradingField = tradingArea.getTradingFields().get(index);
-        List<Field> bossFields = new ArrayList<>();
+        List<Field> bossFields;
 
         if (players.size() == 2) {
             bossFields = Arrays.asList(alCabohne.getField(), donCorlebohne.getField());
