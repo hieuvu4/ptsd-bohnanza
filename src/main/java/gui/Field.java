@@ -33,6 +33,7 @@ public class Field extends PlayerContainer{
             getPlayer().harvest(number);
             clear();
             coins.reload();
+            getGui().reload(DiscardPile.class);
         } catch (IllegalMoveException | ArrayIndexOutOfBoundsException ignored) {}
     }
 

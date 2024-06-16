@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ public class PhasePlantingTradedTest {
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
+        when(gameField.getPlayers()).thenReturn(new ArrayList<>(List.of(player)));
         phase = new PhasePlantingTraded();
         player.setPhase(phase);
     }

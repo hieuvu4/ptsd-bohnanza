@@ -32,6 +32,14 @@ public class PhasePlanting extends Phase {
         if(player.getHand().getHandPile().isEmpty())
             throw new NoSuchElementException("Player " + player.getName() + ": There are no cards in the hand.");
 
+        for(int i = 0; i < player.getFields().length; i++) {
+            if(i == fieldNumber) {
+                continue;
+            }
+            if(player.getField(i).getCardType() == card.cardType()) {
+                throw new IllegalMoveException("Player " + player.getName() + ": Card type already exists.");
+            }
+        }
         if (!card.equals(player.getHand().peekTopCard()))
             throw new IllegalMoveException("Player " + player.getName() + ": The given card is not the first card.");
 

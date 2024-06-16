@@ -95,6 +95,10 @@ public abstract class Phase {
                 + ": Unable to perform this action in the current phase.");
     }
 
+    public void giveBossCardFromHandPile(final Player player, final Card card, final Boss boss) throws IllegalMoveException {
+        throw new IllegalMoveException("Player " + player.getName()
+                + ": Unable to perform this action in the current phase.");
+    }
 
     /**
      * Player can take the discover cards. If the phase is wrong, an IllegalMoveException will be thrown.

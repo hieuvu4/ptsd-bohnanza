@@ -124,7 +124,7 @@ public class GameField implements Observer {
 
         while(donCorlebohneField.getCardAmount() != 1) {
             Card nextCard = pile.drawCard();
-            if (nextCard == card) {
+            if (nextCard.cardType() == card.cardType()) {
                 alCabohnesField.increaseCardAmount();
             } else {
                 donCorlebohneField.setCardType(nextCard.cardType());
@@ -136,7 +136,7 @@ public class GameField implements Observer {
             Field joeBohnanoField = joeBohnano.getField();
             while(joeBohnanoField.getCardAmount() != 1) {
                 Card nextCard = pile.drawCard();
-                if(nextCard == card) {
+                if(nextCard.cardType() == card.cardType()) {
                     alCabohnesField.increaseCardAmount();
                 }
                 else if(nextCard.cardType() == donCorlebohneField.getCardType()) {
@@ -303,6 +303,12 @@ public class GameField implements Observer {
             if(players.size() == 1) {
                 phase = new PhaseGiving();
                 turnPlayer.setPhase(phase);
+                try {
+                    giveBossCardIfAvailable();
+                    turnPlayer.nextPhase();
+                } catch (IllegalMoveException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

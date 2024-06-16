@@ -22,7 +22,8 @@ public class Gui {
 
 
     public Gui() {
-        int playerCount = Integer.parseInt(JOptionPane.showInputDialog("How many players?"));
+//        int playerCount = Integer.parseInt(JOptionPane.showInputDialog("How many players?"));
+        int playerCount = 1;
         game = new GameField(playerCount, playerCount <= 2);
         gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(200, 400), new Color(255, 255, 255), new Color(0, 0, 0));
         gui.setCardDnDHandler(this::dndUpdate);
@@ -31,6 +32,7 @@ public class Gui {
             new Player(this, new Coordinate(0, i * 350), new Size(1100, 350), game.getPlayers().get(i), containers, game.getExtension());
         }
         if (game.getExtension()) {
+            containers.add(new DiscardPile(this, new Coordinate(900, 50), new Size(100, 300), game.getPile().getDiscardPile()));
             containers.add(new DiscoverField(this, new Coordinate(1100, 0), new Size(100, 300), game.getDiscoverArea().getDiscoverFields().get(0), 0));
             containers.add(new DiscoverField(this, new Coordinate(1200, 0), new Size(100, 300), game.getDiscoverArea().getDiscoverFields().get(1), 1));
             containers.add(new DiscoverField(this, new Coordinate(1300, 0), new Size(100, 300), game.getDiscoverArea().getDiscoverFields().get(2), 2));

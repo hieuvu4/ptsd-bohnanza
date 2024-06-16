@@ -31,6 +31,7 @@ public class PlayerTest {
         when(gameField.getPile()).thenReturn(pile);
         when(gameField.getTradingArea()).thenReturn(tradingArea);
         player = new Player("Test", gameField);
+        when(gameField.getPlayers()).thenReturn(new ArrayList<>(List.of(player)));
     }
 
     @Test

@@ -13,7 +13,7 @@ public class Hand {
 
 
     public List<Card> getHandPile() {
-        return Collections.unmodifiableList(handPile);
+        return handPile;
     }
 
     /**

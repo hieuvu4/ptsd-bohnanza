@@ -61,4 +61,15 @@ public class Hand extends PlayerContainer{
     public boolean putInOfferField(OfferField offerField, Card card) {
         return !(getPlayer() == getGui().turnPlayer()) && offerField.getPlayer() == getPlayer() && (getGui().turnPlayer().getPhase() instanceof PhaseTrading);
     }
+
+    @Override
+    protected boolean putInBoss(Boss boss, Card card) {
+        try {
+            getPlayer().giveBossCardFromHand(card.getGameCard(), boss.getBoss());
+            getGui().reload(Boss.class);
+            return true;
+        } catch (IllegalMoveException e) {
+            return false;
+        }
+    }
 }

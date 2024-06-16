@@ -127,6 +127,10 @@ public class Player extends Observable {
         phase.cultivateBossField(this, discoverCardFieldNumber, boss);
     }
 
+    public void giveBossCardFromHand(final Card card, final Boss boss) throws IllegalMoveException {
+        phase.giveBossCardFromHandPile(this, card, boss);
+    }
+
     /**
      * Player tries to draw three cards from a given pile. This move is only possible in phase 4. The cards will be
      * added at the bottom of the hand pile. The state of the player will change from phase 4 to PhaseOut. If there are
@@ -270,7 +274,7 @@ public class Player extends Observable {
             case PhaseUsing phaseUsing:
                 boolean checkDiscoverFieldsEmpty = true;
                 for(int i = 0; i < 3; i++) {
-                    if(gameField.getDiscoverArea().getDiscoverFields().get(i) == null) {
+                    if(gameField.getDiscoverArea().getDiscoverFields().get(i).getCardType() != null) {
                         checkDiscoverFieldsEmpty = false;
                         break;
                     };
@@ -304,7 +308,9 @@ public class Player extends Observable {
             case PhaseCultivating phaseCultivating:
 
                 // only if 1 player
-                checkDiscoverFieldsEmpty();
+                if(gameField.getPlayers().size() == 1) {
+                    checkDiscoverFieldsEmpty();
+                }
 
                 if(checkBossEmpty() && !hand.getHandPile().isEmpty())
                     throw new IllegalMoveException("Player " + this.name + " should give a boss a card.");
