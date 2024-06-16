@@ -27,6 +27,7 @@ public abstract class Container extends GuiElement implements Reloadable {
     public Card addCard(game.cards.Card gameCard) {
         var card = getGui().addCard(gameCard, upperLeftCorner(), this);
         containedCards.add(card);
+        card.getCardObject().showFront(true);
         return card;
     }
 

@@ -34,8 +34,7 @@ public class TradingArea extends Container {
     public void reload() {
         clear();
         if (tradingArea.getTradingCards()[number] != null){
-            var card = addCard(tradingArea.getTradingCards()[number]);
-            card.getCardObject().showFront(true);
+            addCard(tradingArea.getTradingCards()[number]);
         }
         formatCards();
     }

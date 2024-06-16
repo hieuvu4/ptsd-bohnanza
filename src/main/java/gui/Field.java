@@ -38,6 +38,12 @@ public class Field extends PlayerContainer{
 
     @Override
     public void reload() {
+        clear();
+        try {
+            for (int i = 0; i < getPlayer().getField(number).getCardAmount(); i++) {
+                addCard(new game.cards.Card(getPlayer().getField(number).getCardType()));
+            }
+        } catch (ArrayIndexOutOfBoundsException ignored){}
         formatCards();
     }
 }

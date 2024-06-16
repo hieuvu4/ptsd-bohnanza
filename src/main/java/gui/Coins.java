@@ -31,10 +31,7 @@ public class Coins extends PlayerContainer{
     public void reload() {
         displayCoins();
         clear();
-        for (var card: getPlayer().getCoins()) {
-            var guiCard = addCard(card);
-            guiCard.getCardObject().showFront(true);
-        }
+        getPlayer().getCoins().forEach(this::addCard);
         formatCards();
     }
 

@@ -35,11 +35,7 @@ public class Hand extends PlayerContainer{
     public void reload() {
         clear();
         for (int i = getPlayer().getHand().getHandPile().size() - 1; i >= 0; i--) {
-            var card = getPlayer().getHand().getHandPile().get(i);
-            var guiCard = addCard(card);
-            if (shown){
-                guiCard.getCardObject().showFront(true);
-            }
+            addCard(getPlayer().getHand().getHandPile().get(i)).getCardObject().showFront(shown);
         }
         Collections.reverse(containedCards);
         formatCards();

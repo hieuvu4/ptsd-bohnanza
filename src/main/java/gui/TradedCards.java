@@ -32,10 +32,7 @@ public class TradedCards extends PlayerContainer{
     @Override
     public void reload() {
         clear();
-        for (var card: getPlayer().getTradedCards()) {
-            var guiCard = addCard(card);
-            guiCard.getCardObject().showFront(true);
-        }
+        getPlayer().getTradedCards().forEach(this::addCard);
         formatCards();
     }
 }
