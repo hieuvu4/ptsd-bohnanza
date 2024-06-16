@@ -96,10 +96,6 @@ public class Gui {
             if (phaseInfo != null) {
                 gui.removeCompartment(phaseInfo);
             }
-            phaseInfo = gui.addCompartment(new Coordinate(1100, 700), new Size(100, 40), "Player " +
-                    game.getTurnPlayer().getName() + System.lineSeparator() +
-                    game.getTurnPlayer().getPhase().getClass().getSimpleName()
-            );
             reload();
         } catch (IllegalMoveException ignored) {
         }
@@ -107,6 +103,10 @@ public class Gui {
 
     private void reload(){
         containers.forEach(Reloadable::reload);
+        phaseInfo = gui.addCompartment(new Coordinate(1100, 700), new Size(100, 40), "Player " +
+                game.getTurnPlayer().getName() + System.lineSeparator() +
+                game.getTurnPlayer().getPhase().getClass().getSimpleName()
+        );
     }
 
     public void reloadTrade() {

@@ -24,7 +24,7 @@ public class OfferField extends PlayerContainer{
 
     private void takeOffer(Button button) {
         try {
-            getPlayer().offerCards(containedCards.stream().map(Card::getCardType).toList(), number);
+            getPlayer().offerCards(containedCards.stream().map(Card::getGameCard).toList(), number);
             getGui().turnPlayer().acceptOffer(getPlayer(), number);
             clear();
             getGui().reloadTrade();

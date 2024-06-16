@@ -9,10 +9,12 @@ public class Field extends PlayerContainer{
 
     private final int number;
     private final Button harvestButton;
+    private final Coins coins;
 
-    public Field(Gui gui, Coordinate pos, Size size, int number, game.Player player) {
+    public Field(Gui gui, Coordinate pos, Size size, int number, game.Player player, Coins coins) {
         super(gui, pos, new Size(size.width, (size.height * 6) / 7), "Field " + number + " of Player " + player.getName(), player);
         this.number = number;
+        this.coins = coins;
         harvestButton = gui.addButton("Harvest", new Coordinate(pos.x, pos.y + (size.height * 6) / 7),
                 new Size(size.width, size.height / 7), this::harvest);
     }
@@ -30,6 +32,7 @@ public class Field extends PlayerContainer{
         try{
             getPlayer().harvest(number);
             clear();
+            coins.reload();
         } catch (IllegalMoveException | ArrayIndexOutOfBoundsException ignored) {}
     }
 

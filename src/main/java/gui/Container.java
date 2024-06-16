@@ -1,6 +1,8 @@
 package gui;
 
-import io.bitbucket.plt.sdp.bohnanza.gui.*;
+import io.bitbucket.plt.sdp.bohnanza.gui.Compartment;
+import io.bitbucket.plt.sdp.bohnanza.gui.Coordinate;
+import io.bitbucket.plt.sdp.bohnanza.gui.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public abstract class Container extends GuiElement implements Reloadable {
         return card;
     }
 
-    public void clear() {
+    protected void clear() {
         containedCards.forEach(Card::dispose);
         containedCards.clear();
     }

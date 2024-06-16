@@ -19,7 +19,7 @@ public class Card extends GuiElement{
         return cardObject;
     }
 
-    public game.cards.Card getCardType() {
+    public game.cards.Card getGameCard() {
         return card;
     }
 

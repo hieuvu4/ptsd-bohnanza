@@ -22,7 +22,7 @@ public class TradedCards extends PlayerContainer{
     public boolean putInField(Field field, Card card) {
         if (this.getPlayer() != field.getPlayer()) return false;
         try {
-            getPlayer().plant(field.getNumber(), card.getCardType());
+            getPlayer().plant(field.getNumber(), card.getGameCard());
             return true;
         } catch (IllegalMoveException | ArrayIndexOutOfBoundsException | NoSuchElementException e) {
             return false;
