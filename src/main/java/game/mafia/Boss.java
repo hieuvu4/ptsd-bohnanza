@@ -25,7 +25,7 @@ public abstract class Boss {
         int fieldSize = field.getCardAmount();
         int coinAmount = field.harvest();
         int diff = fieldSize - coinAmount;
-        for(int i = 0; i < coinAmount; i++) bank.addCoin(cardType);
+        for(int i = 0; i < coinAmount; i++) bank.addCoin(new Card(cardType));
         for(int i = 0; i < diff; i++) gameField.getPile().getDiscardPile().add(new Card(cardType));
         field.clear();
     }

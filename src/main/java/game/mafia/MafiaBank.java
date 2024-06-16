@@ -1,5 +1,6 @@
 package game.mafia;
 
+import game.cards.Card;
 import game.cards.CardType;
 
 import java.util.ArrayList;
@@ -7,17 +8,17 @@ import java.util.List;
 
 public class MafiaBank {
 
-    List<CardType> coins;
+    List<Card> coins;
 
     public MafiaBank() {
         coins = new ArrayList<>();
     }
 
-    public void addCoin(CardType cardType) {
-        coins.add(cardType);
+    public void addCoin(Card card) {
+        coins.add(card);
     }
 
-    public List<CardType> getCoins() {
+    public List<Card> getCoins() {
         return coins;
     }
 }

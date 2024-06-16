@@ -48,7 +48,7 @@ public class PhaseOut extends Phase {
      */
     @Override
     public void plant(final Player player, final int fieldNumber, final Card card) throws IllegalMoveException {
-        if (player.getTradedCards().isEmpty())
+        if (player.getTradedCards() == null || player.getTradedCards().isEmpty())
             throw new IllegalMoveException("Player " + player.getName()
                     + ": There are no traded cards in this player.");
 

@@ -13,6 +13,9 @@ public class DonCorlebohne extends Boss {
     @Override
     public void tryHarvest() throws IllegalMoveException {
         CardType currentCardType = super.getField().getCardType();
+        if (currentCardType == null) {
+            return;
+        }
         if (currentCardType.getCoinValue(super.getField().getCardAmount()) >= 2) {
             this.harvest();
         }

@@ -27,7 +27,7 @@ public class OfferField extends PlayerContainer{
             getPlayer().offerCards(containedCards.stream().map(Card::getGameCard).toList(), number);
             getGui().turnPlayer().acceptOffer(getPlayer(), number);
             clear();
-            getGui().reloadTrade();
+            getGui().reload(TradingArea.class, TradedCards.class);
         } catch (IllegalMoveException | IllegalArgumentException ignored) {}
     }
 

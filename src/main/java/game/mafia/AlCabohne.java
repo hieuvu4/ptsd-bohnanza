@@ -13,6 +13,9 @@ public class AlCabohne extends Boss {
     @Override
     public void tryHarvest() throws IllegalMoveException {
         CardType currentCardType = super.getField().getCardType();
+        if (currentCardType == null) {
+            return;
+        }
         if (currentCardType.getCoinValue(super.getField().getCardAmount()) >= 3) {
             this.harvest();
         }

@@ -66,4 +66,8 @@ public abstract class Container extends GuiElement implements Reloadable {
     protected boolean putInTradedCards(TradedCards tradedCards, Card card) {
         return false;
     }
+
+    protected boolean putInBoss(Boss boss, Card card) {
+        return false;
+    }
 }

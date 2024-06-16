@@ -15,7 +15,7 @@ public class Player {
     private final TradedCards tradedCards;
     private final Coins coins;
 
-    public Player(Gui gui, Coordinate pos, Size size, game.Player player, List<Container> containerList) {
+    public Player(Gui gui, Coordinate pos, Size size, game.Player player, List<Container> containerList, boolean extension) {
         int container_width =  size.width /11;
 
         coins = new Coins(gui, new Coordinate(pos.x + container_width * 7, pos.y),
@@ -33,17 +33,19 @@ public class Player {
         containerList.add(hand);
 
 
+        if (extension){
+            tradedCards = null;
+        } else {
+            tradedCards = new TradedCards(gui, new Coordinate(pos.x + container_width * 8, pos.y),
+                    new Size(container_width, size.height), player);
 
-        tradedCards = new TradedCards(gui, new Coordinate(pos.x + container_width * 8, pos.y),
-                new Size(container_width, size.height), player);
-
-        for (int i = 0; i < offerFields.length; i++) {
-            offerFields[i] = new OfferField(gui, new Coordinate(pos.x + container_width * 9 + i * container_width, pos.y),
-                    new Size(container_width, size.height), player, i);
-            containerList.add(offerFields[i]);
+            for (int i = 0; i < offerFields.length; i++) {
+                offerFields[i] = new OfferField(gui, new Coordinate(pos.x + container_width * 9 + i * container_width, pos.y),
+                        new Size(container_width, size.height), player, i);
+                containerList.add(offerFields[i]);
+            }
+            containerList.add(tradedCards);
         }
-        containerList.add(tradedCards);
-
         fieldBackground = gui.addCompartment(pos, new Size(pos.x + container_width * 6, (size.height * 6) / 7),
                 "", "BOHNENFELD_ALLE");
     }
