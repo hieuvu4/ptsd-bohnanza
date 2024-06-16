@@ -21,7 +21,7 @@ public class Gui {
 
 
     public Gui() {
-        game = new GameField(2, true);
+        game = new GameField(3, false);
         gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(180, 400), new Color(255, 255, 255), new Color(0, 0, 0));
         gui.setCardDnDHandler(this::dndUpdate);
         nextPhaseButton = addButton("Next Phase", new Coordinate(game.getExtension()? 900: 1100, 0), new Size(100, 50), this::nextPhase);
@@ -116,6 +116,7 @@ public class Gui {
 
     private void reload(){
         containers.forEach(Reloadable::reload);
+        gui.removeCompartment(phaseInfo);
         phaseInfo = gui.addCompartment(new Coordinate(1100, 700), new Size(100, 40), "Player " +
                 game.getTurnPlayer().getName() + System.lineSeparator() +
                 game.getTurnPlayer().getPhase().getClass().getSimpleName()
