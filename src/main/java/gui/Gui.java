@@ -5,6 +5,7 @@ import game.IllegalMoveException;
 import game.phases.PhaseDrawing;
 import io.bitbucket.plt.sdp.bohnanza.gui.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,8 +22,9 @@ public class Gui {
 
 
     public Gui() {
-        game = new GameField(3, false);
-        gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(180, 400), new Color(255, 255, 255), new Color(0, 0, 0));
+        int playerCount = Integer.parseInt(JOptionPane.showInputDialog("How many players?"));
+        game = new GameField(playerCount, playerCount <= 2);
+        gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(200, 400), new Color(255, 255, 255), new Color(0, 0, 0));
         gui.setCardDnDHandler(this::dndUpdate);
         nextPhaseButton = addButton("Next Phase", new Coordinate(game.getExtension()? 900: 1100, 0), new Size(100, 50), this::nextPhase);
         for (int i = 0; i < game.getPlayers().size(); i++) {

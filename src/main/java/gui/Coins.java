@@ -45,6 +45,7 @@ public class Coins extends PlayerContainer{
     private void buyThirdField(Button button) {
         try {
             getPlayer().buyThirdField();
+            reload();
         } catch (IllegalMoveException ignored) {}
     }
 }
