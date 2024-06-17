@@ -24,12 +24,23 @@ public class PhaseCultivating extends Phase {
         int index = -1;
         for(int i = 0; i < player.getFields().length; i++) {
             Field playerField = player.getField(i);
-            if(playerField.getCardType() == discoverField.getCardType() || playerField.getCardType() == null) {
+            if(playerField.getCardType() == discoverField.getCardType()) {
                 cardFound = true;
                 index = i;
                 break;
             }
         }
+        if(!cardFound) {
+            for(int i = 0; i < player.getFields().length; i++) {
+                Field playerField = player.getField(i);
+                if(playerField.getCardType() == null) {
+                    cardFound = true;
+                    index = i;
+                    break;
+                }
+            }
+        }
+
         if (!cardFound) throw new IllegalMoveException();
 
         for(int i = 0; i < discoverField.getCardAmount(); i++) {
