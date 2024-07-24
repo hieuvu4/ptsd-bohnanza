@@ -26,7 +26,21 @@ public class PileTest {
     }
 
     @Test
-    public void drawCardOne() {
+    public void testDrawCardAfterRefill() {
+        pile.getDiscardPile().addAll(pile.getCards());
+        pile.getCards().clear();
+        pile.drawCard();
+
+        int amountCardsBeforeDraw = pile.getCards().size();
+        Card firstCard = pile.getCards().getFirst();
+        Card drawedCard = pile.drawCard();
+
+        Assertions.assertEquals(amountCardsBeforeDraw - 1, pile.getCards().size());
+        Assertions.assertEquals(firstCard, drawedCard);
+    }
+
+    @Test
+    public void testDrawCardOne() {
         int amountCardsBeforeDraw = pile.getCards().size();
         Card firstCard = pile.getCards().getFirst();
 
@@ -38,7 +52,7 @@ public class PileTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 3, 4, 5})
-    public void drawCardMoreThanOne(final int amount) {
+    public void testDrawCardMoreThanOne(final int amount) {
         int amountCardsBeforeDraw = pile.getCards().size();
         Card card = pile.getCards().get(amount);
         IntStream.range(0, amount).forEach(i -> pile.drawCard());

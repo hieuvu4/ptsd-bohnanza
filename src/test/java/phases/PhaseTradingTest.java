@@ -10,8 +10,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -97,5 +99,23 @@ public class PhaseTradingTest {
 
         Assertions.assertNull(tradingArea.getTradingCards()[0]);
         Assertions.assertEquals(new ArrayList<>(List.of(card)), player.getTradedCards());
+    }
+
+    @Test
+    public void checkOfferTest(){
+        var oldOut = System.out;
+        try {
+            var newOut = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(newOut, true, StandardCharsets.UTF_8));
+            player.checkOffers();
+            Assertions.assertEquals("There are no offers to trade!" + System.lineSeparator() +
+                            ("{}" + System.lineSeparator()).repeat(2)
+                    , newOut.toString(StandardCharsets.UTF_8));
+        } catch (IllegalMoveException e) {
+            throw new RuntimeException(e);
+        } finally {
+            System.setOut(oldOut);
+        }
+
     }
 }

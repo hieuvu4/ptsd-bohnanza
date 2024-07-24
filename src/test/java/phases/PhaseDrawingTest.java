@@ -78,7 +78,27 @@ public class PhaseDrawingTest {
 
     @Test
     public void testDrawCardsTwoTimes() throws IllegalMoveException {
-        player.setPhase(new PhaseDrawing());
+        player.drawCards(pile);
+
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {
+            player.drawCards(pile);
+        });
+
+        Assertions.assertEquals("Player " + player.getName()
+                + ": Already drawn three cards.", exception.getMessage());
+    }
+
+    @Test void testDrawCardsExt() throws IllegalMoveException {
+        when(gameField.getExtension()).thenReturn(true);
+        player.drawCards(pile);
+
+        Assertions.assertEquals(2, player.getHand().getHandPile().size());
+    }
+
+
+    @Test
+    public void testDrawCardsExtTwoTimes() throws IllegalMoveException {
+        when(gameField.getExtension()).thenReturn(true);
         player.drawCards(pile);
 
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> {

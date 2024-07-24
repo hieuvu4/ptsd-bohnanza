@@ -367,9 +367,9 @@ public class PlayerTest {
         player.getHand().addCard(card);
         List<Card> cards = new ArrayList<>();
         cards.add(card);
-        player.offerCards(cards, 0);
+        player.offerCards(cards, 1);
 
-        Assertions.assertEquals(cards, tradingArea.getOffersForTCard0().get(player));
+        Assertions.assertEquals(cards, tradingArea.getOffersForTCard1().get(player));
     }
 
     @Test
@@ -446,5 +446,10 @@ public class PlayerTest {
             Assertions.assertEquals("Player " + player.getName()
                     + ": Unable to perform this action in the current phase.", exception.getMessage());
         }
+    }
+
+    @Test
+    public void testGetScore(){
+        Assertions.assertEquals(player.getCoins().size(), player.getScore());
     }
 }

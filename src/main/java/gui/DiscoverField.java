@@ -58,12 +58,14 @@ public class DiscoverField extends Container{
     protected boolean putInDiscardPile(Card card) {
         try {
             getGui().turnPlayer().putDiscoverCardsToDiscard(number);
-            getGui().reload(DiscardPile.class);
+            card.dispose();
+            getGui().reload(DiscardPile.class, DiscoverField.class);
             return true;
         } catch (IllegalMoveException e) {
             return false;
         }
     }
+
 
     @Override
     public void reload() {

@@ -18,7 +18,8 @@ public class PhaseCultivating extends Phase {
         DiscoverArea discoverArea = player.getGameField().getDiscoverArea();
         Field discoverField = discoverArea.getDiscoverFields().get(discoverCardFieldNumber);
 
-        if (discoverField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null)
+            throw new IllegalMoveException("There is no discover card in this field.");
 
         boolean cardFound = false;
         int index = -1;
@@ -53,6 +54,8 @@ public class PhaseCultivating extends Phase {
 
     @Override
     public void cultivateBossField(Player player, int discoverCardFieldNumber, Boss boss) throws IllegalMoveException {
+        if (discoverCardFieldNumber < 0 || discoverCardFieldNumber > 2)
+            throw new IllegalArgumentException("Discover card field number must be between 0 and 2.");
 
         Boss[] bosses = (player.getGameField().getPlayers().size() == 2)?
                 new Boss[]{player.getGameField().getAlCabohne(), player.getGameField().getDonCorlebohne()} :
@@ -63,17 +66,17 @@ public class PhaseCultivating extends Phase {
             if (b.equals(boss)) {
                 continue;
             }
-            if (b.getField().getCardType() != null && b.getField().getCardType() == player.getGameField().getDiscoverArea().getDiscoverFields().get(discoverCardFieldNumber).getCardType()){
-                throw new IllegalMoveException("Another boss already has a card of type");
+            if (b.getField().getCardType() != null
+                    && b.getField().getCardType() == player.getGameField().getDiscoverArea().getDiscoverFields().get(discoverCardFieldNumber).getCardType()){
+                throw new IllegalMoveException("Another boss already has a card of type.");
             }
         }
 
-        if (discoverCardFieldNumber < 0 || discoverCardFieldNumber > 2)
-            throw new IllegalArgumentException("Discover card field number must be between 0 and 2.");
         DiscoverArea discoverArea = player.getGameField().getDiscoverArea();
         Field discoverField = discoverArea.getDiscoverFields().get(discoverCardFieldNumber);
 
-        if (discoverField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null)
+            throw new IllegalMoveException("There is no discover card in this field.");
 
         if(boss.getField().getCardType() == null) {
             boss.getField().setCardType(discoverField.getCardType());
@@ -96,12 +99,12 @@ public class PhaseCultivating extends Phase {
             throw new IllegalMoveException("No such card in hand.");
 
         if(!boss.getField().isEmpty())
-            throw new IllegalArgumentException("Field of boss is not empty");
+            throw new IllegalMoveException("Field of boss is not empty.");
 
         Boss[] bosses = (player.getGameField().getPlayers().size() == 2)?
                 new Boss[]{player.getGameField().getAlCabohne(), player.getGameField().getDonCorlebohne()} :
                 new Boss[]{player.getGameField().getAlCabohne(), player.getGameField().getDonCorlebohne(),
-                player.getGameField().getJoeBohnano()};
+                        player.getGameField().getJoeBohnano()};
 
         for(Boss b : bosses) {
             if (b.getField().getCardType() != null && b.getField().getCardType() == card.cardType()){

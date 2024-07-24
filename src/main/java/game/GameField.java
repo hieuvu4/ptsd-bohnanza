@@ -1,7 +1,6 @@
 package game;
 
 import game.cards.Card;
-import game.cards.CardType;
 import game.mafia.*;
 import game.phases.*;
 
@@ -299,6 +298,8 @@ public class GameField implements Observer {
                 turnPlayer.setPhase(phase);
                 System.out.println();
                 System.out.println("Turn of Player " + turnPlayer.getName());
+
+                checkDiscoveryFieldsEmptyAutomaticNext();
             }
             if(players.size() == 1) {
                 phase = new PhaseGiving();
@@ -309,6 +310,23 @@ public class GameField implements Observer {
                 } catch (IllegalMoveException e) {
                     throw new RuntimeException(e);
                 }
+            }
+        }
+    }
+
+    private void checkDiscoveryFieldsEmptyAutomaticNext() {
+        boolean empty = true;
+        for(int i = 0; i < discoverArea.getDiscoverFields().size(); i++) {
+            if(discoverArea.getDiscoverFields().get(i).getCardType() != null) {
+                empty = false;
+                break;
+            }
+        }
+        if(empty) {
+            try {
+                turnPlayer.nextPhase();
+            } catch (IllegalMoveException e) {
+                throw new RuntimeException(e);
             }
         }
     }

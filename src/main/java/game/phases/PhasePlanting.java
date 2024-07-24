@@ -40,6 +40,7 @@ public class PhasePlanting extends Phase {
                 throw new IllegalMoveException("Player " + player.getName() + ": Card type already exists.");
             }
         }
+
         if (!card.equals(player.getHand().peekTopCard()))
             throw new IllegalMoveException("Player " + player.getName() + ": The given card is not the first card.");
 

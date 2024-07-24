@@ -31,18 +31,6 @@ public enum CardType {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int[] getNumberNeedToHarvest() {
-        return numberNeedToHarvest;
-    }
-
-    public int[] getCoins() {
-        return coins;
-    }
-
     public int getOverallAmount() {
         return overallAmount;
     }

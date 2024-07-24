@@ -42,7 +42,7 @@ public class Pile {
      */
     public Card drawCard() { // impl auto reshuffle
         if(cards.isEmpty() && timesRefillCards == 0) {
-            return null; // TODO: game over
+            throw new EndOfGameException();
         }
         if(cards.isEmpty() && timesRefillCards > 0) {
             cards.addAll(discardPile);

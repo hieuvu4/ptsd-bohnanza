@@ -4,6 +4,11 @@ import io.bitbucket.plt.sdp.bohnanza.gui.CardType;
 
 public class Util {
 
+    /**
+     * Map game CardType to GUI CardType
+     * @param card a game CardType
+     * @return the corresponding GUI CardType
+     */
     public static CardType toGUIType(game.cards.CardType card) {
         return switch (card){
             case BLAUE_BOHNE -> CardType.BLAUE_BOHNE;
@@ -20,6 +25,11 @@ public class Util {
         };
     }
 
+    /**
+     * Map GUI CardType to game CardType
+     * @param type a GUI CardType
+     * @return the corresponding game CardType
+     */
     public static game.cards.CardType toGameType(CardType type) {
         return switch (type) {
             case AUGEN_BOHNE -> game.cards.CardType.AUGENBOHNE;

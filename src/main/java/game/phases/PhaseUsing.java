@@ -13,7 +13,8 @@ public class PhaseUsing extends Phase {
     public void takeDiscoverCards(final Player player, int discoverCardFieldNumber) throws IllegalMoveException {
         Field discoverField = getField(player, discoverCardFieldNumber);
 
-        if (discoverField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null)
+            throw new IllegalMoveException("There is no discover card in this field.");
 
         boolean cardFound = false;
         int index = -1;
@@ -25,7 +26,8 @@ public class PhaseUsing extends Phase {
                 break;
             }
         }
-        if (!cardFound) throw new IllegalMoveException();
+        if (!cardFound) throw new IllegalMoveException("There is no such card in player "
+                + player.getName() + "'s field.");
 
         for(int i = 0; i < discoverField.getCardAmount(); i++) {
             player.getField(index).setCardType(discoverField.getCardType());
@@ -39,7 +41,8 @@ public class PhaseUsing extends Phase {
     public void putDiscoverCardsToDiscard(Player player, int discoverCardFieldNumber) throws IllegalMoveException {
         Field discoverField = getField(player, discoverCardFieldNumber);
 
-        if (discoverField.getCardType() == null) throw new IllegalMoveException();
+        if (discoverField.getCardType() == null)
+            throw new IllegalMoveException("There is no discover card in this field.");
 
         Pile pile = player.getGameField().getPile();
 

@@ -7,6 +7,9 @@ import io.bitbucket.plt.sdp.bohnanza.gui.Compartment;
 import io.bitbucket.plt.sdp.bohnanza.gui.Coordinate;
 import io.bitbucket.plt.sdp.bohnanza.gui.Size;
 
+/**
+ * Container displaying a players Coins
+ */
 public class Coins extends PlayerContainer{
 
     private Compartment coinAmount;

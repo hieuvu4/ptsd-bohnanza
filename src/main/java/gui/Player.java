@@ -6,6 +6,9 @@ import io.bitbucket.plt.sdp.bohnanza.gui.Size;
 
 import java.util.List;
 
+/**
+ * Class constructing and containing all the elements needed per player
+ */
 public class Player {
 
     private final Field[] fields = new Field[3];

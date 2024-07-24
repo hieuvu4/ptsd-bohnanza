@@ -1,16 +1,20 @@
 package gui;
 
+import game.EndOfGameException;
 import game.GameField;
 import game.IllegalMoveException;
 import game.phases.PhaseDrawing;
 import io.bitbucket.plt.sdp.bohnanza.gui.*;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+/**
+ * Main class of the gui
+ */
 public class Gui {
 
     private final HashMap<CardObject, Card> cards = new HashMap<>();
@@ -22,8 +26,7 @@ public class Gui {
 
 
     public Gui() {
-//        int playerCount = Integer.parseInt(JOptionPane.showInputDialog("How many players?"));
-        int playerCount = 1;
+        int playerCount = getPlayerCount();
         game = new GameField(playerCount, playerCount <= 2);
         gui = new GUI(new Size(1500, 1000), new Size(100, 200), new Size(200, 400), new Color(255, 255, 255), new Color(0, 0, 0));
         gui.setCardDnDHandler(this::dndUpdate);
@@ -47,12 +50,18 @@ public class Gui {
             containers.add(new TradingArea(this, new Coordinate(1100, 350), new Size(100, 300), game.getTradingArea(), 1));
         }
         reload();
-        gui.start();
+        try {
+            gui.start();
+        } catch (EndOfGameException ignored){
+            showWinner();
+        }
+
     }
 
     public static void main(String[] args) {
         Gui gui = new Gui();
     }
+
 
     public Button addButton(String label, Coordinate pos, Size size, ButtonHandler buttonHandler){
         return gui.addButton(label, pos, size, buttonHandler);
@@ -66,6 +75,13 @@ public class Gui {
         return gui.addCompartment(upperLeft, size, label, imageName);
     }
 
+    /**
+     * Wrap a game Card and register the wrapped card with the game
+     * @param card the card to wrap
+     * @param pos the position of the card in the GUI
+     * @param currentContainer the container the card is to be contained in
+     * @return the wrapped card
+     */
     public Card addCard(game.cards.Card card, Coordinate pos, Container currentContainer) {
         var cardObject = gui.addCard(Util.toGUIType(card.cardType()), pos);
         var cardT = new Card(this, currentContainer, card, cardObject);
@@ -85,6 +101,9 @@ public class Gui {
         gui.removeCompartment(compartment);
     }
 
+    /**
+     * @return the player whose turn it is
+     */
     public game.Player turnPlayer() {
         return game.getTurnPlayer();
     }
@@ -127,9 +146,55 @@ public class Gui {
         );
     }
 
+    /**
+     * Reload all Reloadables of the specified Concrete Types
+     * @param reload the concrete Types of Reloadable to reload
+     */
     @SafeVarargs
     public final void reload(Class<? extends Reloadable>... reload){
         containers.stream().filter(o-> Arrays.asList(reload).contains(o.getClass()))
                 .forEach(Reloadable::reload);
+    }
+
+    private void showWinner() {
+        var winMessage = new StringBuilder();
+        game.getPlayers().stream()
+                .sorted(Comparator.comparingInt(p -> p.getScore()))
+                .forEach(p->winMessage.append(p.getName())
+                        .append(": ")
+                        .append(p.getScore())
+                        .append(System.lineSeparator())
+                );
+        if(game.getExtension()){
+            winMessage.append("Mafia: ")
+                    .append(game.getMafiaBank().getCoins().size())
+                    .append(System.lineSeparator());
+        }
+
+        var message = new MessageDialog(null, "Winners", null, winMessage.toString(), MessageDialog.INFORMATION, 0);
+        message.open();
+    }
+
+    private static int getPlayerCount() {
+        Display display = new Display();
+        Shell shell = new Shell(display);
+        InputDialog inputDialog = new InputDialog(shell, "Enter Amount of players", "Enter 1 or 2 to play \"Al Cabohne\".\n" +
+                "Enter 3, 4 or 5 to play \"Bohnanza\".", null, newText -> {
+            try{
+                int i = Integer.parseInt(newText);
+                if (i < 1 || i > 5) {
+                    return "Player amount must be between 1 and 5";
+                }
+            } catch (NumberFormatException e){
+                return "Not a Number";
+            }
+            return null;
+        });
+        inputDialog.open();
+        int playerCount = Integer.parseInt(inputDialog.getValue());
+        inputDialog.close();
+        shell.close();
+        display.close();
+        return playerCount;
     }
 }

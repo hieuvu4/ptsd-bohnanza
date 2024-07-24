@@ -67,4 +67,19 @@ public class FieldTest {
         Exception exception = Assertions.assertThrows(IllegalMoveException.class, () -> field.harvest());
         Assertions.assertEquals("Field can't be harvested because field is empty.", exception.getMessage());
     }
+
+    @Test
+    public void testDecreaseCardAmountFail(){
+        Exception exception = Assertions.assertThrows(IllegalMoveException.class, ()->field.decreaseCardAmount());
+        Assertions.assertEquals("Not able to decrease because card amount is 0.", exception.getMessage());
+    }
+
+    @Test
+    public void testDecreaseCardAmountSuc(){
+        field.setCardType(cardType);
+        field.increaseCardAmount();
+        Assertions.assertDoesNotThrow(()->field.decreaseCardAmount());
+    }
+
+
 }
